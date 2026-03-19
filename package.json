@@ -2,7 +2,7 @@
   "name": "rmmz-dev-tools",
   "displayName": "RMMZ Dev Tools",
   "description": "Developer tools for RPG Maker MZ plugin development — annotation highlighting, IntelliSense, and validation",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "abyo-software",
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "images/icon.png",
@@ -56,6 +56,11 @@
         "command": "rmmz.newPlugin",
         "title": "%command.newPlugin%",
         "icon": "$(new-file)"
+      },
+      {
+        "command": "rmmz.prepareRelease",
+        "title": "%command.prepareRelease%",
+        "icon": "$(package)"
       },
       {
         "command": "rmmz.previewAnnotation",
@@ -161,12 +166,26 @@
         "command": "rmmz.toggleAutoRefreshGameState",
         "title": "%command.toggleAutoRefreshGameState%",
         "icon": "$(sync)"
+      },
+      {
+        "command": "rmmz.setupTypeScript",
+        "title": "%command.setupTypeScript%",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "rmmz.toggleTypeScriptBuild",
+        "title": "%command.toggleTypeScriptBuild%",
+        "icon": "$(tools)"
       }
     ],
     "snippets": [
       {
         "language": "javascript",
         "path": "./snippets/rmmz.code-snippets.json"
+      },
+      {
+        "language": "typescript",
+        "path": "./snippets/rmmz-ts.code-snippets.json"
       }
     ],
     "viewsContainers": {

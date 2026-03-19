@@ -3,7 +3,7 @@ import { RmmzCompletionProvider } from './annotation/completionProvider';
 import { RmmzHoverProvider } from './annotation/hoverProvider';
 import { createValidator } from './annotation/validator';
 import { promptIntelliSenseSetup, setupIntelliSense } from './intellisense/setup';
-import { setupDebugger, watchPackageJson } from './debugger/setup';
+import { setupDebugger, watchPackageJson, prepareRelease } from './debugger/setup';
 import { generatePluginTemplate } from './template/generator';
 import { activate as activateDataHover } from './datalink/hover';
 import { activate as activateConflictDetector } from './conflict/detector';
@@ -27,6 +27,8 @@ import { activate as activateLivePreview } from './testplay/livePreview';
 import { activate as activatePluginRegistry } from './registry/manager';
 import { activate as activateClassHierarchy } from './hierarchy/browser';
 import { activate as activateQuickActions } from './sidebar/quickActions';
+import { setupTypeScript } from './typescript/setup';
+import { activate as activateTypeScriptBuild } from './typescript/autoBuild';
 import { initLocale, t } from './i18n';
 import { messages as enMessages } from './messages/en';
 import { messages as jaMessages } from './messages/ja';
@@ -76,6 +78,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Plugin template generator command
   context.subscriptions.push(
     vscode.commands.registerCommand('rmmz.newPlugin', generatePluginTemplate)
+  );
+
+  // Prepare for Release command (remove debug port from package.json)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('rmmz.prepareRelease', async () => {
+      const folder = await pickWorkspaceFolder();
+      if (folder) await prepareRelease(folder);
+    })
   );
 
   // Watch package.json for MZ editor overwrites (all workspace folders)
@@ -148,6 +158,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // Quick Actions sidebar (button panel in RMMZ view container)
   activateQuickActions(context);
+
+  // TypeScript setup command
+  context.subscriptions.push(
+    vscode.commands.registerCommand('rmmz.setupTypeScript', async () => {
+      if (!requirePro('TypeScript Setup')) return;
+      const folder = await pickWorkspaceFolder();
+      if (folder) await setupTypeScript(context, folder);
+    })
+  );
+
+  // TypeScript auto-build (file watcher + tsc)
+  activateTypeScriptBuild(context);
 
   // License management (Gumroad Pro license)
   await activateLicense(context);

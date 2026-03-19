@@ -188,6 +188,10 @@ export const languages = {
   registerCompletionItemProvider: () => ({ dispose: () => {} }),
 };
 
+export const env = {
+  language: 'en',
+};
+
 export const commands = {
   registerCommand: (_command: string, _callback: (...args: any[]) => any) => ({
     dispose: () => {},

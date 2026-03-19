@@ -78,6 +78,9 @@ export class QuickActionsProvider implements vscode.WebviewViewProvider {
     <div class="section-title">${t('quickActions.setup')}</div>
     ${b('rmmz.setupIntelliSense', '&#x2699;', t('quickActions.setupIntelliSense'))}
     ${b('rmmz.setupDebugger', '&#x1F41E;', t('quickActions.setupDebugger'), true)}
+    ${b('rmmz.setupTypeScript', '&#x1F1F9;', t('quickActions.setupTypeScript'), true)}
+    ${b('rmmz.toggleTypeScriptBuild', '&#x1F528;', t('quickActions.toggleTsBuild'), true)}
+    ${b('rmmz.prepareRelease', '&#x1F4E6;', t('quickActions.prepareRelease'))}
   </div>`;
 
     return /* html */ `<!DOCTYPE html>

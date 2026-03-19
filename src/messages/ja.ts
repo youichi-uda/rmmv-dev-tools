@@ -44,6 +44,12 @@ export const messages: Record<string, string> = {
   'debugger.selectInstallFolder': '選択',
   'debugger.selectInstallFolderTitle': 'RPGツクールMZのインストールフォルダを選択（nwjs-win/を含むフォルダ）',
 
+  // ── debugger/setup.ts (release) ────────────────────────────────────────
+  'release.noPackageJson': 'プロジェクトにpackage.jsonが見つかりません。',
+  'release.alreadyClean': 'package.jsonにデバッグポートは含まれていません（クリーン済み）。',
+  'release.done': 'package.jsonからデバッグポートを削除しました。リリース準備完了です！',
+  'release.error': 'package.jsonの更新に失敗しました。',
+
   // ── template/generator.ts ─────────────────────────────────────────────
   'template.step1Title': '新規RMMZプラグイン (1/3)',
   'template.step2Title': '新規RMMZプラグイン (2/3)',
@@ -155,6 +161,32 @@ export const messages: Record<string, string> = {
   // ── preview/annotationPreview.ts ──────────────────────────────────────
   'preview.panelTitle': 'RMMZ アノテーションプレビュー',
 
+  // ── typescript/setup.ts ──────────────────────────────────────────────
+  'typescript.overwritePrompt': 'tsconfig.jsonが既に存在します。RMMZ TypeScript設定で上書きしますか？',
+  'typescript.overwrite': '上書き',
+  'typescript.cancel': 'キャンセル',
+  'typescript.setupComplete': 'TypeScript環境をセットアップしました: tsconfig.json、ts/plugins/、型定義を作成しました。',
+
+  // ── typescript/autoBuild.ts ─────────────────────────────────────────
+  'typescript.buildOff': '$(circle-slash) TSビルド: オフ',
+  'typescript.buildOffTooltip': 'クリックでTypeScript自動ビルドを有効化',
+  'typescript.buildWatching': '$(eye) TSビルド: 監視中',
+  'typescript.buildWatchingTooltip': 'TypeScript自動ビルド有効 — ts/plugins/を監視中',
+  'typescript.buildBuilding': '$(sync~spin) TSビルド: ビルド中...',
+  'typescript.buildBuildingTooltip': 'TypeScriptコンパイル実行中',
+  'typescript.buildOk': '$(check) TSビルド: OK',
+  'typescript.buildOkTooltip': 'TypeScriptコンパイル成功',
+  'typescript.buildError': '$(error) TSビルド: エラー',
+  'typescript.buildErrorTooltip': 'TypeScriptコンパイル失敗 — 問題パネルを確認してください',
+  'typescript.buildEnabled': 'TypeScript自動ビルドを有効にしました。',
+  'typescript.buildDisabled': 'TypeScript自動ビルドを無効にしました。',
+  'typescript.tscNotFound': 'TypeScriptコンパイラが見つかりません。プロジェクトで "npm install typescript --save-dev" を実行してください。',
+
+  // ── template/generator.ts (TypeScript) ──────────────────────────────
+  'template.languageChoice': '言語を選択',
+  'template.languageJS': 'JavaScript',
+  'template.languageTS': 'TypeScript (Pro)',
+
   // ── sidebar/quickActions.ts ───────────────────────────────────────────
   'quickActions.plugin': 'プラグイン',
   'quickActions.analysis': '解析',
@@ -175,4 +207,7 @@ export const messages: Record<string, string> = {
   'quickActions.livePreview': 'ライブプレビュー',
   'quickActions.setupIntelliSense': 'IntelliSenseセットアップ',
   'quickActions.setupDebugger': 'デバッガーセットアップ',
+  'quickActions.setupTypeScript': 'TypeScriptセットアップ',
+  'quickActions.toggleTsBuild': 'TS自動ビルド切替',
+  'quickActions.prepareRelease': 'リリース準備',
 };

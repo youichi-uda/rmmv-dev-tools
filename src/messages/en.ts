@@ -44,6 +44,12 @@ export const messages: Record<string, string> = {
   'debugger.selectInstallFolder': 'Select',
   'debugger.selectInstallFolderTitle': 'Select RPG Maker MZ install folder (contains nwjs-win/)',
 
+  // ── debugger/setup.ts (release) ────────────────────────────────────────
+  'release.noPackageJson': 'No package.json found in the project.',
+  'release.alreadyClean': 'package.json is already clean — no debug port to remove.',
+  'release.done': 'Removed debug port from package.json. Your project is ready for release!',
+  'release.error': 'Failed to update package.json.',
+
   // ── template/generator.ts ─────────────────────────────────────────────
   'template.step1Title': 'New RMMZ Plugin (1/3)',
   'template.step2Title': 'New RMMZ Plugin (2/3)',
@@ -155,6 +161,32 @@ export const messages: Record<string, string> = {
   // ── preview/annotationPreview.ts ──────────────────────────────────────
   'preview.panelTitle': 'RMMZ Annotation Preview',
 
+  // ── typescript/setup.ts ──────────────────────────────────────────────
+  'typescript.overwritePrompt': 'tsconfig.json already exists. Overwrite with RMMZ TypeScript configuration?',
+  'typescript.overwrite': 'Overwrite',
+  'typescript.cancel': 'Cancel',
+  'typescript.setupComplete': 'TypeScript environment set up: tsconfig.json, ts/plugins/, and type definitions created.',
+
+  // ── typescript/autoBuild.ts ─────────────────────────────────────────
+  'typescript.buildOff': '$(circle-slash) TS Build: Off',
+  'typescript.buildOffTooltip': 'Click to enable TypeScript auto-build',
+  'typescript.buildWatching': '$(eye) TS Build: Watching',
+  'typescript.buildWatchingTooltip': 'TypeScript auto-build active — watching ts/plugins/',
+  'typescript.buildBuilding': '$(sync~spin) TS Build: Building...',
+  'typescript.buildBuildingTooltip': 'TypeScript compilation in progress',
+  'typescript.buildOk': '$(check) TS Build: OK',
+  'typescript.buildOkTooltip': 'TypeScript compilation succeeded',
+  'typescript.buildError': '$(error) TS Build: Error',
+  'typescript.buildErrorTooltip': 'TypeScript compilation failed — check Problems panel',
+  'typescript.buildEnabled': 'TypeScript auto-build enabled.',
+  'typescript.buildDisabled': 'TypeScript auto-build disabled.',
+  'typescript.tscNotFound': 'TypeScript compiler not found. Run "npm install typescript --save-dev" in your project.',
+
+  // ── template/generator.ts (TypeScript) ──────────────────────────────
+  'template.languageChoice': 'Select language',
+  'template.languageJS': 'JavaScript',
+  'template.languageTS': 'TypeScript (Pro)',
+
   // ── sidebar/quickActions.ts ───────────────────────────────────────────
   'quickActions.plugin': 'Plugin',
   'quickActions.analysis': 'Analysis',
@@ -175,4 +207,7 @@ export const messages: Record<string, string> = {
   'quickActions.livePreview': 'Live Preview',
   'quickActions.setupIntelliSense': 'Setup IntelliSense',
   'quickActions.setupDebugger': 'Setup Debugger',
+  'quickActions.setupTypeScript': 'Setup TypeScript',
+  'quickActions.toggleTsBuild': 'Toggle TS Auto-Build',
+  'quickActions.prepareRelease': 'Prepare for Release',
 };

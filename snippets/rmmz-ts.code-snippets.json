@@ -1,0 +1,93 @@
+{
+  "RMMZ TS: Typed Alias Pattern": {
+    "scope": "typescript",
+    "prefix": "rmmz-alias",
+    "description": "Alias an existing prototype method with typed this parameter",
+    "body": [
+      "const _${1:Class}_${2:method} = ${1:Class}.prototype.${2:method};",
+      "${1:Class}.prototype.${2:method} = function(this: ${1:Class}${3:}) {",
+      "\t_${1:Class}_${2:method}.call(this${4:});",
+      "\t$0",
+      "};"
+    ]
+  },
+  "RMMZ TS: Register Plugin Command": {
+    "scope": "typescript",
+    "prefix": "rmmz-command",
+    "description": "Register a typed plugin command with PluginManager",
+    "body": [
+      "PluginManager.registerCommand(PLUGIN_NAME, \"${1:commandName}\", (args) => {",
+      "\t$0",
+      "});"
+    ]
+  },
+  "RMMZ TS: Full Plugin Scaffold": {
+    "scope": "typescript",
+    "prefix": "rmmz-plugin",
+    "description": "Complete TypeScript plugin template with annotation block, parameters, and command",
+    "body": [
+      "/*:",
+      " * @target MZ",
+      " * @plugindesc ${1:Plugin description}",
+      " * @author ${2:Author}",
+      " * @url ${3:https://}",
+      " *",
+      " * @help",
+      " * ${4:Help text for this plugin.}",
+      " *",
+      " * @param ${5:paramName}",
+      " * @text ${6:Parameter Label}",
+      " * @type ${7:string}",
+      " * @default ${8:}",
+      " * @desc ${9:Parameter description}",
+      " *",
+      " * @command ${10:commandName}",
+      " * @text ${11:Command Label}",
+      " * @desc ${12:Command description}",
+      " *",
+      " * @arg ${13:argName}",
+      " * @text ${14:Argument Label}",
+      " * @type ${15:string}",
+      " * @default ${16:}",
+      " * @desc ${17:Argument description}",
+      " */",
+      "",
+      "(() => {",
+      "\t\"use strict\";",
+      "",
+      "\tconst PLUGIN_NAME = \"${18:${TM_FILENAME_BASE}}\";",
+      "\tconst parameters = PluginManager.parameters(PLUGIN_NAME);",
+      "",
+      "\tconst param = {",
+      "\t\t${5:paramName}: parameters[\"${5:paramName}\"] || \"${8:}\",",
+      "\t};",
+      "",
+      "\tPluginManager.registerCommand(PLUGIN_NAME, \"${10:commandName}\", (args) => {",
+      "\t\t$0",
+      "\t});",
+      "})();"
+    ]
+  },
+  "RMMZ TS: Parameter Parsing": {
+    "scope": "typescript",
+    "prefix": "rmmz-param",
+    "description": "Parse plugin parameters with type annotations",
+    "body": [
+      "const param = {",
+      "\t${1:key}: parameters[\"${1:key}\"] || \"${2:default}\",$0",
+      "};"
+    ]
+  },
+  "RMMZ TS: IIFE Wrapper": {
+    "scope": "typescript",
+    "prefix": "rmmz-iife",
+    "description": "Immediately Invoked Function Expression wrapper",
+    "body": [
+      "(() => {",
+      "\t\"use strict\";",
+      "",
+      "\t$0",
+      "})();"
+    ]
+  }
+}

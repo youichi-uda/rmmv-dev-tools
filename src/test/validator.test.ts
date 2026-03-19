@@ -1,7 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { DiagnosticSeverity } from 'vscode';
 import { validateDocument } from '../annotation/validator';
 import { mockDocument } from './helpers';
+import { initLocale } from '../i18n';
+import { messages as enMessages } from '../messages/en';
+
+beforeAll(() => {
+  initLocale(enMessages, enMessages);
+});
 
 function diags(content: string) {
   return validateDocument(mockDocument(content));

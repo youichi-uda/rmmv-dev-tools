@@ -102,6 +102,9 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
         ],
         webRoot: '${workspaceFolder}',
         port: 9222,
+        sourceMapPathOverrides: {
+          'ts/plugins/*': '${workspaceFolder}/ts/plugins/*',
+        },
       },
       {
         type: 'chrome',
@@ -109,6 +112,9 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
         name: 'Attach to RMMZ Testplay',
         port: 9222,
         webRoot: '${workspaceFolder}',
+        sourceMapPathOverrides: {
+          'ts/plugins/*': '${workspaceFolder}/ts/plugins/*',
+        },
       },
     ],
   };
@@ -154,6 +160,47 @@ function ensureChromiumArgs(root: string): void {
     }
   } catch {
     // Not a JSON file or can't parse
+  }
+}
+
+/**
+ * Removes chromium-args (remote-debugging-port) from package.json
+ * to prepare the project for release/distribution.
+ */
+export async function prepareRelease(workspaceFolder: vscode.WorkspaceFolder): Promise<void> {
+  const root = workspaceFolder.uri.fsPath;
+  const pkgPath = path.join(root, 'package.json');
+
+  if (!fs.existsSync(pkgPath)) {
+    vscode.window.showWarningMessage(t('release.noPackageJson'));
+    return;
+  }
+
+  try {
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+    const currentArgs: string = pkg['chromium-args'] || '';
+
+    if (!currentArgs.includes('remote-debugging-port')) {
+      vscode.window.showInformationMessage(t('release.alreadyClean'));
+      return;
+    }
+
+    // Remove the remote-debugging-port arg
+    const cleaned = currentArgs
+      .replace(/--remote-debugging-port=\d+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (cleaned) {
+      pkg['chromium-args'] = cleaned;
+    } else {
+      delete pkg['chromium-args'];
+    }
+
+    fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf-8');
+    vscode.window.showInformationMessage(t('release.done'));
+  } catch {
+    vscode.window.showErrorMessage(t('release.error'));
   }
 }
 

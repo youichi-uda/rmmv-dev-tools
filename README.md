@@ -2,7 +2,7 @@
 
 # RMMZ Dev Tools — VS Code Extension for RPG Maker MZ Plugin Development
 
-The first comprehensive VS Code extension built specifically for RPG Maker MZ plugin developers. 14 free features + 14 Pro features covering annotation intelligence, testplay debugging, conflict detection, and more.
+The first comprehensive VS Code extension built specifically for RPG Maker MZ plugin developers. 14 free features + 17 Pro features covering annotation intelligence, testplay debugging, conflict detection, TypeScript workflow, and more.
 
 > Stop writing MZ plugins like it's 2010. Get syntax highlighting, validation, IntelliSense, and a full debugging workflow — all purpose-built for MZ's plugin annotation system.
 
@@ -44,9 +44,17 @@ RPG Maker MZ plugin development has had almost zero dedicated tooling. Existing 
 | **Database Browser** | Browse Actors, Items, Weapons, and all other database files in a sidebar tree |
 | **Note Tag Index** | Scans `data/*.json` and lists all note tags across your project |
 
-## Pro Features (14) — $12 one-time
+## Pro Features (17) — $12 one-time
 
 Activate with a Gumroad license key. No subscription. Works offline.
+
+### TypeScript Workflow (NEW in v1.1.0)
+
+| Feature | Description |
+|---------|-------------|
+| **TypeScript Setup** | One-click setup: generates `tsconfig.json`, `ts/plugins/`, and copies RMMZ type definitions (~72 classes, 250+ interfaces) for full IntelliSense on `$gameParty`, `Window_Base`, `Scene_Map`, etc. |
+| **TypeScript Auto-Build** | File watcher compiles `ts/plugins/*.ts` → `js/plugins/*.js` on save. Status bar shows build state. Errors appear in Problems panel. Cleans up `.js`/`.js.map` when `.ts` files are deleted. |
+| **TypeScript Templates & Snippets** | Plugin template wizard supports TypeScript output. 5 TS-specific snippets (`rmmz-alias` with `this:` type, `rmmz-command`, `rmmz-plugin`, etc.). Debugger setup includes source map support for `.ts` breakpoints. |
 
 ### Testplay & Debugging
 
@@ -77,6 +85,10 @@ Activate with a Gumroad license key. No subscription. Works offline.
 | **Class Hierarchy** | Searchable tree of RMMZ class inheritance — Scenes, Windows, Sprites, Game objects |
 | **Plugin Registry** | Check for plugin updates and view compatibility info |
 
+## Releasing Your Game
+
+> **Important:** Before distributing your game, run `RMMZ: Prepare for Release` from the Command Palette (or the sidebar). This removes the debug port (`--remote-debugging-port`) from `package.json` so your released game doesn't expose a debugging endpoint to players.
+
 ## Getting Started
 
 1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=abyo-software.rmmz-dev-tools)
@@ -89,7 +101,8 @@ Activate with a Gumroad license key. No subscription. Works offline.
 |---------|-------------|
 | `RMMZ: Setup IntelliSense` | Generate `jsconfig.json` for core script completion |
 | `RMMZ: Setup Debugger` | Generate `launch.json` for F5 debugging |
-| `RMMZ: New Plugin` | Scaffold a new plugin file |
+| `RMMZ: New Plugin` | Scaffold a new plugin file (JS or TS) |
+| `RMMZ: Setup TypeScript` | Set up TypeScript plugin development (Pro) |
 | `RMMZ: Activate Pro License` | Enter your Gumroad license key |
 
 ## Requirements
@@ -99,11 +112,11 @@ Activate with a Gumroad license key. No subscription. Works offline.
 
 ## Pro License
 
-Purchase a one-time license on [Gumroad](https://abyo-software.gumroad.com/) for $12+.
+Purchase a one-time license on [Gumroad](https://y1uda.gumroad.com/l/rmmz?wanted=true) for $12+.
 
 - One-time purchase, no subscription
 - Works offline after activation
-- 14 additional features unlocked immediately
+- 17 additional features unlocked immediately
 
 ## Support
 
