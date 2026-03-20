@@ -112,7 +112,7 @@ Activate with a Gumroad license key. No subscription. Works offline.
 
 ## Pro License
 
-Purchase a one-time license on [Gumroad](https://y1uda.gumroad.com/l/rmmz?wanted=true) for $12+.
+Purchase a one-time license on [Gumroad](https://y1uda.gumroad.com/l/rmmv?wanted=true) for $12+.
 
 - One-time purchase, no subscription
 - Works offline after activation
