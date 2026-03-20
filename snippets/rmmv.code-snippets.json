@@ -1,43 +1,51 @@
 {
-  "RMMZ: Alias Pattern": {
+  "RMMV: Alias Pattern": {
     "scope": "javascript",
-    "prefix": "rmmz-alias",
+    "prefix": "rmmv-alias",
     "description": "Alias an existing prototype method (safe override pattern)",
     "body": [
-      "const _${1:Class}_${2:method} = ${1:Class}.prototype.${2:method};",
+      "var _${1:Class}_${2:method} = ${1:Class}.prototype.${2:method};",
       "${1:Class}.prototype.${2:method} = function(${3}) {",
       "\t_${1:Class}_${2:method}.call(this${4:});",
       "\t$0",
       "};"
     ]
   },
-  "RMMZ: Register Plugin Command": {
+  "RMMV: Plugin Command Handler": {
     "scope": "javascript",
-    "prefix": "rmmz-command",
-    "description": "Register a plugin command with PluginManager",
+    "prefix": "rmmv-command",
+    "description": "Override Game_Interpreter.pluginCommand to handle plugin commands",
     "body": [
-      "PluginManager.registerCommand(PLUGIN_NAME, \"${1:commandName}\", (args) => {",
-      "\t$0",
-      "});"
+      "var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;",
+      "Game_Interpreter.prototype.pluginCommand = function(command, args) {",
+      "\t_Game_Interpreter_pluginCommand.call(this, command, args);",
+      "\tif (command === PLUGIN_NAME) {",
+      "\t\tswitch (args[0]) {",
+      "\t\t\tcase \"${1:commandName}\":",
+      "\t\t\t\t$0",
+      "\t\t\t\tbreak;",
+      "\t\t}",
+      "\t}",
+      "};"
     ]
   },
-  "RMMZ: Parameter Parsing": {
+  "RMMV: Parameter Parsing": {
     "scope": "javascript",
-    "prefix": "rmmz-param",
+    "prefix": "rmmv-param",
     "description": "Parse plugin parameters from the annotation block",
     "body": [
-      "const param = {",
+      "var param = {",
       "\t${1:key}: parameters[\"${1:key}\"] || \"${2:default}\",$0",
       "};"
     ]
   },
-  "RMMZ: Full Plugin Scaffold": {
+  "RMMV: Full Plugin Scaffold": {
     "scope": "javascript",
-    "prefix": "rmmz-plugin",
-    "description": "Complete plugin template with annotation block, parameters, and command",
+    "prefix": "rmmv-plugin",
+    "description": "Complete MV plugin template with annotation block and parameters",
     "body": [
       "/*:",
-      " * @target MZ",
+      " * @target MV",
       " * @plugindesc ${1:Plugin description}",
       " * @author ${2:Author}",
       " * @url ${3:https://}",
@@ -50,41 +58,29 @@
       " * @type ${7:string}",
       " * @default ${8:}",
       " * @desc ${9:Parameter description}",
-      " *",
-      " * @command ${10:commandName}",
-      " * @text ${11:Command Label}",
-      " * @desc ${12:Command description}",
-      " *",
-      " * @arg ${13:argName}",
-      " * @text ${14:Argument Label}",
-      " * @type ${15:string}",
-      " * @default ${16:}",
-      " * @desc ${17:Argument description}",
       " */",
       "",
-      "(() => {",
+      "(function() {",
       "\t\"use strict\";",
       "",
-      "\tconst PLUGIN_NAME = \"${18:${TM_FILENAME_BASE}}\";",
-      "\tconst parameters = PluginManager.parameters(PLUGIN_NAME);",
+      "\tvar PLUGIN_NAME = \"${10:${TM_FILENAME_BASE}}\";",
+      "\tvar parameters = PluginManager.parameters(PLUGIN_NAME);",
       "",
-      "\tconst param = {",
+      "\tvar param = {",
       "\t\t${5:paramName}: parameters[\"${5:paramName}\"] || \"${8:}\",",
       "\t};",
       "",
-      "\tPluginManager.registerCommand(PLUGIN_NAME, \"${10:commandName}\", (args) => {",
-      "\t\t$0",
-      "\t});",
+      "\t$0",
       "})();"
     ]
   },
-  "RMMZ: Scene Class": {
+  "RMMV: Scene Class": {
     "scope": "javascript",
-    "prefix": "rmmz-scene",
+    "prefix": "rmmv-scene",
     "description": "Scene class template extending Scene_Base",
     "body": [
       "function Scene_${1:Custom}() {",
-      "\tthis.initialize(...arguments);",
+      "\tthis.initialize.apply(this, arguments);",
       "}",
       "",
       "Scene_${1:Custom}.prototype = Object.create(Scene_Base.prototype);",
@@ -108,20 +104,20 @@
       "};"
     ]
   },
-  "RMMZ: Window Class": {
+  "RMMV: Window Class": {
     "scope": "javascript",
-    "prefix": "rmmz-window",
-    "description": "Window class template extending Window_Base",
+    "prefix": "rmmv-window",
+    "description": "Window class template extending Window_Base (MV x,y,width,height constructor)",
     "body": [
-      "function Window_${1:Custom}(rect) {",
-      "\tthis.initialize(rect);",
+      "function Window_${1:Custom}(x, y, width, height) {",
+      "\tthis.initialize(x, y, width, height);",
       "}",
       "",
       "Window_${1:Custom}.prototype = Object.create(Window_Base.prototype);",
       "Window_${1:Custom}.prototype.constructor = Window_${1:Custom};",
       "",
-      "Window_${1:Custom}.prototype.initialize = function(rect) {",
-      "\tWindow_Base.prototype.initialize.call(this, rect);",
+      "Window_${1:Custom}.prototype.initialize = function(x, y, width, height) {",
+      "\tWindow_Base.prototype.initialize.call(this, x, y, width, height);",
       "\t$0",
       "};",
       "",
@@ -135,13 +131,13 @@
       "};"
     ]
   },
-  "RMMZ: Sprite Class": {
+  "RMMV: Sprite Class": {
     "scope": "javascript",
-    "prefix": "rmmz-sprite",
+    "prefix": "rmmv-sprite",
     "description": "Sprite class template extending Sprite",
     "body": [
       "function Sprite_${1:Custom}() {",
-      "\tthis.initialize(...arguments);",
+      "\tthis.initialize.apply(this, arguments);",
       "}",
       "",
       "Sprite_${1:Custom}.prototype = Object.create(Sprite.prototype);",
@@ -161,12 +157,12 @@
       "};"
     ]
   },
-  "RMMZ: IIFE Wrapper": {
+  "RMMV: IIFE Wrapper": {
     "scope": "javascript",
-    "prefix": "rmmz-iife",
+    "prefix": "rmmv-iife",
     "description": "Immediately Invoked Function Expression wrapper",
     "body": [
-      "(() => {",
+      "(function() {",
       "\t\"use strict\";",
       "",
       "\t$0",

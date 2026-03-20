@@ -134,7 +134,7 @@ function parseAnnotation(lines: string[]): AnnotationData {
   let currentCommand: CommandInfo | undefined;
   let currentArg: ArgInfo | undefined;
 
-  const tagRegex = /^\s*\*?\s*@(\w+)\s*(.*)?$/;
+  const tagRegex = /^\s*\*?\s*@(\w+)\s*(.*?)?\s*$/;
 
   for (const rawLine of lines) {
     const m = rawLine.match(tagRegex);
@@ -557,7 +557,7 @@ describe('Annotation Preview - parseAnnotation edge cases', () => {
 
   it('should ignore @target tag', () => {
     const lines = [
-      ' * @target MZ',
+      ' * @target MV',
       ' * @plugindesc Test',
     ];
     const data = parseAnnotation(lines);

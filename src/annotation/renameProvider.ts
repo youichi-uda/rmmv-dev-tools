@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import { isProLicensed } from '../license/gumroad';
 
 /**
- * Provides rename support for @param and @arg names in RMMZ plugin
- * annotation blocks.  On rename it updates:
- *   1. The @param / @arg tag value itself
+ * Provides rename support for @param names in RMMV plugin annotation blocks.
+ * On rename it updates:
+ *   1. The @param tag value itself
  *   2. Any @parent references to that name in the same block
  *   3. Corresponding parameters["paramName"] strings in the JS code
  *      below the annotation block
@@ -14,8 +14,8 @@ import { isProLicensed } from '../license/gumroad';
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Match `@param paramName` or `@arg argName`, capturing the name. */
-const PARAM_TAG_RE = /^\s*\*?\s*@(param|arg)\s+(\S+)/;
+/** Match `@param paramName`, capturing the name. */
+const PARAM_TAG_RE = /^\s*\*?\s*@(param)\s+(\S+)/;
 
 /** Match `@parent parentName`, capturing the name. */
 const PARENT_TAG_RE = /^\s*\*?\s*@parent\s+(\S+)/;
@@ -90,7 +90,7 @@ function getParamAtPosition(
 // RenameProvider
 // ---------------------------------------------------------------------------
 
-export class RmmzParamRenameProvider implements vscode.RenameProvider {
+export class RmmvParamRenameProvider implements vscode.RenameProvider {
   /**
    * Validate that the cursor is on a renameable position.
    */
@@ -101,7 +101,7 @@ export class RmmzParamRenameProvider implements vscode.RenameProvider {
   ): vscode.ProviderResult<vscode.Range | { range: vscode.Range; placeholder: string }> {
     const info = getParamAtPosition(document, position);
     if (!info) {
-      throw new Error('Cannot rename here — cursor must be on a @param or @arg name.');
+      throw new Error('Cannot rename here — cursor must be on a @param name.');
     }
     return { range: info.range, placeholder: info.name };
   }
@@ -209,6 +209,6 @@ export function activate(context: vscode.ExtensionContext): void {
   ];
 
   context.subscriptions.push(
-    vscode.languages.registerRenameProvider(selector, new RmmzParamRenameProvider())
+    vscode.languages.registerRenameProvider(selector, new RmmvParamRenameProvider())
   );
 }

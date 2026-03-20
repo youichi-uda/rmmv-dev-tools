@@ -1,17 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { Position, CompletionItemKind } from 'vscode';
-import { RmmzCompletionProvider } from '../annotation/completionProvider';
-import { TOP_LEVEL_TAGS, PARAM_TAGS, COMMAND_TAGS, TYPE_VALUES } from '../annotation/tags';
+import { RmmvCompletionProvider } from '../annotation/completionProvider';
+import { TOP_LEVEL_TAGS, PARAM_TAGS, TYPE_VALUES } from '../annotation/tags';
 import { mockDocument, mockCancellationToken, mockCompletionContext } from './helpers';
 
 function complete(content: string, line: number, character: number) {
-  const provider = new RmmzCompletionProvider();
+  const provider = new RmmvCompletionProvider();
   const doc = mockDocument(content);
   const pos = new Position(line, character);
   return provider.provideCompletionItems(doc, pos, mockCancellationToken(), mockCompletionContext());
 }
 
-describe('RmmzCompletionProvider', () => {
+describe('RmmvCompletionProvider', () => {
   it('returns undefined when outside an annotation block', () => {
     const result = complete('// just code\nvar x = 1;', 1, 5);
     expect(result).toBeUndefined();
@@ -45,21 +45,20 @@ describe('RmmzCompletionProvider', () => {
     expect(labels).not.toContain('@plugindesc');
   });
 
-  it('returns command + param tags inside @command scope', () => {
+  it('returns param tags (not top-level) inside nested @param scope', () => {
     const content = `/*:
  * @plugindesc Test
- * @command DoSomething
+ * @param myParam
+ * @type number
  * @`;
-    const items = complete(content, 3, 4);
+    const items = complete(content, 4, 4);
     expect(items).toBeDefined();
     const labels = items!.map(i => i.label);
-    for (const tag of COMMAND_TAGS) {
-      expect(labels).toContain(`@${tag}`);
-    }
-    // command scope also includes param tags
     for (const tag of PARAM_TAGS) {
       expect(labels).toContain(`@${tag}`);
     }
+    // Should NOT contain top-level-only tags like @plugindesc
+    expect(labels).not.toContain('@plugindesc');
   });
 
   it('returns @type value completions after @type ', () => {

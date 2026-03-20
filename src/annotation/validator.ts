@@ -3,18 +3,13 @@ import { t } from '../i18n';
 import {
   TOP_LEVEL_TAGS,
   PARAM_TAGS,
-  COMMAND_TAGS,
-  ARG_TAGS,
   TYPE_VALUES,
   TYPE_SPECIFIC_TAGS,
 } from './tags';
 
-const ALL_KNOWN_TAGS = new Set([
+const ALL_KNOWN_TAGS = new Set<string>([
   ...TOP_LEVEL_TAGS,
   ...PARAM_TAGS,
-  ...COMMAND_TAGS,
-  ...ARG_TAGS,
-  'arg',
 ]);
 
 interface AnnotationBlock {
@@ -24,7 +19,7 @@ interface AnnotationBlock {
 }
 
 /**
- * Finds all RMMZ annotation blocks in a document.
+ * Finds all RMMV annotation blocks in a document.
  */
 function findAnnotationBlocks(document: vscode.TextDocument): AnnotationBlock[] {
   const blocks: AnnotationBlock[] = [];
@@ -55,10 +50,10 @@ function findAnnotationBlocks(document: vscode.TextDocument): AnnotationBlock[] 
   return blocks;
 }
 
-type Scope = 'top' | 'param' | 'command' | 'arg';
+type Scope = 'top' | 'param';
 
 /**
- * Validates RMMZ annotation blocks and returns diagnostics.
+ * Validates RMMV annotation blocks and returns diagnostics.
  */
 export function validateDocument(document: vscode.TextDocument): vscode.Diagnostic[] {
   const diagnostics: vscode.Diagnostic[] = [];
@@ -94,12 +89,6 @@ function validateBlock(
     // Track scope changes
     if (tag === 'param') {
       scope = 'param';
-      currentType = undefined;
-    } else if (tag === 'command') {
-      scope = 'command';
-      currentType = undefined;
-    } else if (tag === 'arg') {
-      scope = 'arg';
       currentType = undefined;
     } else if ((TOP_LEVEL_TAGS as readonly string[]).includes(tag)) {
       scope = 'top';
@@ -176,31 +165,16 @@ function validateTagInScope(
   diagnostics: vscode.Diagnostic[]
 ): void {
   const paramTags = new Set<string>(PARAM_TAGS);
-  const commandTags = new Set<string>(COMMAND_TAGS);
   const topTags = new Set<string>(TOP_LEVEL_TAGS);
 
   // Tags that define scope are always valid
-  if (tag === 'param' || tag === 'command' || tag === 'arg') return;
+  if (tag === 'param') return;
 
   switch (scope) {
     case 'param':
       if (!paramTags.has(tag)) {
         diagnostics.push(
           new vscode.Diagnostic(range, t('validator.notValidInParam', tag), vscode.DiagnosticSeverity.Warning)
-        );
-      }
-      break;
-    case 'command':
-      if (!commandTags.has(tag) && tag !== 'arg') {
-        diagnostics.push(
-          new vscode.Diagnostic(range, t('validator.notValidInCommand', tag), vscode.DiagnosticSeverity.Warning)
-        );
-      }
-      break;
-    case 'arg':
-      if (!paramTags.has(tag)) {
-        diagnostics.push(
-          new vscode.Diagnostic(range, t('validator.notValidInArg', tag), vscode.DiagnosticSeverity.Warning)
         );
       }
       break;
@@ -214,7 +188,7 @@ function validateTagInScope(
   }
 
   // Warn about type-specific tags used with wrong type
-  if (scope === 'param' || scope === 'arg') {
+  if (scope === 'param') {
     if (currentType) {
       const specificTags = TYPE_SPECIFIC_TAGS[currentType];
       const allSpecificTags = new Set(Object.values(TYPE_SPECIFIC_TAGS).flat());
@@ -240,10 +214,10 @@ function getExpectedTypes(tag: string): string {
 }
 
 /**
- * Creates and manages a diagnostic collection for RMMZ annotations.
+ * Creates and manages a diagnostic collection for RMMV annotations.
  */
 export function createValidator(context: vscode.ExtensionContext): vscode.DiagnosticCollection {
-  const diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmz');
+  const diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmv');
   context.subscriptions.push(diagnosticCollection);
 
   // Validate on open and change

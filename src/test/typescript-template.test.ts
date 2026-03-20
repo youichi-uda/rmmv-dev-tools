@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest';
  *
  * The buildTypeScriptTemplate function is module-private.
  * We replicate the template generation logic here to verify
- * the output structure matches RMMZ plugin conventions.
+ * the output structure matches RMMV plugin conventions.
  */
 
 // ── Replicated template generation logic ──
@@ -25,7 +25,7 @@ function buildTypeScriptTemplate(info: PluginInfo): string {
   const lines: string[] = [];
 
   lines.push('/*:');
-  lines.push(' * @target MZ');
+  lines.push(' * @target MV');
   lines.push(` * @plugindesc ${info.description}`);
   lines.push(` * @author ${info.author}`);
   if (info.url) {
@@ -130,9 +130,9 @@ describe('TypeScript Template - annotation block', () => {
     expect(template.startsWith('/*:')).toBe(true);
   });
 
-  it('should include @target MZ', () => {
+  it('should include @target MV', () => {
     const template = buildTypeScriptTemplate(info);
-    expect(template).toContain('@target MZ');
+    expect(template).toContain('@target MV');
   });
 
   it('should include @plugindesc', () => {
@@ -304,9 +304,9 @@ describe('TypeScript Template - annotation preservation', () => {
     const blockMatch = template.match(/\/\*:([\s\S]*?)\*\//);
     expect(blockMatch).not.toBeNull();
 
-    // Verify it contains the essential RMMZ tags
+    // Verify it contains the essential RMMV tags
     const block = blockMatch![1];
-    expect(block).toContain('@target MZ');
+    expect(block).toContain('@target MV');
     expect(block).toContain('@plugindesc');
     expect(block).toContain('@param');
     expect(block).toContain('@command');

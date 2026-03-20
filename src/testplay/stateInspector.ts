@@ -363,7 +363,7 @@ class GameStateProvider implements vscode.TreeDataProvider<GameStateItem> {
 export function activate(context: vscode.ExtensionContext): void {
   const provider = new GameStateProvider();
 
-  const treeView = vscode.window.createTreeView('rmmzGameState', {
+  const treeView = vscode.window.createTreeView('rmmvGameState', {
     treeDataProvider: provider,
     showCollapseAll: true,
   });
@@ -371,16 +371,16 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Refresh command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.refreshGameState', () => provider.refresh())
+    vscode.commands.registerCommand('rmmv.refreshGameState', () => provider.refresh())
   );
 
   // Auto-refresh toggle
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.toggleAutoRefreshGameState', () => {
+    vscode.commands.registerCommand('rmmv.toggleAutoRefreshGameState', () => {
       const newState = !provider.isAutoRefreshEnabled();
       provider.setAutoRefresh(newState);
       vscode.window.showInformationMessage(
-        `RMMZ Game State auto-refresh ${newState ? 'enabled' : 'disabled'}.`
+        `RMMV Game State auto-refresh ${newState ? 'enabled' : 'disabled'}.`
       );
     })
   );

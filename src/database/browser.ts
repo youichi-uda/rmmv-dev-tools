@@ -104,7 +104,7 @@ class DatabaseCache {
 // Virtual document provider for entry detail view
 // ---------------------------------------------------------------------------
 
-const SCHEME = 'rmmz-db';
+const SCHEME = 'rmmv-db';
 
 class DatabaseDocumentProvider implements vscode.TextDocumentContentProvider {
   private cache: DatabaseCache;
@@ -229,7 +229,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Register tree view
   const treeProvider = new DatabaseBrowserProvider(cache);
-  const treeView = vscode.window.createTreeView('rmmzDatabaseBrowser', {
+  const treeView = vscode.window.createTreeView('rmmvDatabaseBrowser', {
     treeDataProvider: treeProvider,
     showCollapseAll: true,
   });
@@ -237,7 +237,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Refresh command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.refreshDatabase', () => treeProvider.refresh())
+    vscode.commands.registerCommand('rmmv.refreshDatabase', () => treeProvider.refresh())
   );
 
   // Auto-refresh when data files change

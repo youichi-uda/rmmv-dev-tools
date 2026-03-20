@@ -47,7 +47,7 @@ function buildTsConfig(): TsConfigResult {
 // ── Tests ──
 
 describe('TypeScript Setup - tsconfig generation', () => {
-  it('should set module to "none" for RMMZ global scope plugins', () => {
+  it('should set module to "none" for RMMV global scope plugins', () => {
     const config = buildTsConfig();
     expect(config.compilerOptions.module).toBe('none');
   });
@@ -72,7 +72,7 @@ describe('TypeScript Setup - tsconfig generation', () => {
     expect(config.compilerOptions.rootDir).toBe('ts');
   });
 
-  it('should target ES2020 matching RMMZ NW.js runtime', () => {
+  it('should target ES2020 matching RMMV NW.js runtime', () => {
     const config = buildTsConfig();
     expect(config.compilerOptions.target).toBe('ES2020');
   });
@@ -99,7 +99,7 @@ describe('TypeScript Setup - tsconfig generation', () => {
     expect(config.compilerOptions.strict).toBe(true);
   });
 
-  it('should include DOM lib for browser APIs used by RMMZ', () => {
+  it('should include DOM lib for browser APIs used by RMMV', () => {
     const config = buildTsConfig();
     expect(config.compilerOptions.lib).toContain('DOM');
     expect(config.compilerOptions.lib).toContain('ES2020');
@@ -154,8 +154,8 @@ describe('TypeScript Setup - type definition file filtering', () => {
 
   it('should only copy .d.ts files', () => {
     const files = [
-      'rmmz_core.d.ts',
-      'rmmz_managers.d.ts',
+      'rmmv_core.d.ts',
+      'rmmv_managers.d.ts',
       'pixi.d.ts',
       'README.md',
       '.gitkeep',
@@ -163,7 +163,7 @@ describe('TypeScript Setup - type definition file filtering', () => {
     ];
 
     const result = filterDtsFiles(files);
-    expect(result).toEqual(['rmmz_core.d.ts', 'rmmz_managers.d.ts', 'pixi.d.ts']);
+    expect(result).toEqual(['rmmv_core.d.ts', 'rmmv_managers.d.ts', 'pixi.d.ts']);
   });
 
   it('should handle empty directory', () => {

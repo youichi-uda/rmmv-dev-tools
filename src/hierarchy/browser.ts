@@ -13,7 +13,7 @@ interface ClassInfo {
   methods: MethodInfo[];
   filePath: string;
   line: number;
-  source: string; // e.g. 'rmmz_core.js' or 'MyPlugin.js'
+  source: string; // e.g. 'rmmv_core.js' or 'MyPlugin.js'
 }
 
 interface MethodInfo {
@@ -65,13 +65,13 @@ export class HierarchyItem extends vscode.TreeItem {
 // Class scanner
 // ---------------------------------------------------------------------------
 
-const RMMZ_FILES = [
-  'rmmz_core.js',
-  'rmmz_managers.js',
-  'rmmz_objects.js',
-  'rmmz_scenes.js',
-  'rmmz_sprites.js',
-  'rmmz_windows.js',
+const RMMV_FILES = [
+  'rpg_core.js',
+  'rpg_managers.js',
+  'rpg_objects.js',
+  'rpg_scenes.js',
+  'rpg_sprites.js',
+  'rpg_windows.js',
 ];
 
 class ClassScanner {
@@ -94,8 +94,8 @@ class ClassScanner {
       const jsDir = path.join(folder.uri.fsPath, 'js');
       if (!fs.existsSync(jsDir)) continue;
 
-      // Scan core RMMZ files
-      for (const file of RMMZ_FILES) {
+      // Scan core RMMV files
+      for (const file of RMMV_FILES) {
         const filePath = path.join(jsDir, file);
         if (fs.existsSync(filePath)) {
           this.scanFile(filePath, file);
@@ -154,11 +154,16 @@ class ClassScanner {
       }
 
       // Constructor pattern: function Foo() { this.initialize.apply(this, arguments); }
-      const ctorMatch = line.match(/^\s*function\s+(\w+)\s*\(\)\s*\{\s*this\.initialize\.apply\s*\(/);
+      // Supports both single-line and multi-line (MV core files split across two lines)
+      const ctorMatch = line.match(/^\s*function\s+(\w+)\s*\(\)\s*\{/);
       if (ctorMatch) {
-        const name = ctorMatch[1];
-        this.ensureClass(name, filePath, source, i + 1);
-        continue;
+        // Check if this.initialize.apply is on this line or the next
+        const nextLine = i + 1 < lines.length ? lines[i + 1] : '';
+        if (/this\.initialize\.apply\s*\(/.test(line) || /this\.initialize\.apply\s*\(/.test(nextLine)) {
+          const name = ctorMatch[1];
+          this.ensureClass(name, filePath, source, i + 1);
+          continue;
+        }
       }
 
       // Prototype chain: Foo.prototype = Object.create(Bar.prototype)
@@ -276,7 +281,7 @@ export class HierarchyBrowserProvider implements vscode.TreeDataProvider<Hierarc
     if (classes.size === 0 && !element) {
       const msg = new HierarchyItem(
         'message',
-        'No RMMZ classes found (open an RPG Maker MZ project)',
+        'No RMMV classes found (open an RPG Maker MV project)',
         vscode.TreeItemCollapsibleState.None
       );
       msg.iconPath = new vscode.ThemeIcon('info');
@@ -479,7 +484,7 @@ export class HierarchyBrowserProvider implements vscode.TreeDataProvider<Hierarc
 export function activate(context: vscode.ExtensionContext): void {
   const provider = new HierarchyBrowserProvider();
 
-  const treeView = vscode.window.createTreeView('rmmzClassHierarchy', {
+  const treeView = vscode.window.createTreeView('rmmvClassHierarchy', {
     treeDataProvider: provider,
     showCollapseAll: true,
   });
@@ -487,16 +492,16 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Refresh command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.refreshHierarchy', () => provider.refresh())
+    vscode.commands.registerCommand('rmmv.refreshHierarchy', () => provider.refresh())
   );
 
   // Search command (QuickPick)
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.searchHierarchy', async () => {
+    vscode.commands.registerCommand('rmmv.searchHierarchy', async () => {
       if (!requirePro('Class Hierarchy')) return;
       const allClasses = provider.getAllClassNames();
       if (allClasses.length === 0) {
-        vscode.window.showInformationMessage('No RMMZ classes found. Open an RPG Maker MZ project first.');
+        vscode.window.showInformationMessage('No RMMV classes found. Open an RPG Maker MV project first.');
         return;
       }
 
@@ -508,7 +513,7 @@ export function activate(context: vscode.ExtensionContext): void {
       }));
 
       const selected = await vscode.window.showQuickPick(picks, {
-        placeHolder: 'Search RMMZ classes...',
+        placeHolder: 'Search RMMV classes...',
         matchOnDescription: true,
       });
 

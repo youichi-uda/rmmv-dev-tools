@@ -171,7 +171,7 @@ async function checkAssets(
           t('asset.missingDir', ref.dir, fullDirPath),
           vscode.DiagnosticSeverity.Warning
         );
-        diag.source = 'rmmz-assets';
+        diag.source = 'rmmv-assets';
         fileDiags.push(diag);
 
         outputChannel.appendLine(
@@ -182,7 +182,7 @@ async function checkAssets(
 
       // Check default file existence
       if (ref.defaultFile && ref.defaultLine !== undefined) {
-        // RMMZ file params don't include the extension in the default value,
+        // RMMV file params don't include the extension in the default value,
         // so we check if any file with that base name exists in the dir.
         const fullDirForDefault = path.join(projectRoot, dirPath);
         let defaultExists = false;
@@ -211,7 +211,7 @@ async function checkAssets(
             t('asset.missingFile', ref.defaultFile, ref.dir),
             vscode.DiagnosticSeverity.Warning
           );
-          diag.source = 'rmmz-assets';
+          diag.source = 'rmmv-assets';
           fileDiags.push(diag);
 
           outputChannel.appendLine(
@@ -242,14 +242,14 @@ async function checkAssets(
  * Call from the main `activate` function.
  */
 export function activate(context: vscode.ExtensionContext): void {
-  const diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmz-assets');
+  const diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmv-assets');
   context.subscriptions.push(diagnosticCollection);
 
-  const outputChannel = vscode.window.createOutputChannel('RMMZ Assets');
+  const outputChannel = vscode.window.createOutputChannel('RMMV Assets');
   context.subscriptions.push(outputChannel);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.checkAssets', () => {
+    vscode.commands.registerCommand('rmmv.checkAssets', () => {
       return checkAssets(diagnosticCollection, outputChannel);
     })
   );

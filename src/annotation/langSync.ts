@@ -14,7 +14,7 @@ interface AnnotationBlock {
 }
 
 interface StructuralElement {
-  tag: string; // 'param', 'command', 'arg'
+  tag: string; // 'param'
   name: string;
   line: number;
 }
@@ -23,9 +23,6 @@ interface BlockStructure {
   locale: string;
   startLine: number;
   params: StructuralElement[];
-  commands: StructuralElement[];
-  /** Map of command name -> list of arg elements */
-  argsByCommand: Map<string, StructuralElement[]>;
 }
 
 // ---------------------------------------------------------------------------
@@ -33,7 +30,7 @@ interface BlockStructure {
 // ---------------------------------------------------------------------------
 
 /**
- * Finds all RMMZ annotation blocks in a document, including locale variants.
+ * Finds all RMMV annotation blocks in a document, including locale variants.
  * Skips `/*~struct~` blocks.
  */
 function findAnnotationBlocks(document: vscode.TextDocument): AnnotationBlock[] {
@@ -82,22 +79,18 @@ function findAnnotationBlocks(document: vscode.TextDocument): AnnotationBlock[] 
 // ---------------------------------------------------------------------------
 
 /**
- * Extracts the structural elements (params, commands, args) from an
- * annotation block. Only captures names, not text content.
+ * Extracts the structural elements (params) from an annotation block.
+ * MV has no @command/@arg, so only @param is tracked.
  */
 function extractStructure(
   document: vscode.TextDocument,
   block: AnnotationBlock
 ): BlockStructure {
   const params: StructuralElement[] = [];
-  const commands: StructuralElement[] = [];
-  const argsByCommand = new Map<string, StructuralElement[]>();
-
-  let currentCommand: string | undefined;
 
   for (let i = block.startLine; i <= block.endLine; i++) {
     const lineText = document.lineAt(i).text;
-    const tagMatch = lineText.match(/^\s*\*?\s*@(\w+)\s*(.*)?$/);
+    const tagMatch = lineText.match(/^\s*\*?\s*@(\w+)\s*(.*?)?\s*$/);
     if (!tagMatch) continue;
 
     const tag = tagMatch[1];
@@ -105,21 +98,6 @@ function extractStructure(
 
     if (tag === 'param') {
       params.push({ tag: 'param', name: rest, line: i });
-    } else if (tag === 'command') {
-      currentCommand = rest;
-      commands.push({ tag: 'command', name: rest, line: i });
-      if (!argsByCommand.has(rest)) {
-        argsByCommand.set(rest, []);
-      }
-    } else if (tag === 'arg') {
-      if (currentCommand !== undefined) {
-        let args = argsByCommand.get(currentCommand);
-        if (!args) {
-          args = [];
-          argsByCommand.set(currentCommand, args);
-        }
-        args.push({ tag: 'arg', name: rest, line: i });
-      }
     }
   }
 
@@ -127,8 +105,6 @@ function extractStructure(
     locale: block.locale,
     startLine: block.startLine,
     params,
-    commands,
-    argsByCommand,
   };
 }
 
@@ -141,8 +117,6 @@ function compareStructures(
   localeBlock: BlockStructure,
   diagnostics: vscode.Diagnostic[]
 ): void {
-  const localeLabel = localeBlock.locale || 'primary';
-
   // Compare params
   const primaryParamNames = primary.params.map(p => p.name);
   const localeParamNames = localeBlock.params.map(p => p.name);
@@ -188,91 +162,6 @@ function compareStructures(
       )
     );
   }
-
-  // Compare commands
-  const primaryCmdNames = primary.commands.map(c => c.name);
-  const localeCmdNames = localeBlock.commands.map(c => c.name);
-
-  for (const c of primary.commands) {
-    if (!localeCmdNames.includes(c.name)) {
-      const range = new vscode.Range(localeBlock.startLine, 0, localeBlock.startLine, 10);
-      diagnostics.push(
-        new vscode.Diagnostic(
-          range,
-          t('langSync.missingCommand', localeBlock.locale, c.name),
-          vscode.DiagnosticSeverity.Warning
-        )
-      );
-    }
-  }
-
-  for (const c of localeBlock.commands) {
-    if (!primaryCmdNames.includes(c.name)) {
-      const range = new vscode.Range(c.line, 0, c.line, 999);
-      diagnostics.push(
-        new vscode.Diagnostic(
-          range,
-          t('langSync.extraCommand', c.name, localeBlock.locale),
-          vscode.DiagnosticSeverity.Warning
-        )
-      );
-    }
-  }
-
-  // Compare args per command
-  for (const cmdName of primaryCmdNames) {
-    if (!localeCmdNames.includes(cmdName)) continue;
-
-    const primaryArgs = primary.argsByCommand.get(cmdName) ?? [];
-    const localeArgs = localeBlock.argsByCommand.get(cmdName) ?? [];
-    const primaryArgNames = primaryArgs.map(a => a.name);
-    const localeArgNames = localeArgs.map(a => a.name);
-
-    for (const a of primaryArgs) {
-      if (!localeArgNames.includes(a.name)) {
-        // Find the command line in locale block for context
-        const cmdLine = localeBlock.commands.find(c => c.name === cmdName);
-        const line = cmdLine ? cmdLine.line : localeBlock.startLine;
-        const range = new vscode.Range(line, 0, line, 999);
-        diagnostics.push(
-          new vscode.Diagnostic(
-            range,
-            t('langSync.missingArg', cmdName, localeBlock.locale, a.name),
-            vscode.DiagnosticSeverity.Warning
-          )
-        );
-      }
-    }
-
-    for (const a of localeArgs) {
-      if (!primaryArgNames.includes(a.name)) {
-        const range = new vscode.Range(a.line, 0, a.line, 999);
-        diagnostics.push(
-          new vscode.Diagnostic(
-            range,
-            t('langSync.extraArg', a.name, localeBlock.locale, cmdName),
-            vscode.DiagnosticSeverity.Warning
-          )
-        );
-      }
-    }
-
-    // Order check for args
-    const commonArgs = primaryArgNames.filter(n => localeArgNames.includes(n));
-    const localeCommonArgs = localeArgNames.filter(n => primaryArgNames.includes(n));
-    if (commonArgs.length > 1 && commonArgs.join(',') !== localeCommonArgs.join(',')) {
-      const cmdLine = localeBlock.commands.find(c => c.name === cmdName);
-      const line = cmdLine ? cmdLine.line : localeBlock.startLine;
-      const range = new vscode.Range(line, 0, line, 999);
-      diagnostics.push(
-        new vscode.Diagnostic(
-          range,
-          t('langSync.argOrder', cmdName, localeBlock.locale),
-          vscode.DiagnosticSeverity.Information
-        )
-      );
-    }
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -312,7 +201,7 @@ function validateDocument(document: vscode.TextDocument): vscode.Diagnostic[] {
  * Call from the main `activate` function.
  */
 export function activate(context: vscode.ExtensionContext): vscode.DiagnosticCollection {
-  const diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmz-lang-sync');
+  const diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmv-lang-sync');
   context.subscriptions.push(diagnosticCollection);
 
   const validate = (document: vscode.TextDocument) => {

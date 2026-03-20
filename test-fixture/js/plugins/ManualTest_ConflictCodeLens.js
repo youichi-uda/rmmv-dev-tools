@@ -50,9 +50,9 @@
   // ------------------------------------------------------------------
   // テスト 1: 競合検出の出力
   // 手順:
-  //   1. コマンドパレット →「RMMZ: Show Plugin Conflicts」を実行する
-  //      （コマンドID: rmmz.showConflicts）
-  //   2.「RMMZ Conflicts」出力チャンネルを確認する
+  //   1. コマンドパレット →「RMMV: Show Plugin Conflicts」を実行する
+  //      （コマンドID: rmmv.showConflicts）
+  //   2.「RMMV Conflicts」出力チャンネルを確認する
   // 期待結果: "=== Conflicts (1) ===" セクションに以下が表示される:
   //   Scene_Battle.prototype.start
   //     - SamplePlugin line NN (alias)
@@ -65,7 +65,7 @@
   // 手順: 下の「Scene_Battle.prototype.start = function」行を確認する
   // 期待結果: 行の上に CodeLens が表示される:
   //   "Override: also modified by [SamplePlugin]"
-  //   クリックすると rmmz.showConflicts が実行される
+  //   クリックすると rmmv.showConflicts が実行される
   // 結果: [ PASS / FAIL ]
   // ------------------------------------------------------------------
 

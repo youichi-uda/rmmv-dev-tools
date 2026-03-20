@@ -168,7 +168,7 @@ export class NoteTagProvider implements vscode.TreeDataProvider<NoteTagItem> {
 export function activate(context: vscode.ExtensionContext): void {
   const provider = new NoteTagProvider();
 
-  const treeView = vscode.window.createTreeView('rmmzNoteTagIndex', {
+  const treeView = vscode.window.createTreeView('rmmvNoteTagIndex', {
     treeDataProvider: provider,
     showCollapseAll: true,
   });
@@ -176,7 +176,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Refresh command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.refreshNoteTags', () => provider.refresh())
+    vscode.commands.registerCommand('rmmv.refreshNoteTags', () => provider.refresh())
   );
 
   // Auto-refresh when data files change

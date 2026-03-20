@@ -63,7 +63,7 @@ describe('Auto-Build Cleanup - path mapping', () => {
     // ts/typings/ maps to js/typings/ which doesn't exist, but the path
     // itself is valid (inside ts/). This is fine — fs.existsSync in the
     // actual code will prevent deletion of non-existent files.
-    const result = mapTsToOutputPaths('/project/ts/typings/rmmz/rmmz_core.d.ts', root);
+    const result = mapTsToOutputPaths('/project/ts/typings/rmmv/rmmv_core.d.ts', root);
     expect(result).not.toBeNull();
     // The .js path would be in js/typings/ which won't exist — harmless
     expect(result!.jsPath).toContain('typings');

@@ -7,7 +7,7 @@
       "request": "launch",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "D:\\dev\\rpgmaker\\rpgmaker-mcp-private\\test-projects\\test-mz"
+        "D:\\dev\\rpgmaker\\rpgmaker-mcp-private\\test-projects\\test-mv"
       ]
     }
   ]

@@ -25,7 +25,7 @@ function buildTemplate(info: PluginInfo): string {
   const lines: string[] = [];
 
   lines.push('/*:');
-  lines.push(' * @target MZ');
+  lines.push(' * @target MV');
   lines.push(` * @plugindesc ${info.description}`);
   lines.push(` * @author ${info.author}`);
   if (info.url) {
@@ -159,8 +159,8 @@ describe('JS Template - annotation block', () => {
     expect(template.startsWith('/*:')).toBe(true);
   });
 
-  it('should include @target MZ', () => {
-    expect(template).toContain('@target MZ');
+  it('should include @target MV', () => {
+    expect(template).toContain('@target MV');
   });
 
   it('should include @plugindesc, @author', () => {

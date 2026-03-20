@@ -1,11 +1,11 @@
 ================================================================================
-  RMMZ Dev Tools -- 手動テスト計画
+  RMMV Dev Tools -- 手動テスト計画
 ================================================================================
 
 前提条件:
-  - RMMZ Dev Tools 拡張が有効（F5 デバッグ or インストール済み）
+  - RMMV Dev Tools 拡張が有効（F5 デバッグ or インストール済み）
   - test-fixture/ をワークスペースとして開く
-  - デバッグコンソールに "RMMZ Dev Tools activated" が出ること
+  - デバッグコンソールに "RMMV Dev Tools activated" が出ること
 
 ================================================================================
   A~H: テストファイルで実施（js/plugins/ManualTest_*.js）
@@ -28,30 +28,30 @@
 
   #   コマンド                              確認内容                                    [ ]
   --- ------------------------------------- ------------------------------------------- ---
-  I1  RMMZ: Setup IntelliSense              jsconfig.json が生成される                  [ ]
-  I2  RMMZ: Setup Debugger (NW.js)          .vscode/launch.json が生成される             [ ]
-  I3  RMMZ: New Plugin                      対話プロンプト → .js ファイル生成            [ ]
-  I4  RMMZ: Preview Annotation              Webview でプラグイン情報が表示される         [ ]
-  I5  RMMZ: Show Plugin Dependency Graph    Webview でノード・エッジが表示される         [ ]
-  I6  RMMZ: Show Plugin Conflicts           出力チャンネルに競合レポート                 [ ]
-  I7  RMMZ: Check Asset References          出力チャンネルに不足アセット一覧             [ ]
-  I8  RMMZ: Format Annotation Block         カーソル位置のブロックが整形される           [ ]
-  I9  RMMZ: Toggle Quick Scene Reload       ステータスバーが Off/Waiting を切替          [ ]
-  I10 RMMZ: Show Testplay Console           RMMZ Console 出力チャンネルが開く            [ ]
-  I11 RMMZ: Clear Testplay Console          出力チャンネルがクリアされる                 [ ]
-  I12 RMMZ: Edit Note Tags                  Webview でタグ編集画面が開く                 [ ]
-  I13 RMMZ: Show Live Game Preview          Webview でスクリーンショット表示             [ ]
-  I14 RMMZ: Check Plugin Updates            出力チャンネルにバージョン比較               [ ]
-  I15 RMMZ: Show Plugin Info                出力チャンネルにプラグイン情報               [ ]
-  I16 RMMZ: Search Class Hierarchy          QuickPick でクラス検索                       [ ]
-  I17 RMMZ: License Status                  Free/Pro 状態メッセージ                      [ ]
-  I18 RMMZ: Activate Pro License            ライセンスキー入力ボックス                   [ ]
-  I19 RMMZ: Deactivate Pro License          ライセンスクリア + ステータスバー更新        [ ]
-  I20 RMMZ: Refresh Note Tag Index          サイドバーツリー更新                         [ ]
-  I21 RMMZ: Refresh Database Browser        サイドバーツリー更新                         [ ]
-  I22 RMMZ: Refresh Game State              サイドバーツリー更新                         [ ]
-  I23 RMMZ: Refresh Class Hierarchy         サイドバーツリー更新                         [ ]
-  I24 RMMZ: Toggle Auto Refresh Game State  2秒自動更新の切替                            [ ]
+  I1  RMMV: Setup IntelliSense              jsconfig.json が生成される                  [ ]
+  I2  RMMV: Setup Debugger (NW.js)          .vscode/launch.json が生成される             [ ]
+  I3  RMMV: New Plugin                      対話プロンプト → .js ファイル生成            [ ]
+  I4  RMMV: Preview Annotation              Webview でプラグイン情報が表示される         [ ]
+  I5  RMMV: Show Plugin Dependency Graph    Webview でノード・エッジが表示される         [ ]
+  I6  RMMV: Show Plugin Conflicts           出力チャンネルに競合レポート                 [ ]
+  I7  RMMV: Check Asset References          出力チャンネルに不足アセット一覧             [ ]
+  I8  RMMV: Format Annotation Block         カーソル位置のブロックが整形される           [ ]
+  I9  RMMV: Toggle Quick Scene Reload       ステータスバーが Off/Waiting を切替          [ ]
+  I10 RMMV: Show Testplay Console           RMMV Console 出力チャンネルが開く            [ ]
+  I11 RMMV: Clear Testplay Console          出力チャンネルがクリアされる                 [ ]
+  I12 RMMV: Edit Note Tags                  Webview でタグ編集画面が開く                 [ ]
+  I13 RMMV: Show Live Game Preview          Webview でスクリーンショット表示             [ ]
+  I14 RMMV: Check Plugin Updates            出力チャンネルにバージョン比較               [ ]
+  I15 RMMV: Show Plugin Info                出力チャンネルにプラグイン情報               [ ]
+  I16 RMMV: Search Class Hierarchy          QuickPick でクラス検索                       [ ]
+  I17 RMMV: License Status                  Free/Pro 状態メッセージ                      [ ]
+  I18 RMMV: Activate Pro License            ライセンスキー入力ボックス                   [ ]
+  I19 RMMV: Deactivate Pro License          ライセンスクリア + ステータスバー更新        [ ]
+  I20 RMMV: Refresh Note Tag Index          サイドバーツリー更新                         [ ]
+  I21 RMMV: Refresh Database Browser        サイドバーツリー更新                         [ ]
+  I22 RMMV: Refresh Game State              サイドバーツリー更新                         [ ]
+  I23 RMMV: Refresh Class Hierarchy         サイドバーツリー更新                         [ ]
+  I24 RMMV: Toggle Auto Refresh Game State  2秒自動更新の切替                            [ ]
 
 ================================================================================
   J. サイドバービュー（4項目）
@@ -59,12 +59,12 @@
 
   #   ビュー名                確認内容                                              [ ]
   --- ----------------------- ----------------------------------------------------- ---
-  J1  RMMZ Note Tags          BattleSpeed, CustomTag, Consumable, HealHP が表示     [ ]
+  J1  RMMV Note Tags          BattleSpeed, CustomTag, Consumable, HealHP が表示     [ ]
                                孤立タグセクションも確認
-  J2  RMMZ Database           Actors > [1] Harold が表示される                      [ ]
+  J2  RMMV Database           Actors > [1] Harold が表示される                      [ ]
                                Items > [1] Potion が表示される
-  J3  RMMZ Game State         ゲーム未実行時 "(Not connected...)" が表示            [ ]
-  J4  RMMZ Class Hierarchy    カテゴリ分類でクラスが表示される                      [ ]
+  J3  RMMV Game State         ゲーム未実行時 "(Not connected...)" が表示            [ ]
+  J4  RMMV Class Hierarchy    カテゴリ分類でクラスが表示される                      [ ]
                                展開するとメソッド一覧、クリックで定義にジャンプ
 
 ================================================================================
@@ -122,7 +122,7 @@
   #   テスト                    確認内容                                            [ ]
   --- ------------------------- --------------------------------------------------- ---
   O1  License Status (Free)     "Free edition" メッセージ + Enter License Key       [ ]
-  O2  ステータスバー (Free)     右下に "RMMZ Free" 表示                             [ ]
+  O2  ステータスバー (Free)     右下に "RMMV Free" 表示                             [ ]
   O3  無効キーで Activate       "Invalid license key." エラー                       [ ]
   O4  Deactivate                "Pro license deactivated." メッセージ               [ ]
 

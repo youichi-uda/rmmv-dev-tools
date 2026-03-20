@@ -151,17 +151,17 @@ describe('.vscodeignore - bundle inclusions', () => {
 // ═══════════════════════════════════════════════════════════════════
 
 describe('Type definitions - expected files and content', () => {
-  const typingsDir = path.join(ROOT, 'typings', 'rmmz');
+  const typingsDir = path.join(ROOT, 'typings', 'rmmv');
 
   const expectedFiles = [
     'pixi.d.ts',
-    'rmmz_core.d.ts',
-    'rmmz_globals.d.ts',
-    'rmmz_managers.d.ts',
-    'rmmz_objects.d.ts',
-    'rmmz_scenes.d.ts',
-    'rmmz_sprites.d.ts',
-    'rmmz_windows.d.ts',
+    'rpg_core.d.ts',
+    'rpg_globals.d.ts',
+    'rpg_managers.d.ts',
+    'rpg_objects.d.ts',
+    'rpg_scenes.d.ts',
+    'rpg_sprites.d.ts',
+    'rpg_windows.d.ts',
   ];
 
   it('should have all 8 expected .d.ts files', () => {
@@ -170,8 +170,8 @@ describe('Type definitions - expected files and content', () => {
     }
   });
 
-  describe('rmmz_globals.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_globals.d.ts'), 'utf-8');
+  describe('rpg_globals.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_globals.d.ts'), 'utf-8');
 
     it('should declare $data global variables', () => {
       expect(content).toContain('declare var $dataActors');
@@ -215,8 +215,8 @@ describe('Type definitions - expected files and content', () => {
     });
   });
 
-  describe('rmmz_core.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_core.d.ts'), 'utf-8');
+  describe('rpg_core.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_core.d.ts'), 'utf-8');
 
     it('should declare core classes', () => {
       expect(content).toContain('declare class Bitmap');
@@ -230,8 +230,8 @@ describe('Type definitions - expected files and content', () => {
     });
   });
 
-  describe('rmmz_managers.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_managers.d.ts'), 'utf-8');
+  describe('rpg_managers.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_managers.d.ts'), 'utf-8');
 
     it('should declare manager namespaces/classes', () => {
       expect(content).toContain('DataManager');
@@ -243,17 +243,17 @@ describe('Type definitions - expected files and content', () => {
       expect(content).toContain('ConfigManager');
     });
 
-    it('should declare PluginManager.registerCommand', () => {
-      expect(content).toMatch(/registerCommand\s*\(/);
-    });
-
     it('should declare PluginManager.parameters', () => {
       expect(content).toMatch(/parameters\s*\(/);
     });
+
+    it('should declare PluginManager.setup', () => {
+      expect(content).toMatch(/setup\s*\(/);
+    });
   });
 
-  describe('rmmz_objects.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_objects.d.ts'), 'utf-8');
+  describe('rpg_objects.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_objects.d.ts'), 'utf-8');
 
     it('should declare key Game_* classes', () => {
       expect(content).toContain('declare class Game_Player');
@@ -280,8 +280,8 @@ describe('Type definitions - expected files and content', () => {
     });
   });
 
-  describe('rmmz_scenes.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_scenes.d.ts'), 'utf-8');
+  describe('rpg_scenes.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_scenes.d.ts'), 'utf-8');
 
     it('should declare key Scene_* classes', () => {
       expect(content).toContain('declare class Scene_Base');
@@ -294,8 +294,8 @@ describe('Type definitions - expected files and content', () => {
     });
   });
 
-  describe('rmmz_windows.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_windows.d.ts'), 'utf-8');
+  describe('rpg_windows.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_windows.d.ts'), 'utf-8');
 
     it('should declare key Window_* classes', () => {
       expect(content).toContain('declare class Window_Base');
@@ -308,8 +308,8 @@ describe('Type definitions - expected files and content', () => {
     });
   });
 
-  describe('rmmz_sprites.d.ts', () => {
-    const content = fs.readFileSync(path.join(typingsDir, 'rmmz_sprites.d.ts'), 'utf-8');
+  describe('rpg_sprites.d.ts', () => {
+    const content = fs.readFileSync(path.join(typingsDir, 'rpg_sprites.d.ts'), 'utf-8');
 
     it('should declare key Sprite_*/Spriteset_* classes', () => {
       expect(content).toContain('declare class Sprite_Character');
@@ -342,7 +342,7 @@ describe('Type definitions - expected files and content', () => {
 describe('Quick Actions - command references', () => {
   // Read the quickActions source to extract command IDs from btn() calls
   const src = fs.readFileSync(path.join(ROOT, 'src', 'sidebar', 'quickActions.ts'), 'utf-8');
-  const btnCommandMatches = src.matchAll(/\bb\('(rmmz\.\w+)'/g);
+  const btnCommandMatches = src.matchAll(/\bb\('(rmmv\.\w+)'/g);
   const referencedCommands = [...btnCommandMatches].map(m => m[1]);
 
   const pkg = loadJson('package.json');
@@ -361,10 +361,10 @@ describe('Quick Actions - command references', () => {
   });
 
   it('should include TypeScript setup button', () => {
-    expect(referencedCommands).toContain('rmmz.setupTypeScript');
+    expect(referencedCommands).toContain('rmmv.setupTypeScript');
   });
 
   it('should include TypeScript build toggle button', () => {
-    expect(referencedCommands).toContain('rmmz.toggleTypeScriptBuild');
+    expect(referencedCommands).toContain('rmmv.toggleTypeScriptBuild');
   });
 });

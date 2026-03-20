@@ -115,7 +115,7 @@ export class ConflictDetector {
 
   constructor() {
     this.diagnosticCollection =
-      vscode.languages.createDiagnosticCollection('rmmz-conflicts');
+      vscode.languages.createDiagnosticCollection('rmmv-conflicts');
   }
 
   dispose(): void {
@@ -290,7 +290,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const detector = new ConflictDetector();
   context.subscriptions.push({ dispose: () => detector.dispose() });
 
-  const outputChannel = vscode.window.createOutputChannel('RMMZ Conflicts');
+  const outputChannel = vscode.window.createOutputChannel('RMMV Conflicts');
   context.subscriptions.push(outputChannel);
 
   // Scan helper
@@ -320,7 +320,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Register the show-conflicts command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.showConflicts', async () => {
+    vscode.commands.registerCommand('rmmv.showConflicts', async () => {
       const results = await runScan();
       outputChannel.clear();
       outputChannel.appendLine(formatResults(results || []));

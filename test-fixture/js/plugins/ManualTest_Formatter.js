@@ -5,8 +5,8 @@
 // テスト方法:
 // 1. VSCode でこのファイルを開く
 // 2. 下のアノテーションブロック内にカーソルを置く
-// 3. コマンドパレット（Ctrl+Shift+P）→「RMMZ: Format Annotation Block」を実行する
-//    （コマンドID: rmmz.formatAnnotation）
+// 3. コマンドパレット（Ctrl+Shift+P）→「RMMV: Format Annotation Block」を実行する
+//    （コマンドID: rmmv.formatAnnotation）
 // 4. ブロックが一貫してフォーマットされることを確認する
 //
 // ソース参照: src/annotation/formatter.ts
@@ -53,7 +53,7 @@
 // ------------------------------------------------------------------
 // テスト 1: アノテーションブロックのフォーマット
 // 手順: 上の /*: ブロック内にカーソルを置き、
-//        「RMMZ: Format Annotation Block」（rmmz.formatAnnotation）を実行する
+//        「RMMV: Format Annotation Block」（rmmv.formatAnnotation）を実行する
 // 期待結果:
 //   - すべての行が " * @tag value" パターンで統一的にフォーマットされる
 //   - " *" の後にスペース1つ、「@tag」の後にスペース1つ、その後に値
@@ -73,8 +73,8 @@
 // ------------------------------------------------------------------
 //
 // テスト 3: アノテーションブロック外でのカーソル
-// 手順: ここ（コードセクション）にカーソルを置き、「RMMZ: Format Annotation Block」を実行する
-// 期待結果: メッセージ: "Cursor is not inside an RMMZ annotation block."
+// 手順: ここ（コードセクション）にカーソルを置き、「RMMV: Format Annotation Block」を実行する
+// 期待結果: メッセージ: "Cursor is not inside an RMMV annotation block."
 // 結果: [ PASS / FAIL ]
 // ------------------------------------------------------------------
 

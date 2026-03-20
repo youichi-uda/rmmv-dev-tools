@@ -9,9 +9,9 @@ import * as path from 'path';
  * default values and verify the resulting code is structurally sound:
  * - Balanced braces / parentheses
  * - No stray snippet syntax in output
- * - Key RMMZ patterns present (prototype chain, IIFE, etc.)
+ * - Key RMMV patterns present (prototype chain, IIFE, etc.)
  *
- * For TS snippets we additionally verify compatibility with the RMMZ type
+ * For TS snippets we additionally verify compatibility with the RMMV type
  * definitions (e.g. registerCommand callback must not use explicit arg types).
  */
 
@@ -42,8 +42,8 @@ function loadSnippets(filename: string): Record<string, { prefix: string; scope:
 
 // ── Load snippet files ──
 
-const tsSnippets = loadSnippets('rmmz-ts.code-snippets.json');
-const jsSnippets = loadSnippets('rmmz.code-snippets.json');
+const tsSnippets = loadSnippets('rmmv-ts.code-snippets.json');
+const jsSnippets = loadSnippets('rmmv.code-snippets.json');
 
 // ── Tests: structural validity (both JS and TS) ──
 
@@ -80,8 +80,8 @@ describe('Snippets - structural validity', () => {
 
 // ── Tests: TS snippet content correctness ──
 
-describe('Snippets - TS rmmz-alias', () => {
-  const code = expandSnippet(tsSnippets['RMMZ TS: Typed Alias Pattern'].body);
+describe('Snippets - TS rmmv-alias', () => {
+  const code = expandSnippet(tsSnippets['RMMV TS: Typed Alias Pattern'].body);
 
   it('should save original method reference', () => {
     expect(code).toMatch(/const _\w+_\w+ = \w+\.prototype\.\w+;/);
@@ -100,33 +100,32 @@ describe('Snippets - TS rmmz-alias', () => {
   });
 });
 
-describe('Snippets - TS rmmz-command', () => {
-  const code = expandSnippet(tsSnippets['RMMZ TS: Register Plugin Command'].body);
+describe('Snippets - TS rmmv-command', () => {
+  const code = expandSnippet(tsSnippets['RMMV TS: Plugin Command Handler'].body);
 
-  it('should call PluginManager.registerCommand', () => {
-    expect(code).toContain('PluginManager.registerCommand(');
+  it('should override Game_Interpreter.pluginCommand', () => {
+    expect(code).toContain('Game_Interpreter.prototype.pluginCommand');
   });
 
   it('should reference PLUGIN_NAME', () => {
     expect(code).toContain('PLUGIN_NAME');
   });
 
-  it('should use bare (args) without explicit type annotation', () => {
-    // Explicit arg types conflict with Record<string, string> callback signature
-    expect(code).toMatch(/\(args\)\s*=>/);
-    expect(code).not.toMatch(/args\s*:\s*\{/);
+  it('should include typed parameters (command: string, args: string[])', () => {
+    expect(code).toContain('command: string');
+    expect(code).toContain('args: string[]');
   });
 });
 
-describe('Snippets - TS rmmz-plugin', () => {
-  const code = expandSnippet(tsSnippets['RMMZ TS: Full Plugin Scaffold'].body);
+describe('Snippets - TS rmmv-plugin', () => {
+  const code = expandSnippet(tsSnippets['RMMV TS: Full Plugin Scaffold'].body);
 
   it('should start with annotation block', () => {
     expect(code).toMatch(/^\/\*:/);
   });
 
-  it('should include @target MZ', () => {
-    expect(code).toContain('@target MZ');
+  it('should include @target MV', () => {
+    expect(code).toContain('@target MV');
   });
 
   it('should include @plugindesc', () => {
@@ -138,7 +137,7 @@ describe('Snippets - TS rmmz-plugin', () => {
   });
 
   it('should wrap in IIFE', () => {
-    expect(code).toContain('(() => {');
+    expect(code).toContain('((): void => {');
     expect(code).toContain('})();');
   });
 
@@ -154,22 +153,14 @@ describe('Snippets - TS rmmz-plugin', () => {
     expect(code).toContain('PluginManager.parameters(PLUGIN_NAME)');
   });
 
-  it('should call PluginManager.registerCommand with bare (args)', () => {
-    expect(code).toContain('PluginManager.registerCommand(');
-    expect(code).toMatch(/\(args\)\s*=>/);
-    expect(code).not.toMatch(/args\s*:\s*\{/);
-  });
-
-  it('should include @param, @command, @arg in annotation', () => {
+  it('should include @param in annotation', () => {
     const annotation = code.match(/\/\*:([\s\S]*?)\*\//)?.[1] ?? '';
     expect(annotation).toContain('@param');
-    expect(annotation).toContain('@command');
-    expect(annotation).toContain('@arg');
   });
 });
 
-describe('Snippets - TS rmmz-param', () => {
-  const code = expandSnippet(tsSnippets['RMMZ TS: Parameter Parsing'].body);
+describe('Snippets - TS rmmv-param', () => {
+  const code = expandSnippet(tsSnippets['RMMV TS: Parameter Parsing'].body);
 
   it('should declare a param object', () => {
     expect(code).toContain('const param = {');
@@ -180,11 +171,11 @@ describe('Snippets - TS rmmz-param', () => {
   });
 });
 
-describe('Snippets - TS rmmz-iife', () => {
-  const code = expandSnippet(tsSnippets['RMMZ TS: IIFE Wrapper'].body);
+describe('Snippets - TS rmmv-iife', () => {
+  const code = expandSnippet(tsSnippets['RMMV TS: IIFE Wrapper'].body);
 
-  it('should be an arrow IIFE', () => {
-    expect(code).toContain('(() => {');
+  it('should be an arrow IIFE with void return type', () => {
+    expect(code).toContain('((): void => {');
     expect(code).toContain('})();');
   });
 
@@ -195,11 +186,11 @@ describe('Snippets - TS rmmz-iife', () => {
 
 // ── Tests: JS snippet content correctness ──
 
-describe('Snippets - JS rmmz-alias', () => {
-  const code = expandSnippet(jsSnippets['RMMZ: Alias Pattern'].body);
+describe('Snippets - JS rmmv-alias', () => {
+  const code = expandSnippet(jsSnippets['RMMV: Alias Pattern'].body);
 
   it('should save original method reference', () => {
-    expect(code).toMatch(/const _\w+_\w+ = \w+\.prototype\.\w+;/);
+    expect(code).toMatch(/var _\w+_\w+ = \w+\.prototype\.\w+;/);
   });
 
   it('should assign new function to prototype', () => {
@@ -215,20 +206,20 @@ describe('Snippets - JS rmmz-alias', () => {
   });
 });
 
-describe('Snippets - JS rmmz-command', () => {
-  const code = expandSnippet(jsSnippets['RMMZ: Register Plugin Command'].body);
+describe('Snippets - JS rmmv-command', () => {
+  const code = expandSnippet(jsSnippets['RMMV: Plugin Command Handler'].body);
 
-  it('should call PluginManager.registerCommand', () => {
-    expect(code).toContain('PluginManager.registerCommand(');
+  it('should override Game_Interpreter.pluginCommand', () => {
+    expect(code).toContain('Game_Interpreter.prototype.pluginCommand');
   });
 
-  it('should use bare (args) callback', () => {
-    expect(code).toMatch(/\(args\)\s*=>/);
+  it('should reference PLUGIN_NAME', () => {
+    expect(code).toContain('PLUGIN_NAME');
   });
 });
 
-describe('Snippets - JS rmmz-scene', () => {
-  const code = expandSnippet(jsSnippets['RMMZ: Scene Class'].body);
+describe('Snippets - JS rmmv-scene', () => {
+  const code = expandSnippet(jsSnippets['RMMV: Scene Class'].body);
 
   it('should define constructor function', () => {
     expect(code).toMatch(/function Scene_\w+\(\)/);
@@ -253,19 +244,19 @@ describe('Snippets - JS rmmz-scene', () => {
   });
 });
 
-describe('Snippets - JS rmmz-window', () => {
-  const code = expandSnippet(jsSnippets['RMMZ: Window Class'].body);
+describe('Snippets - JS rmmv-window', () => {
+  const code = expandSnippet(jsSnippets['RMMV: Window Class'].body);
 
-  it('should define constructor function with rect parameter', () => {
-    expect(code).toMatch(/function Window_\w+\(rect\)/);
+  it('should define constructor function with x,y,width,height parameters', () => {
+    expect(code).toMatch(/function Window_\w+\(x, y, width, height\)/);
   });
 
   it('should set up prototype chain from Window_Base', () => {
     expect(code).toContain('Object.create(Window_Base.prototype)');
   });
 
-  it('should pass rect to Window_Base.prototype.initialize', () => {
-    expect(code).toContain('Window_Base.prototype.initialize.call(this, rect)');
+  it('should pass x,y,width,height to Window_Base.prototype.initialize', () => {
+    expect(code).toContain('Window_Base.prototype.initialize.call(this, x, y, width, height)');
   });
 
   it('should define refresh method with contents.clear()', () => {
@@ -273,8 +264,8 @@ describe('Snippets - JS rmmz-window', () => {
   });
 });
 
-describe('Snippets - JS rmmz-sprite', () => {
-  const code = expandSnippet(jsSnippets['RMMZ: Sprite Class'].body);
+describe('Snippets - JS rmmv-sprite', () => {
+  const code = expandSnippet(jsSnippets['RMMV: Sprite Class'].body);
 
   it('should define constructor function', () => {
     expect(code).toMatch(/function Sprite_\w+\(\)/);
@@ -290,20 +281,20 @@ describe('Snippets - JS rmmz-sprite', () => {
   });
 });
 
-describe('Snippets - JS rmmz-plugin', () => {
-  const code = expandSnippet(jsSnippets['RMMZ: Full Plugin Scaffold'].body);
+describe('Snippets - JS rmmv-plugin', () => {
+  const code = expandSnippet(jsSnippets['RMMV: Full Plugin Scaffold'].body);
 
   it('should start with annotation block', () => {
     expect(code).toMatch(/^\/\*:/);
   });
 
   it('should wrap in IIFE', () => {
-    expect(code).toContain('(() => {');
+    expect(code).toContain('(function()');
     expect(code).toContain('})();');
   });
 
-  it('should use PluginManager.registerCommand with bare (args)', () => {
-    expect(code).toMatch(/\(args\)\s*=>/);
+  it('should call PluginManager.parameters', () => {
+    expect(code).toContain('PluginManager.parameters(PLUGIN_NAME)');
   });
 });
 

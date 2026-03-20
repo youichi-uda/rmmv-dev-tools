@@ -9,7 +9,6 @@ interface PluginInfo {
   author: string;
   description: string;
   url: string;
-  base: string;
   hasCommands: boolean;
   hasParameters: boolean;
   language: 'javascript' | 'typescript';
@@ -79,12 +78,10 @@ export async function generatePluginTemplate(): Promise<void> {
   // ── Step 3: Features ──
   const featureCommandLabel = t('template.featureCommand');
   const featureParamsLabel = t('template.featureParams');
-  const featureBaseLabel = t('template.featureBase');
   const features = await vscode.window.showQuickPick(
     [
       { label: featureCommandLabel, description: t('template.featureCommandDesc'), picked: true },
       { label: featureParamsLabel, description: t('template.featureParamsDesc'), picked: true },
-      { label: featureBaseLabel, description: t('template.featureBaseDesc'), picked: false },
     ],
     {
       title: t('template.step3Title'),
@@ -96,15 +93,6 @@ export async function generatePluginTemplate(): Promise<void> {
 
   const hasCommands = features.some(f => f.label === featureCommandLabel);
   const hasParameters = features.some(f => f.label === featureParamsLabel);
-  const wantsBase = features.some(f => f.label === featureBaseLabel);
-
-  let base = '';
-  if (wantsBase) {
-    base = await vscode.window.showInputBox({
-      prompt: t('template.basePrompt'),
-      placeHolder: t('template.basePlaceholder'),
-    }) || '';
-  }
 
   // ── Language choice (JS or TS) ──
   let language: 'javascript' | 'typescript' = 'javascript';
@@ -130,7 +118,6 @@ export async function generatePluginTemplate(): Promise<void> {
     author: author || 'Author',
     description: description || '',
     url: url || '',
-    base,
     hasCommands,
     hasParameters,
     language,
@@ -168,14 +155,11 @@ function buildTemplate(info: PluginInfo): string {
 
   // Annotation block
   lines.push('/*:');
-  lines.push(' * @target MZ');
+  lines.push(' * @target MV');
   lines.push(` * @plugindesc ${info.description}`);
   lines.push(` * @author ${info.author}`);
   if (info.url) {
     lines.push(` * @url ${info.url}`);
-  }
-  if (info.base) {
-    lines.push(` * @base ${info.base}`);
   }
   lines.push(' *');
 
@@ -193,19 +177,6 @@ function buildTemplate(info: PluginInfo): string {
     lines.push(' * @desc Name displayed in-game.');
     lines.push(' * @type string');
     lines.push(' * @default Default');
-    lines.push(' *');
-  }
-
-  if (info.hasCommands) {
-    lines.push(' * @command showMessage');
-    lines.push(' * @text Show Message');
-    lines.push(' * @desc Displays a message on screen.');
-    lines.push(' *');
-    lines.push(' * @arg text');
-    lines.push(' * @text Message Text');
-    lines.push(' * @desc The text to display.');
-    lines.push(' * @type string');
-    lines.push(' * @default Hello!');
     lines.push(' *');
   }
 
@@ -223,15 +194,15 @@ function buildTemplate(info: PluginInfo): string {
   lines.push('');
 
   // Plugin body
-  lines.push('(() => {');
+  lines.push('(function() {');
   lines.push('  "use strict";');
   lines.push('');
-  lines.push(`  const PLUGIN_NAME = "${info.name}";`);
+  lines.push(`  var PLUGIN_NAME = "${info.name}";`);
   lines.push('');
 
   if (info.hasParameters) {
-    lines.push('  const parameters = PluginManager.parameters(PLUGIN_NAME);');
-    lines.push('  const param = {');
+    lines.push('  var parameters = PluginManager.parameters(PLUGIN_NAME);');
+    lines.push('  var param = {');
     lines.push('    enabled: parameters["enabled"] === "true",');
     lines.push('    displayName: parameters["displayName"] || "Default",');
     lines.push('  };');
@@ -239,18 +210,27 @@ function buildTemplate(info: PluginInfo): string {
   }
 
   if (info.hasCommands) {
-    lines.push('  PluginManager.registerCommand(PLUGIN_NAME, "showMessage", (args) => {');
-    lines.push('    const text = args.text || "Hello!";');
-    lines.push('    // TODO: Implement your command logic here');
-    lines.push('    console.log(`${PLUGIN_NAME}: ${text}`);');
-    lines.push('  });');
+    lines.push('  // Plugin command handler');
+    lines.push('  var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;');
+    lines.push('  Game_Interpreter.prototype.pluginCommand = function(command, args) {');
+    lines.push('    _Game_Interpreter_pluginCommand.call(this, command, args);');
+    lines.push(`    if (command === PLUGIN_NAME) {`);
+    lines.push('      switch (args[0]) {');
+    lines.push('        case "showMessage":');
+    lines.push('          var text = args[1] || "Hello!";');
+    lines.push('          // TODO: Implement your command logic here');
+    lines.push('          console.log(PLUGIN_NAME + ": " + text);');
+    lines.push('          break;');
+    lines.push('      }');
+    lines.push('    }');
+    lines.push('  };');
     lines.push('');
   }
 
   lines.push('  // TODO: Add your plugin logic here');
   lines.push('  //');
   lines.push('  // Example: Override a method');
-  lines.push('  // const _alias = Game_Player.prototype.update;');
+  lines.push('  // var _alias = Game_Player.prototype.update;');
   lines.push('  // Game_Player.prototype.update = function(sceneActive) {');
   lines.push('  //   _alias.call(this, sceneActive);');
   lines.push('  //   // Your logic here');
@@ -267,14 +247,11 @@ function buildTypeScriptTemplate(info: PluginInfo): string {
 
   // Annotation block (identical to JS — removeComments: false preserves it)
   lines.push('/*:');
-  lines.push(' * @target MZ');
+  lines.push(' * @target MV');
   lines.push(` * @plugindesc ${info.description}`);
   lines.push(` * @author ${info.author}`);
   if (info.url) {
     lines.push(` * @url ${info.url}`);
-  }
-  if (info.base) {
-    lines.push(` * @base ${info.base}`);
   }
   lines.push(' *');
 
@@ -295,19 +272,6 @@ function buildTypeScriptTemplate(info: PluginInfo): string {
     lines.push(' *');
   }
 
-  if (info.hasCommands) {
-    lines.push(' * @command showMessage');
-    lines.push(' * @text Show Message');
-    lines.push(' * @desc Displays a message on screen.');
-    lines.push(' *');
-    lines.push(' * @arg text');
-    lines.push(' * @text Message Text');
-    lines.push(' * @desc The text to display.');
-    lines.push(' * @type string');
-    lines.push(' * @default Hello!');
-    lines.push(' *');
-  }
-
   lines.push(' * @help');
   lines.push(` * ${info.name}`);
   lines.push(' *');
@@ -321,8 +285,8 @@ function buildTypeScriptTemplate(info: PluginInfo): string {
   lines.push(' */');
   lines.push('');
 
-  // TypeScript plugin body with type annotations
-  lines.push('(() => {');
+  // TypeScript plugin body
+  lines.push('((): void => {');
   lines.push('  "use strict";');
   lines.push('');
   lines.push(`  const PLUGIN_NAME = "${info.name}";`);
@@ -338,11 +302,20 @@ function buildTypeScriptTemplate(info: PluginInfo): string {
   }
 
   if (info.hasCommands) {
-    lines.push('  PluginManager.registerCommand(PLUGIN_NAME, "showMessage", (args) => {');
-    lines.push('    const text = args.text || "Hello!";');
-    lines.push('    // TODO: Implement your command logic here');
-    lines.push('    console.log(`${PLUGIN_NAME}: ${text}`);');
-    lines.push('  });');
+    lines.push('  // Plugin command handler');
+    lines.push('  const _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;');
+    lines.push('  Game_Interpreter.prototype.pluginCommand = function(this: Game_Interpreter, command: string, args: string[]): void {');
+    lines.push('    _Game_Interpreter_pluginCommand.call(this, command, args);');
+    lines.push(`    if (command === PLUGIN_NAME) {`);
+    lines.push('      switch (args[0]) {');
+    lines.push('        case "showMessage":');
+    lines.push('          const text = args[1] || "Hello!";');
+    lines.push('          // TODO: Implement your command logic here');
+    lines.push('          console.log(`${PLUGIN_NAME}: ${text}`);');
+    lines.push('          break;');
+    lines.push('      }');
+    lines.push('    }');
+    lines.push('  };');
     lines.push('');
   }
 

@@ -184,7 +184,7 @@ function formatGroup(group: TagGroup): string[] {
  */
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.formatAnnotation', () => {
+    vscode.commands.registerCommand('rmmv.formatAnnotation', () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) return;
 

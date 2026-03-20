@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { t } from '../i18n';
 
 /**
- * Sets up TypeScript plugin development in an RMMZ project.
+ * Sets up TypeScript plugin development in an RMMV project.
  * Creates tsconfig.json, ts/plugins/, and copies type definitions.
  */
 export async function setupTypeScript(
@@ -31,8 +31,8 @@ export async function setupTypeScript(
   }
 
   // Copy typings from extension bundle to project
-  const srcTypingsDir = path.join(context.extensionPath, 'typings', 'rmmz');
-  const destTypingsDir = path.join(root, 'ts', 'typings', 'rmmz');
+  const srcTypingsDir = path.join(context.extensionPath, 'typings', 'rmmv');
+  const destTypingsDir = path.join(root, 'ts', 'typings', 'rmmv');
 
   if (fs.existsSync(srcTypingsDir)) {
     if (!fs.existsSync(destTypingsDir)) {

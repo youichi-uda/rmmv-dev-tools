@@ -436,7 +436,7 @@ async function connectAndCapture(): Promise<void> {
 function startCapturing(): void {
   if (captureInterval) clearInterval(captureInterval);
 
-  const intervalMs = vscode.workspace.getConfiguration('rmmz').get<number>(
+  const intervalMs = vscode.workspace.getConfiguration('rmmv').get<number>(
     'livePreviewInterval', DEFAULT_INTERVAL_MS
   );
 
@@ -532,8 +532,8 @@ function showLivePreview(): void {
   const nonce = getNonce();
 
   currentPanel = vscode.window.createWebviewPanel(
-    'rmmzLivePreview',
-    'RMMZ Live Preview',
+    'rmmvLivePreview',
+    'RMMV Live Preview',
     vscode.ViewColumn.Beside,
     { enableScripts: true }
   );
@@ -562,12 +562,12 @@ function showLivePreview(): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Registers the `rmmz.showLivePreview` command.
+ * Registers the `rmmv.showLivePreview` command.
  * Call from the main `activate` function.
  */
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.showLivePreview', showLivePreview)
+    vscode.commands.registerCommand('rmmv.showLivePreview', showLivePreview)
   );
 
   context.subscriptions.push({

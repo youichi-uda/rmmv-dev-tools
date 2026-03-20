@@ -2,12 +2,12 @@ import * as vscode from 'vscode';
 import * as https from 'https';
 import { t } from '../i18n';
 
-const GUMROAD_PRODUCT_ID = 'ZW0MFMWTX2vvvkl1EA6h7A==';
+const GUMROAD_PRODUCT_ID = '2wgb_r4RZpDC_iiSVJUtAg==';
 const VERIFY_URL = 'https://api.gumroad.com/v2/licenses/verify';
 
-const SECRET_KEY_LICENSE = 'rmmz.licenseKey';
-const SECRET_KEY_VERIFIED_AT = 'rmmz.licenseVerifiedAt';
-const PURCHASE_URL = 'https://y1uda.gumroad.com/l/rmmz?wanted=true';
+const SECRET_KEY_LICENSE = 'rmmv.licenseKey';
+const SECRET_KEY_VERIFIED_AT = 'rmmv.licenseVerifiedAt';
+const PURCHASE_URL = 'https://y1uda.gumroad.com/l/rmmv?wanted=true';
 
 /** Re-verify cached license every 7 days. */
 const REVERIFY_INTERVAL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -188,7 +188,7 @@ export function requirePro(featureName: string): boolean {
     )
     .then((choice) => {
       if (choice === t('license.enterKey')) {
-        vscode.commands.executeCommand('rmmz.activateLicense');
+        vscode.commands.executeCommand('rmmv.activateLicense');
       } else if (choice === t('license.purchase')) {
         vscode.env.openExternal(vscode.Uri.parse(PURCHASE_URL));
       }
@@ -205,12 +205,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<Licens
 
   // Status bar item
   statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  statusBarItem.command = 'rmmz.licenseStatus';
+  statusBarItem.command = 'rmmv.licenseStatus';
   context.subscriptions.push(statusBarItem);
 
   // Commands
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.activateLicense', async () => {
+    vscode.commands.registerCommand('rmmv.activateLicense', async () => {
       const key = await vscode.window.showInputBox({
         prompt: t('license.prompt'),
         placeHolder: t('license.placeholder'),
@@ -225,21 +225,21 @@ export async function activate(context: vscode.ExtensionContext): Promise<Licens
         vscode.window.showErrorMessage(result.message);
       }
       updateStatusBar(manager);
-      vscode.commands.executeCommand('rmmz.refreshQuickActions');
+      vscode.commands.executeCommand('rmmv.refreshQuickActions');
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.deactivateLicense', async () => {
+    vscode.commands.registerCommand('rmmv.deactivateLicense', async () => {
       await manager.deactivate();
       vscode.window.showInformationMessage(t('license.deactivated'));
       updateStatusBar(manager);
-      vscode.commands.executeCommand('rmmz.refreshQuickActions');
+      vscode.commands.executeCommand('rmmv.refreshQuickActions');
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.licenseStatus', () => {
+    vscode.commands.registerCommand('rmmv.licenseStatus', () => {
       if (manager.isProLicensed()) {
         vscode.window.showInformationMessage(t('license.statusActive'));
       } else {
@@ -249,7 +249,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Licens
           t('license.purchase'),
         ).then((choice) => {
           if (choice === t('license.enterKey')) {
-            vscode.commands.executeCommand('rmmz.activateLicense');
+            vscode.commands.executeCommand('rmmv.activateLicense');
           } else if (choice === t('license.purchase')) {
             vscode.env.openExternal(vscode.Uri.parse(PURCHASE_URL));
           }

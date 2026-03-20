@@ -1,5 +1,5 @@
-// Type definitions for rmmz_managers.js v1.10.0
-// All RMMZ manager classes — static-only, declared as namespaces.
+// Type definitions for RPG Maker MV rpg_managers.js
+// All RMMV manager classes — static-only, declared as namespaces.
 
 // ---------------------------------------------------------------------------
 // DataManager
@@ -33,37 +33,22 @@ interface DataManagerSaveContents {
   player: Game_Player;
 }
 
-interface DataManagerError {
-  name: string;
-  src: string;
-  url: string;
-}
-
 declare namespace DataManager {
-  let _globalInfo: (DataManagerSavefileInfo | null)[] | null;
-  let _errors: DataManagerError[];
+  let _globalId: string;
+  let _lastAccessedId: number;
+  let _errorUrl: string | null;
   const _databaseFiles: DataManagerDatabaseFile[];
 
-  function loadGlobalInfo(): void;
-  function removeInvalidGlobalInfo(): void;
-  function saveGlobalInfo(): void;
-  function isGlobalInfoLoaded(): boolean;
   function loadDatabase(): void;
   function loadDataFile(name: string, src: string): void;
-  function onXhrLoad(xhr: XMLHttpRequest, name: string, src: string, url: string): void;
-  function onXhrError(name: string, src: string, url: string): void;
   function isDatabaseLoaded(): boolean;
   function loadMapData(mapId: number): void;
-  function makeEmptyMap(): void;
   function isMapLoaded(): boolean;
   function onLoad(object: Record<string, unknown>): void;
-  function isMapObject(object: Record<string, unknown>): boolean;
-  function extractArrayMetadata(array: unknown[]): void;
   function extractMetadata(data: { note: string; meta: Record<string, unknown> }): void;
   function checkError(): void;
   function isBattleTest(): boolean;
   function isEventTest(): boolean;
-  function isTitleSkip(): boolean;
   function isSkill(item: unknown): item is RPG_Skill;
   function isItem(item: unknown): item is RPG_Item;
   function isWeapon(item: unknown): item is RPG_Weapon;
@@ -72,23 +57,19 @@ declare namespace DataManager {
   function setupNewGame(): void;
   function setupBattleTest(): void;
   function setupEventTest(): void;
+  function loadGame(savefileId: number): boolean;
+  function saveGame(savefileId: number): boolean;
+  function loadSavefileInfo(savefileId: number): DataManagerSavefileInfo | null;
+  function isThisGameFile(savefileId: number): boolean;
   function isAnySavefileExists(): boolean;
   function latestSavefileId(): number;
-  function earliestSavefileId(): number;
-  function emptySavefileId(): number;
   function loadAllSavefileImages(): void;
   function loadSavefileImages(info: DataManagerSavefileInfo): void;
   function maxSavefiles(): number;
   function savefileInfo(savefileId: number): DataManagerSavefileInfo | null;
-  function savefileExists(savefileId: number): boolean;
-  function saveGame(savefileId: number): Promise<number>;
-  function loadGame(savefileId: number): Promise<number>;
-  function makeSavename(savefileId: number): string;
-  function selectSavefileForNewGame(): void;
   function makeSavefileInfo(): DataManagerSavefileInfo;
   function makeSaveContents(): DataManagerSaveContents;
   function extractSaveContents(contents: DataManagerSaveContents): void;
-  function correctDataErrors(): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -100,7 +81,6 @@ declare namespace DataManager {
 interface ConfigData {
   alwaysDash: boolean;
   commandRemember: boolean;
-  touchUI: boolean;
   bgmVolume: number;
   bgsVolume: number;
   meVolume: number;
@@ -110,8 +90,6 @@ interface ConfigData {
 declare namespace ConfigManager {
   let alwaysDash: boolean;
   let commandRemember: boolean;
-  let touchUI: boolean;
-  let _isLoaded: boolean;
   let bgmVolume: number;
   let bgsVolume: number;
   let meVolume: number;
@@ -119,10 +97,9 @@ declare namespace ConfigManager {
 
   function load(): void;
   function save(): void;
-  function isLoaded(): boolean;
   function makeData(): ConfigData;
   function applyData(config: Partial<ConfigData>): void;
-  function readFlag(config: Record<string, unknown>, name: string, defaultValue: boolean): boolean;
+  function readFlag(config: Record<string, unknown>, name: string): boolean;
   function readVolume(config: Record<string, unknown>, name: string): number;
 }
 
@@ -133,122 +110,100 @@ declare namespace ConfigManager {
 // ---------------------------------------------------------------------------
 
 declare namespace StorageManager {
-  let _forageKeys: string[];
-  let _forageKeysUpdated: boolean;
-
+  function save(savefileId: number, json: string): void;
+  function load(savefileId: number): string;
+  function exists(savefileId: number): boolean;
+  function remove(savefileId: number): void;
+  function backup(savefileId: number): void;
+  function backupExists(savefileId: number): boolean;
+  function cleanBackup(savefileId: number): void;
+  function restoreBackup(savefileId: number): void;
   function isLocalMode(): boolean;
-  function saveObject(saveName: string, object: unknown): Promise<void>;
-  function loadObject(saveName: string): Promise<unknown>;
-  function objectToJson(object: unknown): Promise<string>;
-  function jsonToObject(json: string): Promise<unknown>;
-  function jsonToZip(json: string): Promise<string>;
-  function zipToJson(zip: string): Promise<string>;
-  function saveZip(saveName: string, zip: string): Promise<void>;
-  function loadZip(saveName: string): Promise<string>;
-  function exists(saveName: string): boolean;
-  function remove(saveName: string): void;
-  function saveToLocalFile(saveName: string, zip: string): Promise<void>;
-  function loadFromLocalFile(saveName: string): Promise<string>;
-  function localFileExists(saveName: string): boolean;
-  function removeLocalFile(saveName: string): void;
-  function saveToForage(saveName: string, zip: string): Promise<void>;
-  function loadFromForage(saveName: string): Promise<string>;
-  function forageExists(saveName: string): boolean;
-  function removeForage(saveName: string): Promise<void>;
-  function updateForageKeys(): Promise<number>;
-  function forageKeysUpdated(): boolean;
-  function fsMkdir(path: string): void;
-  function fsRename(oldPath: string, newPath: string): void;
-  function fsUnlink(path: string): void;
-  function fsReadFile(path: string): string | null;
-  function fsWriteFile(path: string, data: string): void;
-  function fileDirectoryPath(): string;
-  function filePath(saveName: string): string;
-  function forageKey(saveName: string): string;
-  function forageTestKey(): string;
-}
-
-// ---------------------------------------------------------------------------
-// FontManager
-//
-// The static class that loads font files.
-// ---------------------------------------------------------------------------
-
-declare namespace FontManager {
-  let _urls: Record<string, string>;
-  let _states: Record<string, string>;
-
-  function load(family: string, filename: string): void;
-  function isReady(): boolean;
-  function startLoading(family: string, url: string): void;
-  function throwLoadError(family: string): never;
-  function makeUrl(filename: string): string;
+  function saveToLocalFile(savefileId: number, json: string): void;
+  function loadFromLocalFile(savefileId: number): string;
+  function localFileExists(savefileId: number): boolean;
+  function removeLocalFile(savefileId: number): void;
+  function saveToWebStorage(savefileId: number, json: string): void;
+  function loadFromWebStorage(savefileId: number): string;
+  function webStorageExists(savefileId: number): boolean;
+  function removeWebStorage(savefileId: number): void;
+  function localFileDirectoryPath(): string;
+  function localFilePath(savefileId: number): string;
+  function webStorageKey(savefileId: number): string;
 }
 
 // ---------------------------------------------------------------------------
 // ImageManager
 //
 // The static class that loads images, creates bitmap objects and retains them.
+// MV uses hue parameter on all load methods and CacheMap/ImageCache for caching.
 // ---------------------------------------------------------------------------
 
 declare namespace ImageManager {
-  let standardIconWidth: number;
-  let standardIconHeight: number;
-  let standardFaceWidth: number;
-  let standardFaceHeight: number;
-  let _cache: Record<string, Bitmap>;
-  let _system: Record<string, Bitmap>;
-  let _emptyBitmap: Bitmap;
-  const iconWidth: number;
-  const iconHeight: number;
-  const faceWidth: number;
-  const faceHeight: number;
+  let _imageCache: ImageCache;
+  let _requestQueue: RequestQueue;
+  let _systemReservationId: number;
+  let cache: CacheMap;
 
-  function getIconSize(): number;
-  function getFaceSize(): number;
-  function loadAnimation(filename: string): Bitmap;
-  function loadBattleback1(filename: string): Bitmap;
-  function loadBattleback2(filename: string): Bitmap;
-  function loadEnemy(filename: string): Bitmap;
-  function loadCharacter(filename: string): Bitmap;
-  function loadFace(filename: string): Bitmap;
-  function loadParallax(filename: string): Bitmap;
-  function loadPicture(filename: string): Bitmap;
-  function loadSvActor(filename: string): Bitmap;
-  function loadSvEnemy(filename: string): Bitmap;
-  function loadSystem(filename: string): Bitmap;
-  function loadTileset(filename: string): Bitmap;
-  function loadTitle1(filename: string): Bitmap;
-  function loadTitle2(filename: string): Bitmap;
-  function loadBitmap(folder: string, filename: string): Bitmap;
-  function loadBitmapFromUrl(url: string): Bitmap;
+  function loadAnimation(filename: string, hue?: number): Bitmap;
+  function loadBattleback1(filename: string, hue?: number): Bitmap;
+  function loadBattleback2(filename: string, hue?: number): Bitmap;
+  function loadEnemy(filename: string, hue?: number): Bitmap;
+  function loadCharacter(filename: string, hue?: number): Bitmap;
+  function loadFace(filename: string, hue?: number): Bitmap;
+  function loadParallax(filename: string, hue?: number): Bitmap;
+  function loadPicture(filename: string, hue?: number): Bitmap;
+  function loadSvActor(filename: string, hue?: number): Bitmap;
+  function loadSvEnemy(filename: string, hue?: number): Bitmap;
+  function loadSystem(filename: string, hue?: number): Bitmap;
+  function loadTileset(filename: string, hue?: number): Bitmap;
+  function loadTitle1(filename: string, hue?: number): Bitmap;
+  function loadTitle2(filename: string, hue?: number): Bitmap;
+  function loadBitmap(folder: string, filename: string, hue?: number, smooth?: boolean): Bitmap;
+  function loadEmptyBitmap(): Bitmap;
+  function loadNormalBitmap(path: string, hue?: number): Bitmap;
   function clear(): void;
   function isReady(): boolean;
-  function throwLoadError(bitmap: Bitmap): never;
-  function isObjectCharacter(filename: string): boolean;
   function isBigCharacter(filename: string): boolean;
+  function isObjectCharacter(filename: string): boolean;
   function isZeroParallax(filename: string): boolean;
-}
 
-// ---------------------------------------------------------------------------
-// EffectManager
-//
-// The static class that loads Effekseer effects.
-// ---------------------------------------------------------------------------
+  function reserveAnimation(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveBattleback1(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveBattleback2(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveEnemy(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveCharacter(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveFace(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveParallax(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reservePicture(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveSvActor(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveSvEnemy(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveSystem(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveTileset(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveTitle1(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveTitle2(filename: string, hue?: number, reservationId?: number): Bitmap;
+  function reserveBitmap(folder: string, filename: string, hue?: number, smooth?: boolean, reservationId?: number): Bitmap;
+  function reserveNormalBitmap(path: string, hue?: number, reservationId?: number): Bitmap;
 
-declare namespace EffectManager {
-  let _cache: Record<string, EffekseerEffect>;
-  let _errorUrls: string[];
+  function requestAnimation(filename: string, hue?: number): Bitmap;
+  function requestBattleback1(filename: string, hue?: number): Bitmap;
+  function requestBattleback2(filename: string, hue?: number): Bitmap;
+  function requestEnemy(filename: string, hue?: number): Bitmap;
+  function requestCharacter(filename: string, hue?: number): Bitmap;
+  function requestFace(filename: string, hue?: number): Bitmap;
+  function requestParallax(filename: string, hue?: number): Bitmap;
+  function requestPicture(filename: string, hue?: number): Bitmap;
+  function requestSvActor(filename: string, hue?: number): Bitmap;
+  function requestSvEnemy(filename: string, hue?: number): Bitmap;
+  function requestSystem(filename: string, hue?: number): Bitmap;
+  function requestTileset(filename: string, hue?: number): Bitmap;
+  function requestTitle1(filename: string, hue?: number): Bitmap;
+  function requestTitle2(filename: string, hue?: number): Bitmap;
+  function requestBitmap(folder: string, filename: string, hue?: number, smooth?: boolean): Bitmap;
+  function requestNormalBitmap(path: string, hue?: number): Bitmap;
 
-  function load(filename: string): EffekseerEffect | null;
-  function startLoading(url: string): EffekseerEffect;
-  function clear(): void;
-  function onLoad(url: string): void;
-  function onError(url: string): void;
-  function makeUrl(filename: string): string;
-  function checkErrors(): void;
-  function throwLoadError(url: string): never;
-  function isReady(): boolean;
+  function releaseReservation(reservationId: number): void;
+  function setDefaultReservationId(reservationId: number): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -264,9 +219,9 @@ declare namespace AudioManager {
   let _seVolume: number;
   let _currentBgm: RPG_AudioFile | null;
   let _currentBgs: RPG_AudioFile | null;
-  let _bgmBuffer: WebAudio | null;
-  let _bgsBuffer: WebAudio | null;
-  let _meBuffer: WebAudio | null;
+  let _bgmBuffer: WebAudio | Html5Audio | null;
+  let _bgsBuffer: WebAudio | Html5Audio | null;
+  let _meBuffer: WebAudio | Html5Audio | null;
   let _seBuffers: WebAudio[];
   let _staticBuffers: WebAudio[];
   let _replayFadeTime: number;
@@ -280,7 +235,7 @@ declare namespace AudioManager {
   function replayBgm(bgm: RPG_AudioFile): void;
   function isCurrentBgm(bgm: RPG_AudioFile): boolean;
   function updateBgmParameters(bgm: RPG_AudioFile): void;
-  function updateCurrentBgm(bgm: RPG_AudioFile, pos?: number): void;
+  function updateCurrentBgm(bgm: RPG_AudioFile, pos: number): void;
   function stopBgm(): void;
   function fadeOutBgm(duration: number): void;
   function fadeInBgm(duration: number): void;
@@ -288,7 +243,6 @@ declare namespace AudioManager {
   function replayBgs(bgs: RPG_AudioFile): void;
   function isCurrentBgs(bgs: RPG_AudioFile): boolean;
   function updateBgsParameters(bgs: RPG_AudioFile): void;
-  function updateCurrentBgs(bgs: RPG_AudioFile, pos?: number): void;
   function stopBgs(): void;
   function fadeOutBgs(duration: number): void;
   function fadeInBgs(duration: number): void;
@@ -298,20 +252,19 @@ declare namespace AudioManager {
   function stopMe(): void;
   function playSe(se: RPG_AudioFile): void;
   function updateSeParameters(buffer: WebAudio, se: RPG_AudioFile): void;
-  function cleanupSe(): void;
   function stopSe(): void;
   function playStaticSe(se: RPG_AudioFile): void;
   function loadStaticSe(se: RPG_AudioFile): void;
   function isStaticSe(se: RPG_AudioFile): boolean;
-  function stopAll(): void;
   function saveBgm(): RPG_AudioFile;
   function saveBgs(): RPG_AudioFile;
   function makeEmptyAudioObject(): RPG_AudioFile;
-  function createBuffer(folder: string, name: string): WebAudio;
-  function updateBufferParameters(buffer: WebAudio, configVolume: number, audio: RPG_AudioFile): void;
+  function createBuffer(folder: string, name: string): WebAudio | Html5Audio;
+  function updateBufferParameters(buffer: WebAudio | Html5Audio, configVolume: number, audio: RPG_AudioFile): void;
   function audioFileExt(): string;
+  function shouldUseHtml5Audio(): boolean;
   function checkErrors(): void;
-  function throwLoadError(webAudio: WebAudio): never;
+  function checkWebAudioError(webAudio: WebAudio): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -399,15 +352,9 @@ declare namespace TextManager {
   const clear: string;
   const newGame: string;
   const continue_: string;
-  const toTitle: string;
-  const cancel: string;
-  const buy: string;
-  const sell: string;
-
-  // Message terms (from $dataSystem.terms.messages)
-  const alwaysDash: string;
   const commandRemember: string;
   const touchUI: string;
+  const alwaysDash: string;
   const bgmVolume: string;
   const bgsVolume: string;
   const meVolume: string;
@@ -418,7 +365,6 @@ declare namespace TextManager {
   const saveMessage: string;
   const loadMessage: string;
   const file: string;
-  const autosave: string;
   const partyName: string;
   const emerge: string;
   const preemptive: string;
@@ -461,47 +407,6 @@ declare namespace TextManager {
 }
 
 // ---------------------------------------------------------------------------
-// ColorManager
-//
-// The static class that handles the window colors.
-// ---------------------------------------------------------------------------
-
-declare namespace ColorManager {
-  let _windowskin: Bitmap;
-
-  function loadWindowskin(): void;
-  function textColor(n: number): string;
-  function normalColor(): string;
-  function systemColor(): string;
-  function crisisColor(): string;
-  function deathColor(): string;
-  function gaugeBackColor(): string;
-  function hpGaugeColor1(): string;
-  function hpGaugeColor2(): string;
-  function mpGaugeColor1(): string;
-  function mpGaugeColor2(): string;
-  function mpCostColor(): string;
-  function powerUpColor(): string;
-  function powerDownColor(): string;
-  function ctGaugeColor1(): string;
-  function ctGaugeColor2(): string;
-  function tpGaugeColor1(): string;
-  function tpGaugeColor2(): string;
-  function tpCostColor(): string;
-  function pendingColor(): string;
-  function hpColor(actor: Game_Actor): string;
-  function mpColor(actor: Game_Actor): string;
-  function tpColor(actor: Game_Actor): string;
-  function paramchangeTextColor(change: number): string;
-  function damageColor(colorType: number): string;
-  function outlineColor(): string;
-  function dimColor1(): string;
-  function dimColor2(): string;
-  function itemBackColor1(): string;
-  function itemBackColor2(): string;
-}
-
-// ---------------------------------------------------------------------------
 // SceneManager
 //
 // The static class that manages scene transitions.
@@ -515,48 +420,45 @@ declare namespace SceneManager {
   let _scene: Scene_Base | null;
   let _nextScene: Scene_Base | null;
   let _stack: SceneConstructor[];
+  let _stopped: boolean;
+  let _sceneStarted: boolean;
   let _exiting: boolean;
-  let _previousScene: Scene_Base | null;
   let _previousClass: SceneConstructor | null;
   let _backgroundBitmap: Bitmap | null;
-  let _smoothDeltaTime: number;
-  let _elapsedTime: number;
+  let _screenWidth: number;
+  let _screenHeight: number;
+  let _boxWidth: number;
+  let _boxHeight: number;
+  let _deltaTime: number;
+  let _currentTime: number;
+  let _accumulator: number;
 
   function run(sceneClass: SceneConstructor): void;
   function initialize(): void;
-  function checkBrowser(): void;
-  function checkPluginErrors(): void;
   function initGraphics(): void;
+  function preferableRendererType(): string;
+  function shouldUseCanvasRenderer(): boolean;
+  function checkWebGL(): void;
+  function checkFileAccess(): void;
   function initAudio(): void;
-  function initVideo(): void;
   function initInput(): void;
-  function setupEventHandlers(): void;
-  function update(deltaTime: number): void;
-  function determineRepeatNumber(deltaTime: number): number;
+  function initNwjs(): void;
+  function checkPluginErrors(): void;
+  function setupErrorHandlers(): void;
+  function requestUpdate(): void;
+  function update(): void;
   function terminate(): void;
-  function onError(event: ErrorEvent): void;
-  function onReject(event: PromiseRejectionEvent): void;
-  function onUnload(): void;
+  function onError(e: Event): void;
   function onKeyDown(event: KeyboardEvent): void;
-  function reloadGame(): void;
-  function showDevTools(): void;
   function catchException(e: unknown): void;
-  function catchNormalError(e: Error): void;
-  function catchLoadError(e: [string, string, (() => void)?]): void;
-  function catchUnknownError(e: unknown): void;
-  function updateMain(): void;
-  function updateFrameCount(): void;
+  function tickStart(): void;
+  function tickEnd(): void;
   function updateInputData(): void;
-  function updateEffekseer(): void;
+  function updateMain(): void;
+  function updateManagers(): void;
   function changeScene(): void;
-  function updateScene(): void;
-  function isGameActive(): boolean;
-  function onSceneTerminate(): void;
-  function onSceneCreate(): void;
-  function onBeforeSceneStart(): void;
-  function onSceneStart(): void;
   function isSceneChanging(): boolean;
-  function isCurrentSceneBusy(): boolean;
+  function isCurrentSceneStarted(): boolean;
   function isNextScene(sceneClass: SceneConstructor): boolean;
   function isPreviousScene(sceneClass: SceneConstructor): boolean;
   function goto(sceneClass: SceneConstructor | null): void;
@@ -576,6 +478,7 @@ declare namespace SceneManager {
 // BattleManager
 //
 // The static class that manages battle progress.
+// MV uses turn-based battle by default (no TPB system).
 // ---------------------------------------------------------------------------
 
 interface BattleRewards {
@@ -586,14 +489,13 @@ interface BattleRewards {
 
 declare namespace BattleManager {
   let _phase: string;
-  let _inputting: boolean;
   let _canEscape: boolean;
   let _canLose: boolean;
   let _battleTest: boolean;
   let _eventCallback: ((result: number) => void) | null;
   let _preemptive: boolean;
   let _surprise: boolean;
-  let _currentActor: Game_Actor | null;
+  let _actorIndex: number;
   let _actionForcedBattler: Game_Battler | null;
   let _mapBgm: RPG_AudioFile | null;
   let _mapBgs: RPG_AudioFile | null;
@@ -602,75 +504,36 @@ declare namespace BattleManager {
   let _action: Game_Action | null;
   let _targets: Game_Battler[];
   let _logWindow: Window_BattleLog | null;
+  let _statusWindow: Window_BattleStatus | null;
   let _spriteset: Spriteset_Battle | null;
   let _escapeRatio: number;
   let _escaped: boolean;
   let _rewards: BattleRewards;
-  let _tpbNeedsPartyCommand: boolean;
 
   function setup(troopId: number, canEscape: boolean, canLose: boolean): void;
   function initMembers(): void;
-  function isTpb(): boolean;
-  function isActiveTpb(): boolean;
   function isBattleTest(): boolean;
-  function setBattleTest(battleTest: boolean): void;
-  function setEventCallback(callback: (result: number) => void): void;
-  function setLogWindow(logWindow: Window_BattleLog): void;
-  function setSpriteset(spriteset: Spriteset_Battle): void;
-  function onEncounter(): void;
-  function ratePreemptive(): number;
-  function rateSurprise(): number;
-  function saveBgmAndBgs(): void;
-  function playBattleBgm(): void;
-  function playVictoryMe(): void;
-  function playDefeatMe(): void;
-  function replayBgmAndBgs(): void;
-  function makeEscapeRatio(): void;
-  function update(timeActive: boolean): void;
-  function updatePhase(timeActive: boolean): void;
-  function updateEvent(): boolean;
-  function updateEventMain(): boolean;
-  function isBusy(): boolean;
-  function updateTpbInput(): void;
-  function checkTpbInputClose(): void;
-  function checkTpbInputOpen(): void;
-  function isPartyTpbInputtable(): boolean;
-  function needsActorInputCancel(): boolean;
-  function isTpbMainPhase(): boolean;
-  function isInputting(): boolean;
-  function isInTurn(): boolean;
   function isTurnEnd(): boolean;
   function isAborting(): boolean;
-  function isBattleEnd(): boolean;
+  function isInputting(): boolean;
+  function isInTurn(): boolean;
   function canEscape(): boolean;
   function canLose(): boolean;
-  function isEscaped(): boolean;
   function actor(): Game_Actor | null;
+  function clearActor(): void;
+  function changeActor(newActorIndex: number, lastActorActionState: string): void;
   function startBattle(): void;
   function displayStartMessages(): void;
   function startInput(): void;
   function inputtingAction(): Game_Action | null;
   function selectNextCommand(): void;
-  function selectNextActor(): void;
   function selectPreviousCommand(): void;
-  function selectPreviousActor(): void;
-  function changeCurrentActor(forward: boolean): void;
-  function startActorInput(): void;
-  function finishActorInput(): void;
-  function cancelActorInput(): void;
-  function updateStart(): void;
+  function refreshStatus(): void;
   function startTurn(): void;
-  function updateTurn(timeActive: boolean): void;
-  function updateTpb(): void;
-  function updateAllTpbBattlers(): void;
-  function updateTpbBattler(battler: Game_Battler): void;
-  function checkTpbTurnEnd(): void;
+  function updateTurn(): void;
   function processTurn(): void;
-  function endBattlerActions(battler: Game_Battler): void;
   function endTurn(): void;
   function updateTurnEnd(): void;
-  function endAllBattlersTurn(): void;
-  function displayBattlerStatus(battler: Game_Battler, current: boolean): void;
   function getNextSubject(): Game_Battler | null;
   function allBattleMembers(): Game_Battler[];
   function makeActionOrders(): void;
@@ -693,14 +556,11 @@ declare namespace BattleManager {
   function processEscape(): boolean;
   function onEscapeSuccess(): void;
   function onEscapeFailure(): void;
-  function processPartyEscape(): void;
   function processAbort(): void;
   function processDefeat(): void;
   function endBattle(result: number): void;
   function updateBattleEnd(): void;
   function makeRewards(): void;
-  function displayVictoryMessage(): void;
-  function displayDefeatMessage(): void;
   function displayEscapeSuccessMessage(): void;
   function displayEscapeFailureMessage(): void;
   function displayRewards(): void;
@@ -711,17 +571,38 @@ declare namespace BattleManager {
   function gainExp(): void;
   function gainGold(): void;
   function gainDropItems(): void;
+  function makeEscapeRatio(): void;
+
+  function setEventCallback(callback: (result: number) => void): void;
+  function setLogWindow(logWindow: Window_BattleLog): void;
+  function setStatusWindow(statusWindow: Window_BattleStatus): void;
+  function setSpriteset(spriteset: Spriteset_Battle): void;
+  function onEncounter(): void;
+  function ratePreemptive(): number;
+  function rateSurprise(): number;
+  function saveBgmAndBgs(): void;
+  function playBattleBgm(): void;
+  function playVictoryMe(): void;
+  function playDefeatMe(): void;
+  function replayBgmAndBgs(): void;
+  function updateEvent(): boolean;
+  function updateEventMain(): boolean;
+  function isBusy(): boolean;
+  function isEscaped(): boolean;
+  function displayVictoryMessage(): void;
+  function displayDefeatMessage(): void;
 }
 
 // ---------------------------------------------------------------------------
 // PluginManager
 //
 // The static class that manages the plugins.
+// MV does NOT have PluginManager.registerCommand (that is MZ only).
 // ---------------------------------------------------------------------------
 
 interface PluginInfo {
   name: string;
-  status: boolean;
+  status: string;
   description: string;
   parameters: Record<string, string>;
 }
@@ -730,16 +611,11 @@ declare namespace PluginManager {
   let _scripts: string[];
   let _errorUrls: string[];
   let _parameters: Record<string, Record<string, string>>;
-  let _commands: Record<string, (args: Record<string, string>) => void>;
 
   function setup(plugins: PluginInfo[]): void;
-  function parameters(name: string): Record<string, string>;
-  function setParameters(name: string, parameters: Record<string, string>): void;
-  function loadScript(filename: string): void;
-  function onError(e: Event): void;
-  function makeUrl(filename: string): string;
   function checkErrors(): void;
-  function throwLoadError(url: string): never;
-  function registerCommand(pluginName: string, commandName: string, func: (args: Record<string, string>) => void): void;
-  function callCommand(self: Game_Interpreter, pluginName: string, commandName: string, args: Record<string, string>): void;
+  function parameters(name: string): Record<string, string>;
+  function setStatus(name: string, status: boolean): void;
+  function loadScript(name: string): void;
+  function onError(e: Event): void;
 }

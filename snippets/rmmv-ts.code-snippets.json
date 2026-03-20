@@ -1,7 +1,7 @@
 {
-  "RMMZ TS: Typed Alias Pattern": {
+  "RMMV TS: Typed Alias Pattern": {
     "scope": "typescript",
-    "prefix": "rmmz-alias",
+    "prefix": "rmmv-alias",
     "description": "Alias an existing prototype method with typed this parameter",
     "body": [
       "const _${1:Class}_${2:method} = ${1:Class}.prototype.${2:method};",
@@ -11,23 +11,31 @@
       "};"
     ]
   },
-  "RMMZ TS: Register Plugin Command": {
+  "RMMV TS: Plugin Command Handler": {
     "scope": "typescript",
-    "prefix": "rmmz-command",
-    "description": "Register a typed plugin command with PluginManager",
+    "prefix": "rmmv-command",
+    "description": "Override Game_Interpreter.pluginCommand with typed parameters",
     "body": [
-      "PluginManager.registerCommand(PLUGIN_NAME, \"${1:commandName}\", (args) => {",
-      "\t$0",
-      "});"
+      "const _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;",
+      "Game_Interpreter.prototype.pluginCommand = function(this: Game_Interpreter, command: string, args: string[]): void {",
+      "\t_Game_Interpreter_pluginCommand.call(this, command, args);",
+      "\tif (command === PLUGIN_NAME) {",
+      "\t\tswitch (args[0]) {",
+      "\t\t\tcase \"${1:commandName}\":",
+      "\t\t\t\t$0",
+      "\t\t\t\tbreak;",
+      "\t\t}",
+      "\t}",
+      "};"
     ]
   },
-  "RMMZ TS: Full Plugin Scaffold": {
+  "RMMV TS: Full Plugin Scaffold": {
     "scope": "typescript",
-    "prefix": "rmmz-plugin",
-    "description": "Complete TypeScript plugin template with annotation block, parameters, and command",
+    "prefix": "rmmv-plugin",
+    "description": "Complete TypeScript MV plugin template with annotation block and parameters",
     "body": [
       "/*:",
-      " * @target MZ",
+      " * @target MV",
       " * @plugindesc ${1:Plugin description}",
       " * @author ${2:Author}",
       " * @url ${3:https://}",
@@ -40,37 +48,25 @@
       " * @type ${7:string}",
       " * @default ${8:}",
       " * @desc ${9:Parameter description}",
-      " *",
-      " * @command ${10:commandName}",
-      " * @text ${11:Command Label}",
-      " * @desc ${12:Command description}",
-      " *",
-      " * @arg ${13:argName}",
-      " * @text ${14:Argument Label}",
-      " * @type ${15:string}",
-      " * @default ${16:}",
-      " * @desc ${17:Argument description}",
       " */",
       "",
-      "(() => {",
+      "((): void => {",
       "\t\"use strict\";",
       "",
-      "\tconst PLUGIN_NAME = \"${18:${TM_FILENAME_BASE}}\";",
+      "\tconst PLUGIN_NAME = \"${10:${TM_FILENAME_BASE}}\";",
       "\tconst parameters = PluginManager.parameters(PLUGIN_NAME);",
       "",
       "\tconst param = {",
       "\t\t${5:paramName}: parameters[\"${5:paramName}\"] || \"${8:}\",",
       "\t};",
       "",
-      "\tPluginManager.registerCommand(PLUGIN_NAME, \"${10:commandName}\", (args) => {",
-      "\t\t$0",
-      "\t});",
+      "\t$0",
       "})();"
     ]
   },
-  "RMMZ TS: Parameter Parsing": {
+  "RMMV TS: Parameter Parsing": {
     "scope": "typescript",
-    "prefix": "rmmz-param",
+    "prefix": "rmmv-param",
     "description": "Parse plugin parameters with type annotations",
     "body": [
       "const param = {",
@@ -78,12 +74,12 @@
       "};"
     ]
   },
-  "RMMZ TS: IIFE Wrapper": {
+  "RMMV TS: IIFE Wrapper": {
     "scope": "typescript",
-    "prefix": "rmmz-iife",
+    "prefix": "rmmv-iife",
     "description": "Immediately Invoked Function Expression wrapper",
     "body": [
-      "(() => {",
+      "((): void => {",
       "\t\"use strict\";",
       "",
       "\t$0",

@@ -579,8 +579,8 @@ function showNoteTagEditor(): void {
   }
 
   currentPanel = vscode.window.createWebviewPanel(
-    'rmmzNoteTagEditor',
-    'RMMZ Note Tag Editor',
+    'rmmvNoteTagEditor',
+    'RMMV Note Tag Editor',
     vscode.ViewColumn.Active,
     { enableScripts: true }
   );
@@ -630,11 +630,11 @@ function showNoteTagEditor(): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Registers the `rmmz.editNoteTags` command.
+ * Registers the `rmmv.editNoteTags` command.
  * Call from the main `activate` function.
  */
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.editNoteTags', showNoteTagEditor)
+    vscode.commands.registerCommand('rmmv.editNoteTags', showNoteTagEditor)
   );
 }

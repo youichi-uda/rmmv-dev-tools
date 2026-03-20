@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import { TAG_DESCRIPTIONS, TYPE_DESCRIPTIONS, TYPE_VALUES } from './tags';
 
 /**
- * Provides hover information for RMMZ annotation tags and @type values.
+ * Provides hover information for RMMV annotation tags and @type values.
  */
-export class RmmzHoverProvider implements vscode.HoverProvider {
+export class RmmvHoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,

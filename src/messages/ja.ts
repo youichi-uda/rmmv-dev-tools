@@ -1,7 +1,7 @@
 export const messages: Record<string, string> = {
   // ── extension.ts ──────────────────────────────────────────────────────
   'noWorkspaceFolder': 'ワークスペースフォルダが開かれていません。',
-  'pickWorkspaceFolder': 'RPGツクールMZプロジェクトフォルダを選択',
+  'pickWorkspaceFolder': 'RPGツクールMVプロジェクトフォルダを選択',
 
   // ── license/gumroad.ts ────────────────────────────────────────────────
   'license.invalidKey': '無効なライセンスキーです。',
@@ -10,39 +10,40 @@ export const messages: Record<string, string> = {
   'license.activated': 'Proライセンスが有効になりました！',
   'license.verifyFailed': '認証に失敗しました: {0}',
   'license.deactivated': 'Proライセンスを解除しました。',
-  'license.statusActive': 'RMMZ Dev Tools: Proライセンスが有効です。',
-  'license.statusFree': 'RMMZ Dev Tools: 無料版です。Proライセンスを認証すると全機能が使えます。',
+  'license.statusActive': 'RMMV Dev Tools: Proライセンスが有効です。',
+  'license.statusFree': 'RMMV Dev Tools: 無料版です。Proライセンスを認証すると全機能が使えます。',
   'license.enterKey': 'ライセンスキー入力',
-  'license.prompt': 'RMMZ Dev Tools Proライセンスキーを入力してください',
+  'license.prompt': 'RMMV Dev Tools Proライセンスキーを入力してください',
   'license.placeholder': 'XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX',
-  'license.statusBarPro': '$(star-full) RMMZ Pro',
-  'license.statusBarFree': '$(star-empty) RMMZ 無料版',
-  'license.tooltipPro': 'RMMZ Dev Tools — Proライセンス有効',
-  'license.tooltipFree': 'RMMZ Dev Tools — 無料版。クリックしてProを認証。',
+  'license.statusBarPro': '$(star-full) RMMV Pro',
+  'license.statusBarFree': '$(star-empty) RMMV 無料版',
+  'license.tooltipPro': 'RMMV Dev Tools — Proライセンス有効',
+  'license.tooltipFree': 'RMMV Dev Tools — 無料版。クリックしてProを認証。',
   'license.requirePro': '「{0}」はPro機能です。ライセンスを認証してご利用ください。',
   'license.purchase': 'Proを購入',
 
   // ── intellisense/setup.ts ─────────────────────────────────────────────
   'intellisense.alreadyExists': 'jsconfig.jsonは既に存在します。IntelliSenseは有効のはずです。',
-  'intellisense.overwritePrompt': 'jsconfig.jsonが既に存在します。RMMZ設定で上書きしますか？',
+  'intellisense.overwritePrompt': 'jsconfig.jsonが既に存在します。RMMV設定で上書きしますか？',
   'intellisense.overwrite': '上書き',
   'intellisense.cancel': 'キャンセル',
-  'intellisense.created': 'RMMZ IntelliSense用のjsconfig.jsonを作成しました。',
-  'intellisense.detected': 'RPGツクールMZプロジェクトを検出しました。コアスクリプト補完用のIntelliSenseをセットアップしますか？',
+  'intellisense.created': 'RMMV IntelliSense用のjsconfig.jsonを作成しました。',
+  'intellisense.detected': 'RPGツクールMVプロジェクトを検出しました。コアスクリプト補完用のIntelliSenseをセットアップしますか？',
   'intellisense.setup': 'セットアップ',
   'intellisense.notNow': '今はしない',
   'intellisense.dontAsk': '今後表示しない',
 
   // ── debugger/setup.ts ─────────────────────────────────────────────────
-  'debugger.alreadyExists': 'RMMZデバッガー設定はlaunch.jsonに既に存在します。',
-  'debugger.addedToExisting': '既存のlaunch.jsonにRMMZデバッグ設定を追加しました。',
-  'debugger.created': 'RMMZデバッグ設定付きのlaunch.jsonを作成しました。',
-  'debugger.restoredPort': 'RMMZ Dev Tools: package.jsonのデバッグポートを復元しました（MZエディタによる上書きを検出）。',
+  'debugger.alreadyExists': 'RMMVデバッガー設定はlaunch.jsonに既に存在します。',
+  'debugger.addedToExisting': '既存のlaunch.jsonにRMMVデバッグ設定を追加しました。',
+  'debugger.created': 'RMMVデバッグ設定付きのlaunch.jsonを作成しました。',
+  'debugger.restoredPort': 'RMMV Dev Tools: package.jsonのデバッグポートを復元しました（MVエディタによる上書きを検出）。',
   'debugger.updated': 'launch.jsonのruntimeExecutableを更新しました。',
-  'debugger.nwExeNotFound': '設定されたパスにnw.exeが見つかりません: {0}。正しいRPGツクールMZのインストールフォルダを選択してください。',
-  'debugger.nwExeNotFoundSelected': '選択されたフォルダにnw.exeが見つかりません: {0}。RPGツクールMZのインストールフォルダ内にnwjs-win/nw.exeが必要です。',
+  'debugger.nwExeNotFound': '設定されたパスにnw.exeが見つかりません: {0}。正しいRPGツクールMVのインストールフォルダを選択してください。',
+  'debugger.nwExeNotFoundSelected': '選択されたフォルダにnw.exeが見つかりません: {0}。ゲームプロジェクトではなく、RPGツクールMVのインストールフォルダ（例: C:\\Program Files\\KADOKAWA\\RPGMV）を選択してください。',
   'debugger.selectInstallFolder': '選択',
-  'debugger.selectInstallFolderTitle': 'RPGツクールMZのインストールフォルダを選択（nwjs-win/を含むフォルダ）',
+  'debugger.selectInstallFolderTitle': 'RPGツクールMVのインストールフォルダを選択（例: C:\\Program Files\\KADOKAWA\\RPGMV）',
+  'debugger.selectInstallFolderPrompt': 'プロジェクトにGame.exeがありません。nwjs-win/nw.exeを含むRPGツクールMVのインストールフォルダを選択してください。',
 
   // ── debugger/setup.ts (release) ────────────────────────────────────────
   'release.noPackageJson': 'プロジェクトにpackage.jsonが見つかりません。',
@@ -51,9 +52,9 @@ export const messages: Record<string, string> = {
   'release.error': 'package.jsonの更新に失敗しました。',
 
   // ── template/generator.ts ─────────────────────────────────────────────
-  'template.step1Title': '新規RMMZプラグイン (1/3)',
-  'template.step2Title': '新規RMMZプラグイン (2/3)',
-  'template.step3Title': '新規RMMZプラグイン (3/3)',
+  'template.step1Title': '新規RMMVプラグイン (1/3)',
+  'template.step2Title': '新規RMMVプラグイン (2/3)',
+  'template.step3Title': '新規RMMVプラグイン (3/3)',
   'template.pluginNamePrompt': 'プラグイン名（ファイル名として使用）',
   'template.pluginNamePlaceholder': 'MyPlugin',
   'template.pluginNameRequired': 'プラグイン名は必須です',
@@ -66,19 +67,15 @@ export const messages: Record<string, string> = {
   'template.urlPrompt': 'URL（任意 — プラグインページ、GitHubなど）',
   'template.urlPlaceholder': 'https://github.com/you/plugin',
   'template.featureCommand': 'プラグインコマンド',
-  'template.featureCommandDesc': '@command / registerCommand のサンプルを含める',
+  'template.featureCommandDesc': 'pluginCommand ハンドラのサンプルを含める',
   'template.featureParams': 'パラメータ',
   'template.featureParamsDesc': '@param のサンプルとパース処理を含める',
-  'template.featureBase': '依存プラグイン',
-  'template.featureBaseDesc': '@base タグを追加（例: PluginCommonBase）',
   'template.selectFeatures': '含める機能を選択',
-  'template.basePrompt': '依存プラグイン名（@base）',
-  'template.basePlaceholder': 'PluginCommonBase',
   'template.overwritePrompt': '{0}.jsは既に存在します。上書きしますか？',
   'template.created': 'プラグインを作成しました: {0}.js',
 
   // ── annotation/formatter.ts ───────────────────────────────────────────
-  'formatter.notInBlock': 'カーソルがRMMZアノテーションブロック内にありません。',
+  'formatter.notInBlock': 'カーソルがRMMVアノテーションブロック内にありません。',
 
   // ── annotation/validator.ts ───────────────────────────────────────────
   'validator.unknownType': '不明な@type: "{0}"',
@@ -88,7 +85,7 @@ export const messages: Record<string, string> = {
   'validator.notValidInArg': '@{0}は@arg内では無効です',
   'validator.notValidAtTop': '@{0}はトップレベルでは無効です',
   'validator.typeHint': '@{0}は通常 @type {1} で使用します（"{2}"ではなく）',
-  'validator.targetRecommended': '@target MZ の記述を推奨します',
+  'validator.targetRecommended': '@target MV の記述を推奨します',
   'validator.plugindescRequired': '@plugindesc は必須です',
 
   // ── annotation/langSync.ts ────────────────────────────────────────────
@@ -110,8 +107,8 @@ export const messages: Record<string, string> = {
   'conflict.aliasChain': '{0} エイリアスチェーン: {1}',
 
   // ── asset/checker.ts ──────────────────────────────────────────────────
-  'asset.noProject': 'RMMZプロジェクトのワークスペースが見つかりません。',
-  'asset.header': '=== RMMZ 素材参照チェック ===',
+  'asset.noProject': 'RMMVプロジェクトのワークスペースが見つかりません。',
+  'asset.header': '=== RMMV 素材参照チェック ===',
   'asset.projectRoot': 'プロジェクトルート: {0}',
   'asset.missingDir': 'ディレクトリが見つかりません: {0}（解決先: {1}）',
   'asset.missingDirShort': 'ディレクトリが見つかりません: {0}',
@@ -119,19 +116,19 @@ export const messages: Record<string, string> = {
   'asset.complete': 'チェック完了。{0}件の警告が見つかりました。',
 
   // ── reload/sceneReload.ts ─────────────────────────────────────────────
-  'reload.statusOff': '$(circle-slash) RMMZ リロード: オフ',
-  'reload.statusConnected': '$(zap) RMMZ リロード: 接続中',
-  'reload.statusWaiting': '$(plug) RMMZ リロード: 待機中',
+  'reload.statusOff': '$(circle-slash) RMMV リロード: オフ',
+  'reload.statusConnected': '$(zap) RMMV リロード: 接続中',
+  'reload.statusWaiting': '$(plug) RMMV リロード: 待機中',
   'reload.tooltipOff': 'クリックでシーンリロードを有効化',
   'reload.tooltipConnected': 'シーンリロード有効 — ゲームに接続中',
   'reload.tooltipWaiting': 'シーンリロード有効 — ポート9222でゲームを待機中',
-  'reload.enabled': 'RMMZシーンリロードを有効にしました。',
-  'reload.disabled': 'RMMZシーンリロードを無効にしました。',
+  'reload.enabled': 'RMMVシーンリロードを有効にしました。',
+  'reload.disabled': 'RMMVシーンリロードを無効にしました。',
   'reload.reloadedScene': '$(zap) シーンリロード: {0}',
   'reload.failed': 'シーンリロード失敗: {0}',
 
   // ── testplay/console.ts ───────────────────────────────────────────────
-  'console.channelName': 'RMMZ コンソール',
+  'console.channelName': 'RMMV コンソール',
   'console.connected': '--- ゲームに接続しました ---',
   'console.disconnected': '--- ゲームが切断されました ---',
   'console.listening': '--- ポート9222でゲームを待機中 ---',
@@ -139,7 +136,7 @@ export const messages: Record<string, string> = {
 
   // ── registry/manager.ts ───────────────────────────────────────────────
   'registry.noPlugins': 'js/plugins/ にプラグインが見つかりません。',
-  'registry.updateHeader': 'RMMZ プラグイン更新チェック',
+  'registry.updateHeader': 'RMMV プラグイン更新チェック',
   'registry.noRegistry': 'plugin-registry.jsonが見つかりません。data/またはプロジェクトルートに作成してバージョンを管理できます。',
   'registry.registryLoaded': 'レジストリ読込元: {0}',
   'registry.registry': 'レジストリ: {0}',
@@ -151,18 +148,18 @@ export const messages: Record<string, string> = {
   'registry.updatesAvailable': '利用可能な更新: {0}',
   'registry.compatIssues': '互換性の問題: {0}',
   'registry.noActiveEditor': 'アクティブなエディタがありません。',
-  'registry.noAnnotation': 'このファイルにRMMZプラグインアノテーションが見つかりません。',
+  'registry.noAnnotation': 'このファイルにRMMVプラグインアノテーションが見つかりません。',
   'registry.notInPluginRegistry': 'プラグインレジストリに登録されていません。',
   'registry.updateAvailableDetail': '*** 更新あり: v{0} -> v{1}',
 
   // ── dependency/graph.ts ───────────────────────────────────────────────
-  'graph.panelTitle': 'RMMZ プラグイン依存関係',
+  'graph.panelTitle': 'RMMV プラグイン依存関係',
 
   // ── preview/annotationPreview.ts ──────────────────────────────────────
-  'preview.panelTitle': 'RMMZ アノテーションプレビュー',
+  'preview.panelTitle': 'RMMV アノテーションプレビュー',
 
   // ── typescript/setup.ts ──────────────────────────────────────────────
-  'typescript.overwritePrompt': 'tsconfig.jsonが既に存在します。RMMZ TypeScript設定で上書きしますか？',
+  'typescript.overwritePrompt': 'tsconfig.jsonが既に存在します。RMMV TypeScript設定で上書きしますか？',
   'typescript.overwrite': '上書き',
   'typescript.cancel': 'キャンセル',
   'typescript.setupComplete': 'TypeScript環境をセットアップしました: tsconfig.json、ts/plugins/、型定義を作成しました。',

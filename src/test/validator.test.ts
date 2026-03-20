@@ -19,7 +19,7 @@ describe('validateDocument', () => {
   it('warns on unknown tags', () => {
     const d = diags(`/*:
  * @plugindesc My Plugin
- * @target MZ
+ * @target MV
  * @unknownTag foo
  */`);
     const unknown = d.filter(x => x.message.includes('Unknown annotation tag: @unknownTag'));
@@ -32,7 +32,7 @@ describe('validateDocument', () => {
   it('warns on invalid @type value', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param foo
  * @type numbre
  */`);
@@ -47,7 +47,7 @@ describe('validateDocument', () => {
   it('does not warn on valid @type values', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param foo
  * @type number
  */`);
@@ -58,7 +58,7 @@ describe('validateDocument', () => {
   it('accepts struct<TypeName> as a valid type', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param foo
  * @type struct<MyStruct>
  */`);
@@ -69,7 +69,7 @@ describe('validateDocument', () => {
   it('accepts array types (number[])', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param foo
  * @type number[]
  */`);
@@ -82,7 +82,7 @@ describe('validateDocument', () => {
   it('warns when @min is used at top level (outside @param)', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @min 0
  */`);
     const scopeWarns = d.filter(x => x.message.includes('not valid at top level'));
@@ -92,7 +92,7 @@ describe('validateDocument', () => {
   it('allows @min inside @param scope', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param myNumber
  * @type number
  * @min 0
@@ -101,14 +101,14 @@ describe('validateDocument', () => {
     expect(scopeWarns).toHaveLength(0);
   });
 
-  it('warns when @min is inside @command scope (before @arg)', () => {
+  it('warns when @min is used at top level (after @param resets to top)', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
- * @command DoThing
+ * @target MV
+ * @help Some help text
  * @min 5
  */`);
-    const scopeWarns = d.filter(x => x.message.includes('not valid inside @command'));
+    const scopeWarns = d.filter(x => x.message.includes('not valid at top level'));
     expect(scopeWarns).toHaveLength(1);
   });
 
@@ -117,7 +117,7 @@ describe('validateDocument', () => {
   it('hints when @min is used with @type string', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param foo
  * @type string
  * @min 0
@@ -131,7 +131,7 @@ describe('validateDocument', () => {
   it('does not hint when @min is used with @type number', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
+ * @target MV
  * @param foo
  * @type number
  * @min 0
@@ -144,7 +144,7 @@ describe('validateDocument', () => {
 
   it('warns when @plugindesc is missing', () => {
     const d = diags(`/*:
- * @target MZ
+ * @target MV
  * @author Me
  */`);
     const missing = d.filter(x => x.message.includes('@plugindesc is required'));
@@ -159,19 +159,18 @@ describe('validateDocument', () => {
  * @plugindesc My Plugin
  * @author Me
  */`);
-    const missing = d.filter(x => x.message.includes('@target MZ is recommended'));
+    const missing = d.filter(x => x.message.includes('@target MV is recommended'));
     expect(missing).toHaveLength(1);
     expect(missing[0].severity).toBe(DiagnosticSeverity.Information);
   });
 
   // ---- Top-level tags reset scope ----
 
-  it('resets scope when a top-level tag appears after @arg', () => {
+  it('resets scope when a top-level tag appears after @param', () => {
     const d = diags(`/*:
  * @plugindesc Test
- * @target MZ
- * @command DoThing
- * @arg myArg
+ * @target MV
+ * @param myParam
  * @type number
  * @help This is help text
  */`);
@@ -201,7 +200,7 @@ describe('validateDocument', () => {
   it('produces no warnings for a fully valid block', () => {
     const d = diags(`/*:
  * @plugindesc A fully valid plugin
- * @target MZ
+ * @target MV
  * @author Author
  * @help This plugin does things.
  *
@@ -212,15 +211,6 @@ describe('validateDocument', () => {
  * @max 100
  * @default 10
  * @desc How fast it goes.
- *
- * @command Run
- * @text Run Command
- * @desc Runs the command.
- *
- * @arg distance
- * @type number
- * @min 0
- * @default 5
  */`);
     expect(d).toHaveLength(0);
   });

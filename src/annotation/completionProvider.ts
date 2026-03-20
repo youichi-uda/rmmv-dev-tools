@@ -2,15 +2,13 @@ import * as vscode from 'vscode';
 import {
   TOP_LEVEL_TAGS,
   PARAM_TAGS,
-  COMMAND_TAGS,
-  ARG_TAGS,
   TYPE_VALUES,
   TYPE_DESCRIPTIONS,
   TAG_DESCRIPTIONS,
 } from './tags';
 
 /**
- * Determines if the given position is inside an RMMZ annotation block.
+ * Determines if the given position is inside an RMMV annotation block.
  * Returns the block content and its start position if found.
  */
 function getAnnotationBlock(
@@ -42,10 +40,11 @@ function getAnnotationBlock(
   };
 }
 
-type Scope = 'top' | 'param' | 'command' | 'arg';
+type Scope = 'top' | 'param';
 
 /**
  * Determines the current annotation scope at the given position.
+ * MV only has top-level and @param scopes (no @command/@arg).
  */
 function getCurrentScope(
   document: vscode.TextDocument,
@@ -64,8 +63,6 @@ function getCurrentScope(
     const tagMatch = lineText.match(/^\*?\s*@(\w+)/);
     if (tagMatch) {
       const tag = tagMatch[1];
-      if (tag === 'arg') return 'arg';
-      if (tag === 'command') return 'command';
       if (tag === 'param') return 'param';
       // Other tags don't change scope, keep looking
     }
@@ -75,9 +72,9 @@ function getCurrentScope(
 }
 
 /**
- * Provides completion items for RMMZ annotation tags and @type values.
+ * Provides completion items for RMMV annotation tags and @type values.
  */
-export class RmmzCompletionProvider implements vscode.CompletionItemProvider {
+export class RmmvCompletionProvider implements vscode.CompletionItemProvider {
   provideCompletionItems(
     document: vscode.TextDocument,
     position: vscode.Position,
@@ -136,21 +133,7 @@ export class RmmzCompletionProvider implements vscode.CompletionItemProvider {
   }
 
   private getScopedTagCompletions(scope: Scope, prefix: string): vscode.CompletionItem[] {
-    let tags: readonly string[];
-    switch (scope) {
-      case 'param':
-        tags = PARAM_TAGS;
-        break;
-      case 'command':
-        tags = [...COMMAND_TAGS, ...PARAM_TAGS]; // command can contain @arg which has sub-tags
-        break;
-      case 'arg':
-        tags = ARG_TAGS;
-        break;
-      default:
-        tags = TOP_LEVEL_TAGS;
-        break;
-    }
+    const tags: readonly string[] = scope === 'param' ? PARAM_TAGS : TOP_LEVEL_TAGS;
     return this.getTagCompletions([...tags], prefix);
   }
 

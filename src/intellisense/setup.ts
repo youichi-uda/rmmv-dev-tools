@@ -4,9 +4,9 @@ import * as fs from 'fs';
 import { t } from '../i18n';
 
 /**
- * Checks if the workspace looks like an RPG Maker MZ project.
+ * Checks if the workspace looks like an RPG Maker MV project.
  */
-export function isRmmzProject(workspaceFolder: vscode.WorkspaceFolder): boolean {
+export function isRmmvProject(workspaceFolder: vscode.WorkspaceFolder): boolean {
   const root = workspaceFolder.uri.fsPath;
   const hasPluginsDir = fs.existsSync(path.join(root, 'js', 'plugins'));
   const hasDataDir = fs.existsSync(path.join(root, 'data'));
@@ -69,13 +69,13 @@ export function promptIntelliSenseSetup(context: vscode.ExtensionContext): void 
   if (!folders) return;
 
   for (const folder of folders) {
-    if (!isRmmzProject(folder)) continue;
+    if (!isRmmvProject(folder)) continue;
 
     const jsconfigPath = path.join(folder.uri.fsPath, 'jsconfig.json');
     if (fs.existsSync(jsconfigPath)) continue;
 
     // Check if we've already prompted
-    const promptedKey = `rmmz.intellisensePrompted.${folder.uri.fsPath}`;
+    const promptedKey = `rmmv.intellisensePrompted.${folder.uri.fsPath}`;
     if (context.globalState.get<boolean>(promptedKey)) continue;
 
     vscode.window

@@ -3,12 +3,12 @@ import { isProLicensed } from '../license/gumroad';
 import { t } from '../i18n';
 
 /**
- * Provides the Quick Actions webview in the RMMZ sidebar.
+ * Provides the Quick Actions webview in the RMMV sidebar.
  * Shows categorized buttons for common commands.
  * Pro features show a badge when not licensed.
  */
 export class QuickActionsProvider implements vscode.WebviewViewProvider {
-  static readonly viewType = 'rmmzQuickActions';
+  static readonly viewType = 'rmmvQuickActions';
 
   private _view?: vscode.WebviewView;
 
@@ -48,39 +48,39 @@ export class QuickActionsProvider implements vscode.WebviewViewProvider {
     const body = `
   <div class="section">
     <div class="section-title">${t('quickActions.plugin')}</div>
-    ${b('rmmz.newPlugin', '+', t('quickActions.newPlugin'))}
-    ${b('rmmz.previewAnnotation', '&#x25A3;', t('quickActions.annotationPreview'), true)}
-    ${b('rmmz.formatAnnotation', '&#x2261;', t('quickActions.formatAnnotation'))}
+    ${b('rmmv.newPlugin', '+', t('quickActions.newPlugin'))}
+    ${b('rmmv.previewAnnotation', '&#x25A3;', t('quickActions.annotationPreview'), true)}
+    ${b('rmmv.formatAnnotation', '&#x2261;', t('quickActions.formatAnnotation'))}
   </div>
 
   <div class="section">
     <div class="section-title">${t('quickActions.analysis')}</div>
-    ${b('rmmz.showConflicts', '&#x26A0;', t('quickActions.pluginConflicts'))}
-    ${b('rmmz.showDependencyGraph', '&#x2B95;', t('quickActions.dependencyGraph'), true)}
-    ${b('rmmz.checkAssets', '&#x1F50D;', t('quickActions.checkAssets'))}
-    ${b('rmmz.checkPluginUpdates', '&#x21BB;', t('quickActions.checkUpdates'), true)}
+    ${b('rmmv.showConflicts', '&#x26A0;', t('quickActions.pluginConflicts'))}
+    ${b('rmmv.showDependencyGraph', '&#x2B95;', t('quickActions.dependencyGraph'), true)}
+    ${b('rmmv.checkAssets', '&#x1F50D;', t('quickActions.checkAssets'))}
+    ${b('rmmv.checkPluginUpdates', '&#x21BB;', t('quickActions.checkUpdates'), true)}
   </div>
 
   <div class="section">
     <div class="section-title">${t('quickActions.data')}</div>
-    ${b('rmmz.editNoteTags', '&#x270E;', t('quickActions.editNoteTags'), true)}
-    ${b('rmmz.searchHierarchy', '&#x1F50E;', t('quickActions.searchClasses'), true)}
+    ${b('rmmv.editNoteTags', '&#x270E;', t('quickActions.editNoteTags'), true)}
+    ${b('rmmv.searchHierarchy', '&#x1F50E;', t('quickActions.searchClasses'), true)}
   </div>
 
   <div class="section">
     <div class="section-title">${t('quickActions.testplay')}</div>
-    ${b('rmmz.toggleSceneReload', '&#x26A1;', t('quickActions.toggleSceneReload'), true)}
-    ${b('rmmz.showConsole', '&#x25B6;', t('quickActions.console'), true)}
-    ${b('rmmz.showLivePreview', '&#x1F3AE;', t('quickActions.livePreview'), true)}
+    ${b('rmmv.toggleSceneReload', '&#x26A1;', t('quickActions.toggleSceneReload'), true)}
+    ${b('rmmv.showConsole', '&#x25B6;', t('quickActions.console'), true)}
+    ${b('rmmv.showLivePreview', '&#x1F3AE;', t('quickActions.livePreview'), true)}
   </div>
 
   <div class="section">
     <div class="section-title">${t('quickActions.setup')}</div>
-    ${b('rmmz.setupIntelliSense', '&#x2699;', t('quickActions.setupIntelliSense'))}
-    ${b('rmmz.setupDebugger', '&#x1F41E;', t('quickActions.setupDebugger'), true)}
-    ${b('rmmz.setupTypeScript', '&#x1F1F9;', t('quickActions.setupTypeScript'), true)}
-    ${b('rmmz.toggleTypeScriptBuild', '&#x1F528;', t('quickActions.toggleTsBuild'), true)}
-    ${b('rmmz.prepareRelease', '&#x1F4E6;', t('quickActions.prepareRelease'))}
+    ${b('rmmv.setupIntelliSense', '&#x2699;', t('quickActions.setupIntelliSense'))}
+    ${b('rmmv.setupDebugger', '&#x1F41E;', t('quickActions.setupDebugger'), true)}
+    ${b('rmmv.setupTypeScript', '&#x1F1F9;', t('quickActions.setupTypeScript'), true)}
+    ${b('rmmv.toggleTypeScriptBuild', '&#x1F528;', t('quickActions.toggleTsBuild'), true)}
+    ${b('rmmv.prepareRelease', '&#x1F4E6;', t('quickActions.prepareRelease'))}
   </div>`;
 
     return /* html */ `<!DOCTYPE html>
@@ -170,7 +170,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Refresh badge when license state may have changed
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.refreshQuickActions', () => {
+    vscode.commands.registerCommand('rmmv.refreshQuickActions', () => {
       provider.refresh();
     })
   );

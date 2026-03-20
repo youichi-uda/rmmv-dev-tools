@@ -266,7 +266,7 @@ function showPluginInfo(): void {
   const registry = registryPath ? loadRegistry(registryPath) : undefined;
   const registryEntry = registry?.plugins[fileName];
 
-  const outputChannel = vscode.window.createOutputChannel('RMMZ Plugin Info');
+  const outputChannel = vscode.window.createOutputChannel('RMMV Plugin Info');
   outputChannel.clear();
   outputChannel.show(true);
 
@@ -317,10 +317,10 @@ function showPluginInfo(): void {
  */
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.checkPluginUpdates', checkPluginUpdates)
+    vscode.commands.registerCommand('rmmv.checkPluginUpdates', checkPluginUpdates)
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.showPluginInfo', showPluginInfo)
+    vscode.commands.registerCommand('rmmv.showPluginInfo', showPluginInfo)
   );
 }

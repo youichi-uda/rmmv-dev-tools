@@ -1,7 +1,7 @@
 export const messages: Record<string, string> = {
   // ── extension.ts ──────────────────────────────────────────────────────
   'noWorkspaceFolder': 'No workspace folder open.',
-  'pickWorkspaceFolder': 'Select the RPG Maker MZ project folder',
+  'pickWorkspaceFolder': 'Select the RPG Maker MV project folder',
 
   // ── license/gumroad.ts ────────────────────────────────────────────────
   'license.invalidKey': 'Invalid license key.',
@@ -10,39 +10,40 @@ export const messages: Record<string, string> = {
   'license.activated': 'Pro license activated!',
   'license.verifyFailed': 'Verification failed: {0}',
   'license.deactivated': 'Pro license deactivated.',
-  'license.statusActive': 'RMMZ Dev Tools: Pro license is active.',
-  'license.statusFree': 'RMMZ Dev Tools: Free edition. Activate a Pro license to unlock all features.',
+  'license.statusActive': 'RMMV Dev Tools: Pro license is active.',
+  'license.statusFree': 'RMMV Dev Tools: Free edition. Activate a Pro license to unlock all features.',
   'license.enterKey': 'Enter License Key',
-  'license.prompt': 'Enter your RMMZ Dev Tools Pro license key',
+  'license.prompt': 'Enter your RMMV Dev Tools Pro license key',
   'license.placeholder': 'XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX',
-  'license.statusBarPro': '$(star-full) RMMZ Pro',
-  'license.statusBarFree': '$(star-empty) RMMZ Free',
-  'license.tooltipPro': 'RMMZ Dev Tools — Pro license active',
-  'license.tooltipFree': 'RMMZ Dev Tools — Free edition. Click to activate Pro.',
+  'license.statusBarPro': '$(star-full) RMMV Pro',
+  'license.statusBarFree': '$(star-empty) RMMV Free',
+  'license.tooltipPro': 'RMMV Dev Tools — Pro license active',
+  'license.tooltipFree': 'RMMV Dev Tools — Free edition. Click to activate Pro.',
   'license.requirePro': '"{0}" is a Pro feature. Please activate your license to use it.',
   'license.purchase': 'Purchase Pro',
 
   // ── intellisense/setup.ts ─────────────────────────────────────────────
   'intellisense.alreadyExists': 'jsconfig.json already exists. IntelliSense should be active.',
-  'intellisense.overwritePrompt': 'jsconfig.json already exists. Overwrite with RMMZ configuration?',
+  'intellisense.overwritePrompt': 'jsconfig.json already exists. Overwrite with RMMV configuration?',
   'intellisense.overwrite': 'Overwrite',
   'intellisense.cancel': 'Cancel',
-  'intellisense.created': 'Created jsconfig.json for RMMZ IntelliSense.',
-  'intellisense.detected': 'RPG Maker MZ project detected. Set up IntelliSense for core script completion?',
+  'intellisense.created': 'Created jsconfig.json for RMMV IntelliSense.',
+  'intellisense.detected': 'RPG Maker MV project detected. Set up IntelliSense for core script completion?',
   'intellisense.setup': 'Setup',
   'intellisense.notNow': 'Not now',
   'intellisense.dontAsk': "Don't ask again",
 
   // ── debugger/setup.ts ─────────────────────────────────────────────────
-  'debugger.alreadyExists': 'RMMZ debugger configuration already exists in launch.json.',
-  'debugger.addedToExisting': 'Added RMMZ debug configurations to existing launch.json.',
-  'debugger.created': 'Created launch.json with RMMZ debug configurations.',
-  'debugger.restoredPort': 'RMMZ Dev Tools: Restored debug port in package.json (MZ editor had overwritten it).',
+  'debugger.alreadyExists': 'RMMV debugger configuration already exists in launch.json.',
+  'debugger.addedToExisting': 'Added RMMV debug configurations to existing launch.json.',
+  'debugger.created': 'Created launch.json with RMMV debug configurations.',
+  'debugger.restoredPort': 'RMMV Dev Tools: Restored debug port in package.json (MV editor had overwritten it).',
   'debugger.updated': 'Updated runtimeExecutable in launch.json.',
-  'debugger.nwExeNotFound': 'nw.exe not found in configured path: {0}. Please select the correct RPG Maker MZ install folder.',
-  'debugger.nwExeNotFoundSelected': 'nw.exe not found in selected folder: {0}. Expected nwjs-win/nw.exe inside the RPG Maker MZ install folder.',
+  'debugger.nwExeNotFound': 'nw.exe not found in configured path: {0}. Please select the correct RPG Maker MV install folder.',
+  'debugger.nwExeNotFoundSelected': 'nw.exe not found in: {0}. Select the RPG Maker MV install folder (e.g. C:\\Program Files\\KADOKAWA\\RPGMV) — not the game project folder.',
   'debugger.selectInstallFolder': 'Select',
-  'debugger.selectInstallFolderTitle': 'Select RPG Maker MZ install folder (contains nwjs-win/)',
+  'debugger.selectInstallFolderTitle': 'Select RPG Maker MV install folder (e.g. C:\\Program Files\\KADOKAWA\\RPGMV)',
+  'debugger.selectInstallFolderPrompt': 'Game.exe was not found in the project. Please select the RPG Maker MV install folder containing nwjs-win/nw.exe.',
 
   // ── debugger/setup.ts (release) ────────────────────────────────────────
   'release.noPackageJson': 'No package.json found in the project.',
@@ -51,9 +52,9 @@ export const messages: Record<string, string> = {
   'release.error': 'Failed to update package.json.',
 
   // ── template/generator.ts ─────────────────────────────────────────────
-  'template.step1Title': 'New RMMZ Plugin (1/3)',
-  'template.step2Title': 'New RMMZ Plugin (2/3)',
-  'template.step3Title': 'New RMMZ Plugin (3/3)',
+  'template.step1Title': 'New RMMV Plugin (1/3)',
+  'template.step2Title': 'New RMMV Plugin (2/3)',
+  'template.step3Title': 'New RMMV Plugin (3/3)',
   'template.pluginNamePrompt': 'Plugin name (used as filename)',
   'template.pluginNamePlaceholder': 'MyPlugin',
   'template.pluginNameRequired': 'Plugin name is required',
@@ -66,19 +67,15 @@ export const messages: Record<string, string> = {
   'template.urlPrompt': 'URL (optional — plugin page, GitHub, etc.)',
   'template.urlPlaceholder': 'https://github.com/you/plugin',
   'template.featureCommand': 'Plugin Command',
-  'template.featureCommandDesc': 'Include a @command / registerCommand example',
+  'template.featureCommandDesc': 'Include a pluginCommand handler example',
   'template.featureParams': 'Parameters',
   'template.featureParamsDesc': 'Include @param examples with parsing code',
-  'template.featureBase': 'Base Dependency',
-  'template.featureBaseDesc': 'Add @base tag (e.g., PluginCommonBase)',
   'template.selectFeatures': 'Select features to include',
-  'template.basePrompt': 'Base plugin name (@base dependency)',
-  'template.basePlaceholder': 'PluginCommonBase',
   'template.overwritePrompt': '{0}.js already exists. Overwrite?',
   'template.created': 'Created plugin: {0}.js',
 
   // ── annotation/formatter.ts ───────────────────────────────────────────
-  'formatter.notInBlock': 'Cursor is not inside an RMMZ annotation block.',
+  'formatter.notInBlock': 'Cursor is not inside an RMMV annotation block.',
 
   // ── annotation/validator.ts ───────────────────────────────────────────
   'validator.unknownType': 'Unknown @type: "{0}"',
@@ -88,7 +85,7 @@ export const messages: Record<string, string> = {
   'validator.notValidInArg': '@{0} is not valid inside @arg',
   'validator.notValidAtTop': '@{0} is not valid at top level',
   'validator.typeHint': '@{0} is typically used with @type {1}, not "{2}"',
-  'validator.targetRecommended': '@target MZ is recommended',
+  'validator.targetRecommended': '@target MV is recommended',
   'validator.plugindescRequired': '@plugindesc is required',
 
   // ── annotation/langSync.ts ────────────────────────────────────────────
@@ -110,8 +107,8 @@ export const messages: Record<string, string> = {
   'conflict.aliasChain': '{0} alias chain: {1}',
 
   // ── asset/checker.ts ──────────────────────────────────────────────────
-  'asset.noProject': 'No RMMZ project workspace found.',
-  'asset.header': '=== RMMZ Asset Reference Check ===',
+  'asset.noProject': 'No RMMV project workspace found.',
+  'asset.header': '=== RMMV Asset Reference Check ===',
   'asset.projectRoot': 'Project root: {0}',
   'asset.missingDir': 'Missing directory: {0} (resolved to {1})',
   'asset.missingDirShort': 'Missing directory: {0}',
@@ -119,19 +116,19 @@ export const messages: Record<string, string> = {
   'asset.complete': 'Check complete. {0} warning(s) found.',
 
   // ── reload/sceneReload.ts ─────────────────────────────────────────────
-  'reload.statusOff': '$(circle-slash) RMMZ Reload: Off',
-  'reload.statusConnected': '$(zap) RMMZ Reload: Connected',
-  'reload.statusWaiting': '$(plug) RMMZ Reload: Waiting',
+  'reload.statusOff': '$(circle-slash) RMMV Reload: Off',
+  'reload.statusConnected': '$(zap) RMMV Reload: Connected',
+  'reload.statusWaiting': '$(plug) RMMV Reload: Waiting',
   'reload.tooltipOff': 'Click to enable Quick Scene Reload',
   'reload.tooltipConnected': 'Quick Scene Reload active — connected to game',
   'reload.tooltipWaiting': 'Quick Scene Reload enabled — waiting for game on port 9222',
-  'reload.enabled': 'RMMZ Quick Scene Reload enabled.',
-  'reload.disabled': 'RMMZ Quick Scene Reload disabled.',
+  'reload.enabled': 'RMMV Quick Scene Reload enabled.',
+  'reload.disabled': 'RMMV Quick Scene Reload disabled.',
   'reload.reloadedScene': '$(zap) Reloaded scene: {0}',
   'reload.failed': 'Scene reload failed: {0}',
 
   // ── testplay/console.ts ───────────────────────────────────────────────
-  'console.channelName': 'RMMZ Console',
+  'console.channelName': 'RMMV Console',
   'console.connected': '--- Connected to game ---',
   'console.disconnected': '--- Game disconnected ---',
   'console.listening': '--- Listening for game on port 9222 ---',
@@ -139,7 +136,7 @@ export const messages: Record<string, string> = {
 
   // ── registry/manager.ts ───────────────────────────────────────────────
   'registry.noPlugins': 'No plugins found in js/plugins/.',
-  'registry.updateHeader': 'RMMZ Plugin Update Check',
+  'registry.updateHeader': 'RMMV Plugin Update Check',
   'registry.noRegistry': 'No plugin-registry.json found. Create one in data/ or project root to track versions.',
   'registry.registryLoaded': 'Registry loaded from: {0}',
   'registry.registry': 'Registry: {0}',
@@ -151,18 +148,18 @@ export const messages: Record<string, string> = {
   'registry.updatesAvailable': 'Updates available: {0}',
   'registry.compatIssues': 'Compatibility issues: {0}',
   'registry.noActiveEditor': 'No active editor.',
-  'registry.noAnnotation': 'No RMMZ plugin annotation found in the active file.',
+  'registry.noAnnotation': 'No RMMV plugin annotation found in the active file.',
   'registry.notInPluginRegistry': 'Not found in plugin registry.',
   'registry.updateAvailableDetail': '*** Update available: v{0} -> v{1}',
 
   // ── dependency/graph.ts ───────────────────────────────────────────────
-  'graph.panelTitle': 'RMMZ Plugin Dependencies',
+  'graph.panelTitle': 'RMMV Plugin Dependencies',
 
   // ── preview/annotationPreview.ts ──────────────────────────────────────
-  'preview.panelTitle': 'RMMZ Annotation Preview',
+  'preview.panelTitle': 'RMMV Annotation Preview',
 
   // ── typescript/setup.ts ──────────────────────────────────────────────
-  'typescript.overwritePrompt': 'tsconfig.json already exists. Overwrite with RMMZ TypeScript configuration?',
+  'typescript.overwritePrompt': 'tsconfig.json already exists. Overwrite with RMMV TypeScript configuration?',
   'typescript.overwrite': 'Overwrite',
   'typescript.cancel': 'Cancel',
   'typescript.setupComplete': 'TypeScript environment set up: tsconfig.json, ts/plugins/, and type definitions created.',

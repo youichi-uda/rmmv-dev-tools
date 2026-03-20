@@ -81,7 +81,7 @@ describe('tag definitions', () => {
     }
   });
 
-  it('ARG_TAGS is the same as PARAM_TAGS', () => {
-    expect(ARG_TAGS).toEqual(PARAM_TAGS);
+  it('ARG_TAGS is empty (MV has no @arg)', () => {
+    expect(ARG_TAGS).toEqual([]);
   });
 });

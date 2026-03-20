@@ -197,18 +197,18 @@ function stopWatching(): void {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-  diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmz-tsc');
+  diagnosticCollection = vscode.languages.createDiagnosticCollection('rmmv-tsc');
   context.subscriptions.push(diagnosticCollection);
 
   // Status bar item
   statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 49);
-  statusBarItem.command = 'rmmz.toggleTypeScriptBuild';
+  statusBarItem.command = 'rmmv.toggleTypeScriptBuild';
   context.subscriptions.push(statusBarItem);
   updateStatusBar('off');
 
   // Toggle command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.toggleTypeScriptBuild', () => {
+    vscode.commands.registerCommand('rmmv.toggleTypeScriptBuild', () => {
       if (!requirePro('TypeScript Auto-Build')) return;
       enabled = !enabled;
       if (enabled) {

@@ -97,7 +97,7 @@ function scanPluginOverrides(
   return overrideMap;
 }
 
-class RmmzOverrideCodeLensProvider implements vscode.CodeLensProvider {
+class RmmvOverrideCodeLensProvider implements vscode.CodeLensProvider {
   private _onDidChangeCodeLenses = new vscode.EventEmitter<void>();
   readonly onDidChangeCodeLenses = this._onDidChangeCodeLenses.event;
 
@@ -154,7 +154,7 @@ class RmmzOverrideCodeLensProvider implements vscode.CodeLensProvider {
       const range = new vscode.Range(i, 0, i, lineText.length);
       const lens = new vscode.CodeLens(range, {
         title,
-        command: 'rmmz.showConflicts',
+        command: 'rmmv.showConflicts',
         tooltip: 'Show full conflict report',
       });
       lenses.push(lens);
@@ -168,7 +168,7 @@ class RmmzOverrideCodeLensProvider implements vscode.CodeLensProvider {
  * Activates the CodeLens provider for prototype override detection.
  */
 export function activate(context: vscode.ExtensionContext): void {
-  const provider = new RmmzOverrideCodeLensProvider();
+  const provider = new RmmvOverrideCodeLensProvider();
 
   // Initial scan
   provider.refresh();

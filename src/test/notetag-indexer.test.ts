@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 
 /**
  * The NoteTagIndexer (src/notetag/indexer.ts) uses three regex patterns
- * to extract note tags from RMMZ data files:
+ * to extract note tags from RMMV data files:
  *
  *   SIMPLE_TAG_PATTERN = /<(\w+)(?::([^>]*))?>/g
  *   BLOCK_TAG_PATTERN  = /<(\w+)>\s*\n([\s\S]*?)\n\s*<\/\1>/g

@@ -131,7 +131,7 @@ function stopListening(): void {
 
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.showConsole', () => {
+    vscode.commands.registerCommand('rmmv.showConsole', () => {
       if (!requirePro('Testplay Console')) return;
       const channel = getOutputChannel();
       channel.show(true);
@@ -140,7 +140,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.clearConsole', () => {
+    vscode.commands.registerCommand('rmmv.clearConsole', () => {
       const channel = getOutputChannel();
       channel.clear();
       channel.appendLine(`[${timestamp()}] ${t('console.cleared')}`);

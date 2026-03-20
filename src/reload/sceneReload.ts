@@ -343,13 +343,13 @@ function stopWatching(): void {
 export function activate(context: vscode.ExtensionContext): void {
   // Status bar item
   statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 50);
-  statusBarItem.command = 'rmmz.toggleSceneReload';
+  statusBarItem.command = 'rmmv.toggleSceneReload';
   context.subscriptions.push(statusBarItem);
   updateStatusBar();
 
   // Toggle command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.toggleSceneReload', () => {
+    vscode.commands.registerCommand('rmmv.toggleSceneReload', () => {
       if (!requirePro('Quick Scene Reload')) return;
       enabled = !enabled;
       if (enabled) {

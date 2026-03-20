@@ -6,7 +6,7 @@
     </linearGradient>
   </defs>
   <rect width="128" height="128" rx="16" fill="url(#bg)"/>
-  <text x="64" y="59" text-anchor="middle" font-family="Consolas,monospace" font-size="47" font-weight="bold" fill="#7ec8f0">@MZ</text>
+  <text x="64" y="59" text-anchor="middle" font-family="Consolas,monospace" font-size="47" font-weight="bold" fill="#7ec8f0">@MV</text>
   <text x="64" y="91" text-anchor="middle" font-family="Consolas,monospace" font-size="31" fill="#c0c0c0">{dev}</text>
   <rect x="20" y="96" width="88" height="3" rx="1.5" fill="#4a9eff" opacity="0.6"/>
 </svg>

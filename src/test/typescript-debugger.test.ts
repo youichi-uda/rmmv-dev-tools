@@ -25,7 +25,7 @@ function buildLaunchConfigurations(nwExePath: string): LaunchConfig[] {
     {
       type: 'chrome',
       request: 'launch',
-      name: 'RMMZ Testplay (Debug)',
+      name: 'RMMV Testplay (Debug)',
       runtimeExecutable: nwExePath,
       runtimeArgs: ['.', '--remote-debugging-port=9222'],
       webRoot: '${workspaceFolder}',
@@ -37,7 +37,7 @@ function buildLaunchConfigurations(nwExePath: string): LaunchConfig[] {
     {
       type: 'chrome',
       request: 'attach',
-      name: 'Attach to RMMZ Testplay',
+      name: 'Attach to RMMV Testplay',
       port: 9222,
       webRoot: '${workspaceFolder}',
       sourceMapPathOverrides: {

@@ -1,5 +1,5 @@
-// Type definitions for RMMZ Game_* object classes (rmmz_objects.js v1.10.0)
-// These are the runtime game object classes used by RPG Maker MZ.
+// Type definitions for RPG Maker MV rpg_objects.js
+// These are the runtime game object classes used by RPG Maker MV.
 
 // ─── Game_Temp ───────────────────────────────────────────────────────────────
 // The game object class for temporary data that is not included in save data.
@@ -9,34 +9,15 @@ declare class Game_Temp {
 
     initialize(): void;
     isPlaytest(): boolean;
+    reserveCommonEvent(commonEventId: number): void;
+    clearCommonEvent(): void;
+    isCommonEventReserved(): boolean;
+    reservedCommonEvent(): RPG_CommonEvent | null;
     setDestination(x: number, y: number): void;
     clearDestination(): void;
     isDestinationValid(): boolean;
     destinationX(): number | null;
     destinationY(): number | null;
-    setTouchState(target: Game_Battler | null, state: string): void;
-    clearTouchState(): void;
-    touchTarget(): Game_Battler | null;
-    touchState(): string;
-    requestBattleRefresh(): void;
-    clearBattleRefreshRequest(): void;
-    isBattleRefreshRequested(): boolean;
-    reserveCommonEvent(commonEventId: number): void;
-    retrieveCommonEvent(): RPG_CommonEvent | null;
-    clearCommonEventReservation(): void;
-    isCommonEventReserved(): boolean;
-    requestAnimation(targets: Game_Character[], animationId: number, mirror?: boolean): void;
-    retrieveAnimation(): { targets: Game_Character[]; animationId: number; mirror: boolean } | undefined;
-    requestBalloon(target: Game_Character, balloonId: number): void;
-    retrieveBalloon(): { target: Game_Character; balloonId: number } | undefined;
-    lastActionData(type: number): number;
-    setLastActionData(type: number, value: number): void;
-    setLastUsedSkillId(skillID: number): void;
-    setLastUsedItemId(itemID: number): void;
-    setLastSubjectActorId(actorID: number): void;
-    setLastSubjectEnemyIndex(enemyIndex: number): void;
-    setLastTargetActorId(actorID: number): void;
-    setLastTargetEnemyIndex(enemyIndex: number): void;
 }
 
 // ─── Game_System ─────────────────────────────────────────────────────────────
@@ -45,6 +26,23 @@ declare class Game_Temp {
 declare class Game_System {
     constructor();
 
+    _saveEnabled: boolean;
+    _menuEnabled: boolean;
+    _encounterEnabled: boolean;
+    _formationEnabled: boolean;
+    _battleCount: number;
+    _winCount: number;
+    _escapeCount: number;
+    _saveCount: number;
+    _versionId: number;
+    _framesOnSave: number;
+    _bgmOnSave: RPG_AudioFile | null;
+    _bgsOnSave: RPG_AudioFile | null;
+    _windowTone: number[] | null;
+    _battleBgm: RPG_AudioFile | null;
+    _victoryMe: RPG_AudioFile | null;
+    _defeatMe: RPG_AudioFile | null;
+
     initialize(): void;
     isJapanese(): boolean;
     isChinese(): boolean;
@@ -52,52 +50,42 @@ declare class Game_System {
     isCJK(): boolean;
     isRussian(): boolean;
     isSideView(): boolean;
-    isAutosaveEnabled(): boolean;
-    isMessageSkipEnabled(): boolean;
-    isSaveEnabled(): boolean;
-    disableSave(): void;
-    enableSave(): void;
-    isMenuEnabled(): boolean;
-    disableMenu(): void;
-    enableMenu(): void;
-    isEncounterEnabled(): boolean;
-    disableEncounter(): void;
-    enableEncounter(): void;
-    isFormationEnabled(): boolean;
-    disableFormation(): void;
-    enableFormation(): void;
-    battleCount(): number;
-    winCount(): number;
-    escapeCount(): number;
-    saveCount(): number;
-    versionId(): number;
-    savefileId(): number;
-    setSavefileId(savefileId: number): void;
-    windowTone(): number[];
-    setWindowTone(value: number[]): void;
-    battleBgm(): RPG_AudioFile;
-    setBattleBgm(value: RPG_AudioFile): void;
-    victoryMe(): RPG_AudioFile;
-    setVictoryMe(value: RPG_AudioFile): void;
-    defeatMe(): RPG_AudioFile;
-    setDefeatMe(value: RPG_AudioFile): void;
-    onBattleStart(): void;
-    onBattleWin(): void;
-    onBattleEscape(): void;
-    onBeforeSave(): void;
-    onAfterLoad(): void;
+    isBattleEventRunning(): boolean;
     playtime(): number;
     playtimeText(): string;
     saveBgm(): void;
     replayBgm(): void;
     saveWalkingBgm(): void;
     replayWalkingBgm(): void;
-    saveWalkingBgm2(): void;
-    mainFontFace(): string;
-    numberFontFace(): string;
-    mainFontSize(): number;
-    windowPadding(): number;
-    windowOpacity(): number;
+    saveCount(): number;
+    versionId(): number;
+    windowTone(): number[];
+    setBattleBgm(value: RPG_AudioFile): void;
+    battleBgm(): RPG_AudioFile;
+    setVictoryMe(value: RPG_AudioFile): void;
+    victoryMe(): RPG_AudioFile;
+    setDefeatMe(value: RPG_AudioFile): void;
+    defeatMe(): RPG_AudioFile;
+    onBattleStart(): void;
+    onBattleWin(): void;
+    onBattleEscape(): void;
+    onBeforeSave(): void;
+    onAfterLoad(): void;
+    isMenuEnabled(): boolean;
+    disableMenu(): void;
+    enableMenu(): void;
+    isSaveEnabled(): boolean;
+    disableSave(): void;
+    enableSave(): void;
+    isEncounterEnabled(): boolean;
+    disableEncounters(): void;
+    enableEncounters(): void;
+    isFormationEnabled(): boolean;
+    disableFormation(): void;
+    enableFormation(): void;
+    battleCount(): number;
+    winCount(): number;
+    escapeCount(): number;
 }
 
 // ─── Game_Timer ──────────────────────────────────────────────────────────────
@@ -106,13 +94,15 @@ declare class Game_System {
 declare class Game_Timer {
     constructor();
 
+    _frames: number;
+    _working: boolean;
+
     initialize(): void;
     update(sceneActive: boolean): void;
     start(count: number): void;
     stop(): void;
     isWorking(): boolean;
     seconds(): number;
-    frames(): number;
     onExpire(): void;
 }
 
@@ -122,46 +112,45 @@ declare class Game_Timer {
 declare class Game_Message {
     constructor();
 
+    _texts: string[];
+    _choices: string[];
+    _faceName: string;
+    _faceIndex: number;
+    _background: number;
+    _positionType: number;
+    _choiceDefaultType: number;
+    _choiceCancelType: number;
+    _choiceCallback: ((n: number) => void) | null;
+    _numInputVariableId: number;
+    _numInputMaxDigits: number;
+    _itemChoiceVariableId: number;
+    _itemChoiceItypeId: number;
+    _scrollMode: boolean;
+    _scrollSpeed: number;
+    _scrollNoFast: boolean;
+
     initialize(): void;
     clear(): void;
     choices(): string[];
-    speakerName(): string;
     faceName(): string;
     faceIndex(): number;
     background(): number;
     positionType(): number;
     choiceDefaultType(): number;
     choiceCancelType(): number;
-    choiceBackground(): number;
-    choicePositionType(): number;
-    numInputVariableId(): number;
-    numInputMaxDigits(): number;
-    itemChoiceVariableId(): number;
-    itemChoiceItypeId(): number;
-    scrollMode(): boolean;
-    scrollSpeed(): number;
-    scrollNoFast(): boolean;
+    choiceCallback(): ((n: number) => void) | null;
     add(text: string): void;
-    setSpeakerName(speakerName: string): void;
     setFaceImage(faceName: string, faceIndex: number): void;
     setBackground(background: number): void;
     setPositionType(positionType: number): void;
     setChoices(choices: string[], defaultType: number, cancelType: number): void;
-    setChoiceBackground(background: number): void;
-    setChoicePositionType(positionType: number): void;
-    setNumberInput(variableId: number, maxDigits: number): void;
-    setItemChoice(variableId: number, itemType: number): void;
-    setScroll(speed: number, noFast: boolean): void;
     setChoiceCallback(callback: (n: number) => void): void;
     onChoice(n: number): void;
     hasText(): boolean;
     isChoice(): boolean;
-    isNumberInput(): boolean;
-    isItemChoice(): boolean;
     isBusy(): boolean;
     newPage(): void;
     allText(): string;
-    isRTL(): boolean;
 }
 
 // ─── Game_Switches ───────────────────────────────────────────────────────────
@@ -200,6 +189,8 @@ declare class Game_Variables {
 declare class Game_SelfSwitches {
     constructor();
 
+    _data: Record<string, boolean>;
+
     initialize(): void;
     clear(): void;
     value(key: [number, number, string]): boolean;
@@ -208,7 +199,8 @@ declare class Game_SelfSwitches {
 }
 
 // ─── Game_Screen ─────────────────────────────────────────────────────────────
-// The game object class for screen effect data.
+// The game object class for screen effect data, such as changes in color tone
+// and flash.
 
 declare class Game_Screen {
     constructor();
@@ -252,10 +244,8 @@ declare class Game_Screen {
     updateShake(): void;
     updateZoom(): void;
     updateWeather(): void;
-    updatePictures(): void;
-    startFlashForDamage(): void;
     showPicture(pictureId: number, name: string, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number): void;
-    movePicture(pictureId: number, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number, duration: number, easingType: number): void;
+    movePicture(pictureId: number, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number, duration: number): void;
     rotatePicture(pictureId: number, speed: number): void;
     tintPicture(pictureId: number, tone: number[], duration: number): void;
     erasePicture(pictureId: number): void;
@@ -266,6 +256,17 @@ declare class Game_Screen {
 
 declare class Game_Picture {
     constructor();
+
+    _name: string;
+    _origin: number;
+    _x: number;
+    _y: number;
+    _scaleX: number;
+    _scaleY: number;
+    _opacity: number;
+    _blendMode: number;
+    _tone: number[] | null;
+    _angle: number;
 
     initialize(): void;
     name(): string;
@@ -278,27 +279,24 @@ declare class Game_Picture {
     blendMode(): number;
     tone(): number[] | null;
     angle(): number;
-    initBasic(): void;
+    initBasic(pictureId: number): void;
     initTarget(): void;
     initTone(): void;
     initRotation(): void;
     show(name: string, origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number): void;
-    move(origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number, duration: number, easingType: number): void;
+    move(origin: number, x: number, y: number, scaleX: number, scaleY: number, opacity: number, blendMode: number, duration: number): void;
     rotate(speed: number): void;
     tint(tone: number[], duration: number): void;
+    erase(): void;
     update(): void;
     updateMove(): void;
     updateTone(): void;
     updateRotation(): void;
-    applyEasing(current: number, target: number): number;
-    calcEasing(t: number): number;
-    easeIn(t: number, exponent: number): number;
-    easeOut(t: number, exponent: number): number;
-    easeInOut(t: number, exponent: number): number;
 }
 
 // ─── Game_Item ───────────────────────────────────────────────────────────────
 // The game object class for handling skills, items, weapons, and armor.
+// It is required because save data should not include the database object itself.
 
 declare class Game_Item {
     constructor(item?: RPG_Skill | RPG_Item | RPG_Weapon | RPG_Armor | null);
@@ -309,10 +307,8 @@ declare class Game_Item {
     initialize(item?: RPG_Skill | RPG_Item | RPG_Weapon | RPG_Armor | null): void;
     isSkill(): boolean;
     isItem(): boolean;
-    isUsableItem(): boolean;
     isWeapon(): boolean;
     isArmor(): boolean;
-    isEquipItem(): boolean;
     isNull(): boolean;
     itemId(): number;
     object(): RPG_Skill | RPG_Item | RPG_Weapon | RPG_Armor | null;
@@ -349,9 +345,7 @@ declare class Game_Action {
     _forcing: boolean;
     _subjectActorId: number;
     _subjectEnemyIndex: number;
-    _reflectionTarget: Game_Battler | undefined;
 
-    initialize(subject: Game_Battler, forcing?: boolean): void;
     clear(): void;
     setSubject(subject: Game_Battler): void;
     subject(): Game_Battler;
@@ -371,13 +365,11 @@ declare class Game_Action {
     checkItemScope(list: number[]): boolean;
     isForOpponent(): boolean;
     isForFriend(): boolean;
-    isForEveryone(): boolean;
-    isForAliveFriend(): boolean;
     isForDeadFriend(): boolean;
     isForUser(): boolean;
-    isForOne(): boolean;
-    isForRandom(): boolean;
     isForAll(): boolean;
+    isForRandom(): boolean;
+    isForOne(): boolean;
     needsSelection(): boolean;
     numTargets(): number;
     checkDamageType(list: number[]): boolean;
@@ -395,25 +387,15 @@ declare class Game_Action {
     isGuard(): boolean;
     isMagicSkill(): boolean;
     decideRandomTarget(): void;
-    setConfusion(): void;
-    prepare(): void;
-    isValid(): boolean;
-    speed(): number;
     makeTargets(): Game_Battler[];
     repeatTargets(targets: Game_Battler[]): Game_Battler[];
     confusionTarget(): Game_Battler;
-    targetsForEveryone(): Game_Battler[];
     targetsForOpponents(): Game_Battler[];
     targetsForFriends(): Game_Battler[];
-    randomTargets(unit: Game_Unit): Game_Battler[];
-    targetsForDead(unit: Game_Unit): Game_Battler[];
-    targetsForAlive(unit: Game_Unit): Game_Battler[];
-    targetsForDeadAndAlive(unit: Game_Unit): Game_Battler[];
     evaluate(): number;
     itemTargetCandidates(): Game_Battler[];
     evaluateWithTarget(target: Game_Battler): number;
     testApply(target: Game_Battler): boolean;
-    testLifeAndDeath(target: Game_Battler): boolean;
     hasItemAnyValidEffects(target: Game_Battler): boolean;
     testItemEffect(target: Game_Battler, effect: RPG_Effect): boolean;
     itemCnt(target: Game_Battler): number;
@@ -439,8 +421,6 @@ declare class Game_Action {
     itemEffectRecoverMp(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectGainTp(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectAddState(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectAddAttackState(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectAddNormalState(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectRemoveState(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectAddBuff(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectAddDebuff(target: Game_Battler, effect: RPG_Effect): void;
@@ -450,13 +430,14 @@ declare class Game_Action {
     itemEffectGrow(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectLearnSkill(target: Game_Battler, effect: RPG_Effect): void;
     itemEffectCommonEvent(target: Game_Battler, effect: RPG_Effect): void;
-    makeSuccess(target: Game_Battler): void;
     applyItemUserEffect(target: Game_Battler): void;
     lukEffectRate(target: Game_Battler): number;
     applyGlobal(): void;
-    updateLastUsed(): void;
-    updateLastSubject(): void;
-    updateLastTarget(target: Game_Battler): void;
+    makeSuccess(target: Game_Battler): void;
+    hasItem(): boolean;
+    isValid(): boolean;
+    speed(): number;
+    makeSpeed(): number;
 }
 
 // ─── Game_ActionResult ───────────────────────────────────────────────────────
@@ -484,8 +465,6 @@ declare class Game_ActionResult {
 
     initialize(): void;
     clear(): void;
-    addedStateObjects(): RPG_State[];
-    removedStateObjects(): RPG_State[];
     isStatusAffected(): boolean;
     isHit(): boolean;
     isStateAdded(stateId: number): boolean;
@@ -518,7 +497,6 @@ declare class Game_BattlerBase {
     static TRAIT_ATTACK_STATE: number;
     static TRAIT_ATTACK_SPEED: number;
     static TRAIT_ATTACK_TIMES: number;
-    static TRAIT_ATTACK_SKILL: number;
     static TRAIT_STYPE_ADD: number;
     static TRAIT_STYPE_SEAL: number;
     static TRAIT_SKILL_ADD: number;
@@ -539,7 +517,7 @@ declare class Game_BattlerBase {
     static ICON_BUFF_START: number;
     static ICON_DEBUFF_START: number;
 
-    // Properties (getters)
+    // Properties (getters defined via Object.defineProperties)
     readonly hp: number;
     readonly mp: number;
     readonly tp: number;
@@ -624,7 +602,6 @@ declare class Game_BattlerBase {
     traitsSet(code: number): number[];
     paramBase(paramId: number): number;
     paramPlus(paramId: number): number;
-    paramBasePlus(paramId: number): number;
     paramMin(paramId: number): number;
     paramMax(paramId: number): number;
     paramRate(paramId: number): number;
@@ -642,15 +619,12 @@ declare class Game_BattlerBase {
     attackStatesRate(stateId: number): number;
     attackSpeed(): number;
     attackTimesAdd(): number;
-    attackSkillId(): number;
     addedSkillTypes(): number[];
-    isSkillTypeSealed(stypeId: number): boolean;
     addedSkills(): number[];
+    isSkillTypeSealed(stTypeId: number): boolean;
     isSkillSealed(skillId: number): boolean;
-    isEquipWtypeOk(wtypeId: number): boolean;
-    isEquipAtypeOk(atypeId: number): boolean;
-    isEquipTypeLocked(etypeId: number): boolean;
     isEquipTypeSealed(etypeId: number): boolean;
+    isEquipTypeLocked(etypeId: number): boolean;
     slotType(): number;
     isDualWield(): boolean;
     actionPlusSet(): number[];
@@ -661,40 +635,6 @@ declare class Game_BattlerBase {
     isGuard(): boolean;
     isSubstitute(): boolean;
     isPreserveTp(): boolean;
-    addParam(paramId: number, value: number): void;
-    setHp(hp: number): void;
-    setMp(mp: number): void;
-    setTp(tp: number): void;
-    maxTp(): number;
-    refresh(): void;
-    recoverAll(): void;
-    hpRate(): number;
-    mpRate(): number;
-    tpRate(): number;
-    hide(): void;
-    appear(): void;
-    isHidden(): boolean;
-    isAppeared(): boolean;
-    isDead(): boolean;
-    isAlive(): boolean;
-    isDying(): boolean;
-    isRestricted(): boolean;
-    canInput(): boolean;
-    canMove(): boolean;
-    isConfused(): boolean;
-    confusionLevel(): number;
-    isActor(): boolean;
-    isEnemy(): boolean;
-    sortStates(): void;
-    restriction(): number;
-    addNewState(stateId: number): void;
-    onRestrict(): void;
-    mostImportantStateText(): string;
-    stateMotionIndex(): number;
-    stateOverlayIndex(): number;
-    isSkillWtypeOk(skill: RPG_Skill): boolean;
-    skillMpCost(skill: RPG_Skill): number;
-    skillTpCost(skill: RPG_Skill): number;
     canPaySkillCost(skill: RPG_Skill): boolean;
     paySkillCost(skill: RPG_Skill): void;
     isOccasionOk(item: RPG_Skill | RPG_Item): boolean;
@@ -705,13 +645,39 @@ declare class Game_BattlerBase {
     canEquip(item: RPG_Weapon | RPG_Armor | null): boolean;
     canEquipWeapon(item: RPG_Weapon): boolean;
     canEquipArmor(item: RPG_Armor): boolean;
+    attackSkillId(): number;
     guardSkillId(): number;
     canAttack(): boolean;
     canGuard(): boolean;
+    isAlive(): boolean;
+    isDead(): boolean;
+    isDeathStateAffected(): boolean;
+    isAppeared(): boolean;
+    isHidden(): boolean;
+    appear(): void;
+    hide(): void;
+    isActor(): boolean;
+    isEnemy(): boolean;
+    sortReference(): number;
+    restriction(): number;
+    canMove(): boolean;
+    canInput(): boolean;
+    isConfused(): boolean;
+    confusionLevel(): number;
+    friendsUnit(): Game_Unit;
+    opponentsUnit(): Game_Unit;
+    index(): number;
+    isBattleMember(): boolean;
+    name(): string;
+    refresh(): void;
+    addNewState(stateId: number): void;
+    currentClass(): RPG_Class;
+    equipSlots(): number[];
 }
 
 // ─── Game_Battler ────────────────────────────────────────────────────────────
-// The superclass of Game_Actor and Game_Enemy.
+// The superclass of Game_Actor and Game_Enemy. It contains methods for sprites
+// and actions.
 
 declare class Game_Battler extends Game_BattlerBase {
     constructor();
@@ -721,40 +687,27 @@ declare class Game_Battler extends Game_BattlerBase {
     _result: Game_ActionResult;
     _actionState: string;
     _lastTargetIndex: number;
+    _animations: { animationId: number; mirror: boolean; delay: number }[];
     _damagePopup: boolean;
     _effectType: string | null;
     _motionType: string | null;
     _weaponImageId: number;
     _motionRefresh: boolean;
     _selected: boolean;
-    _tpbState: string;
-    _tpbChargeTime: number;
-    _tpbCastTime: number;
-    _tpbIdleTime: number;
-    _tpbTurnCount: number;
-    _tpbTurnEnd: boolean;
 
-    initialize(): void;
     initMembers(): void;
+    clearAnimations(): void;
     clearDamagePopup(): void;
-    clearWeaponAnimation(): void;
-    clearEffect(): void;
-    clearMotion(): void;
-    requestEffect(effectType: string): void;
-    requestMotion(motionType: string): void;
-    requestMotionRefresh(): void;
-    cancelMotionRefresh(): void;
-    select(): void;
-    deselect(): void;
     isDamagePopupRequested(): boolean;
-    isEffectRequested(): boolean;
-    isMotionRequested(): boolean;
-    isWeaponAnimationRequested(): boolean;
-    isMotionRefreshRequested(): boolean;
-    isSelected(): boolean;
-    effectType(): string | null;
-    motionType(): string | null;
+    requestDamagePopup(): void;
+    clearWeaponAnimation(): void;
     weaponImageId(): number;
+    requestWeaponAnimation(): void;
+    isWeaponAnimationRequested(): boolean;
+    clearEffect(): void;
+    requestEffect(effectType: string): void;
+    isEffectRequested(): boolean;
+    effectType(): string | null;
     startDamagePopup(): void;
     shouldPopupDamage(): boolean;
     startWeaponAnimation(weaponImageId: number): void;
@@ -764,40 +717,8 @@ declare class Game_Battler extends Game_BattlerBase {
     clearActions(): void;
     result(): Game_ActionResult;
     clearResult(): void;
-    clearTpbChargeTime(): void;
-    applyTpbPenalty(): void;
-    initTpbChargeTime(advantageous: boolean): void;
-    tpbChargeTime(): number;
-    startTpbCasting(): void;
-    startTpbAction(): void;
-    isTpbCharged(): boolean;
-    isTpbReady(): boolean;
-    isTpbTimeout(): boolean;
-    updateTpb(): void;
-    updateTpbChargeTime(): void;
-    updateTpbCastTime(): void;
-    updateTpbAutoBattle(): void;
-    updateTpbIdleTime(): void;
-    tpbAcceleration(): number;
-    tpbRelativeSpeed(): number;
-    tpbSpeed(): number;
-    tpbBaseSpeed(): number;
-    tpbRequiredCastTime(): number;
-    onTpbCharged(): void;
-    shouldDelayTpbCharge(): boolean;
-    finishTpbCharge(): void;
-    isTpbTurnEnd(): boolean;
-    initTpbTurn(): void;
-    startTpbTurn(): void;
-    makeTpbActions(): void;
-    onTpbTimeout(): void;
-    turnCount(): number;
-    canInput(): boolean;
     refresh(): void;
     addState(stateId: number): void;
-    isStateAddable(stateId: number): boolean;
-    isStateRestrict(stateId: number): boolean;
-    onRestrict(): void;
     removeState(stateId: number): void;
     escape(): void;
     addBuff(paramId: number, turns: number): void;
@@ -812,7 +733,7 @@ declare class Game_Battler extends Game_BattlerBase {
     makeActions(): void;
     speed(): number;
     makeSpeed(): void;
-    currentAction(): Game_Action;
+    currentAction(): Game_Action | null;
     removeCurrentAction(): void;
     setLastTarget(target: Game_Battler): void;
     forceAction(skillId: number, targetIndex: number): void;
@@ -830,7 +751,7 @@ declare class Game_Battler extends Game_BattlerBase {
     regenerateMp(): void;
     regenerateTp(): void;
     regenerateAll(): void;
-    onBattleStart(advantageous: boolean): void;
+    onBattleStart(): void;
     onAllActionsEnd(): void;
     onTurnEnd(): void;
     onBattleEnd(): void;
@@ -851,9 +772,14 @@ declare class Game_Battler extends Game_BattlerBase {
     performEvasion(): void;
     performMagicEvasion(): void;
     performCounter(): void;
-    performReflection(): void;
-    performSubstitute(target: Game_Battler): void;
     performCollapse(): void;
+    performReflection(): void;
+    isAnimationRequested(): boolean;
+    shiftAnimation(): { animationId: number; mirror: boolean; delay: number } | undefined;
+    startAnimation(animationId: number, mirror: boolean, delay: number): void;
+    isSelected(): boolean;
+    select(): void;
+    deselect(): void;
 }
 
 // ─── Game_Actor ──────────────────────────────────────────────────────────────
@@ -862,11 +788,10 @@ declare class Game_Battler extends Game_BattlerBase {
 declare class Game_Actor extends Game_Battler {
     constructor(actorId: number);
 
-    readonly level: number;
-
     _actorId: number;
     _name: string;
     _nickname: string;
+    _profile: string;
     _classId: number;
     _level: number;
     _characterName: string;
@@ -881,11 +806,8 @@ declare class Game_Actor extends Game_Battler {
     _lastMenuSkill: Game_Item;
     _lastBattleSkill: Game_Item;
     _lastCommandSymbol: string;
-    _profile: string;
     _stateSteps: Record<number, number>;
 
-    initialize(actorId: number): void;
-    initMembers(): void;
     setup(actorId: number): void;
     actorId(): number;
     actor(): RPG_Actor;
@@ -904,57 +826,18 @@ declare class Game_Actor extends Game_Battler {
     eraseState(stateId: number): void;
     resetStateCounts(stateId: number): void;
     initImages(): void;
-    expForLevel(level: number): number;
-    initExp(): void;
+    exp(): number;
     currentExp(): number;
     currentLevelExp(): number;
     nextLevelExp(): number;
     nextRequiredExp(): number;
     maxLevel(): number;
     isMaxLevel(): boolean;
-    initSkills(): void;
-    initEquips(equips: number[]): void;
-    equipSlots(): number[];
-    equips(): (RPG_Weapon | RPG_Armor | null)[];
-    weapons(): RPG_Weapon[];
-    armors(): RPG_Armor[];
-    hasWeapon(weapon: RPG_Weapon): boolean;
-    hasArmor(armor: RPG_Armor): boolean;
-    isEquipChangeOk(slotId: number): boolean;
-    changeEquip(slotId: number, item: RPG_Weapon | RPG_Armor | null): void;
-    forceChangeEquip(slotId: number, item: RPG_Weapon | RPG_Armor | null): void;
-    tradeItemWithParty(newItem: RPG_Weapon | RPG_Armor | null, oldItem: RPG_Weapon | RPG_Armor | null): boolean;
-    changeEquipById(etypeId: number, itemId: number): void;
-    isEquipped(item: RPG_Weapon | RPG_Armor): boolean;
-    discardEquip(item: RPG_Weapon | RPG_Armor): void;
-    releaseUnequippableItems(forcing: boolean): void;
-    clearEquipments(): void;
-    optimizeEquipments(): void;
-    bestEquipItem(slotId: number): RPG_Weapon | RPG_Armor | null;
-    calcEquipItemPerformance(item: RPG_Weapon | RPG_Armor): number;
-    isSkillWtypeOk(skill: RPG_Skill): boolean;
-    isWtypeEquipped(wtypeId: number): boolean;
-    refresh(): void;
-    hide(): void;
-    isActor(): true;
-    friendsUnit(): Game_Party;
-    opponentsUnit(): Game_Troop;
-    index(): number;
-    isBattleMember(): boolean;
-    isFormationChangeOk(): boolean;
+    initExp(): void;
     currentClass(): RPG_Class;
-    isClass(gameClass: RPG_Class): boolean;
-    skillTypes(): number[];
-    skills(): RPG_Skill[];
-    usableSkills(): RPG_Skill[];
-    traitObjects(): (RPG_State | RPG_Actor | RPG_Class | RPG_Weapon | RPG_Armor)[];
-    attackElements(): number[];
+    isLearnedSkill(skillId: number): boolean;
     hasNoWeapons(): boolean;
     bareHandsElementId(): number;
-    paramBase(paramId: number): number;
-    paramPlus(paramId: number): number;
-    attackAnimationId1(): number;
-    attackAnimationId2(): number;
     bareHandsAnimationId(): number;
     changeExp(exp: number, show: boolean): void;
     levelUp(): void;
@@ -968,16 +851,45 @@ declare class Game_Actor extends Game_Battler {
     changeLevel(level: number, show: boolean): void;
     learnSkill(skillId: number): void;
     forgetSkill(skillId: number): void;
-    isLearnedSkill(skillId: number): boolean;
     hasSkill(skillId: number): boolean;
+    skills(): RPG_Skill[];
+    usableSkills(): RPG_Skill[];
+    traitObjects(): (RPG_State | RPG_Actor | RPG_Class | RPG_Weapon | RPG_Armor)[];
+    attackElements(): number[];
+    animationId1(): number;
+    animationId2(): number;
+    attackAnimationId1(): number;
+    attackAnimationId2(): number;
+    changeEquip(slotId: number, item: RPG_Weapon | RPG_Armor | null): void;
+    forceChangeEquip(slotId: number, item: RPG_Weapon | RPG_Armor | null): void;
+    tradeItemWithParty(newItem: RPG_Weapon | RPG_Armor | null, oldItem: RPG_Weapon | RPG_Armor | null): boolean;
+    changeEquipById(etypeId: number, itemId: number): void;
+    isEquipped(item: RPG_Weapon | RPG_Armor): boolean;
+    releaseUnequippableItems(forcing: boolean): void;
+    clearEquipments(): void;
+    optimizeEquipments(): void;
+    bestEquipItem(slotId: number): RPG_Weapon | RPG_Armor | null;
+    calcEquipItemPerformance(item: RPG_Weapon | RPG_Armor): number;
+    isSkillWtypeOk(skill: RPG_Skill): boolean;
+    isWtypeEquipped(wtypeId: number): boolean;
+    refresh(): void;
+    isActor(): boolean;
+    friendsUnit(): Game_Party;
+    opponentsUnit(): Game_Troop;
+    index(): number;
+    isBattleMember(): boolean;
+    isFormationChangeOk(): boolean;
+    currentClassId(): number;
     changeClass(classId: number, keepExp: boolean): void;
-    setCharacterImage(characterName: string, characterIndex: number): void;
-    setFaceImage(faceName: string, faceIndex: number): void;
-    setBattlerImage(battlerName: string): void;
-    isSpriteVisible(): boolean;
-    performActionStart(action: Game_Action): void;
-    performAction(action: Game_Action): void;
-    performActionEnd(): void;
+    equips(): (RPG_Weapon | RPG_Armor | null)[];
+    weapons(): RPG_Weapon[];
+    armors(): RPG_Armor[];
+    hasWeapon(weapon: RPG_Weapon): boolean;
+    hasArmor(armor: RPG_Armor): boolean;
+    isEquipChangeOk(slotId: number): boolean;
+    isEquipTypeLocked(etypeId: number): boolean;
+    isEquipTypeSealed(etypeId: number): boolean;
+    equipSlots(): number[];
     performAttack(): void;
     performDamage(): void;
     performEvasion(): void;
@@ -991,7 +903,7 @@ declare class Game_Actor extends Game_Battler {
     makeConfusionActions(): void;
     makeActions(): void;
     onPlayerWalk(): void;
-    updateStateSteps(state: RPG_State): void;
+    updateStateSteps(): void;
     showAddedStates(): void;
     showRemovedStates(): void;
     stepsForTurn(): number;
@@ -1001,20 +913,16 @@ declare class Game_Actor extends Game_Battler {
     basicFloorDamage(): number;
     maxFloorDamage(): number;
     performMapDamage(): void;
-    clearActions(): void;
-    inputtingAction(): Game_Action;
+    inputtingAction(): Game_Action | null;
     selectNextCommand(): boolean;
     selectPreviousCommand(): boolean;
-    lastSkill(): RPG_Skill | null;
     lastMenuSkill(): RPG_Skill | null;
     setLastMenuSkill(skill: RPG_Skill): void;
     lastBattleSkill(): RPG_Skill | null;
     setLastBattleSkill(skill: RPG_Skill): void;
     lastCommandSymbol(): string;
     setLastCommandSymbol(symbol: string): void;
-    testEscape(item: RPG_Skill | RPG_Item): boolean;
-    meetsUsableItemConditions(item: RPG_Skill | RPG_Item): boolean;
-    onEscapeFailure(): void;
+    testEscape(item: RPG_Item): boolean;
 }
 
 // ─── Game_Enemy ──────────────────────────────────────────────────────────────
@@ -1029,10 +937,8 @@ declare class Game_Enemy extends Game_Battler {
     _screenX: number;
     _screenY: number;
 
-    initialize(enemyId: number, x: number, y: number): void;
-    initMembers(): void;
     setup(enemyId: number, x: number, y: number): void;
-    isEnemy(): true;
+    isEnemy(): boolean;
     friendsUnit(): Game_Troop;
     opponentsUnit(): Game_Party;
     index(): number;
@@ -1055,7 +961,7 @@ declare class Game_Enemy extends Game_Battler {
     name(): string;
     isLetterEmpty(): boolean;
     setLetter(letter: string): void;
-    setPlural(plural: boolean): void;
+    setPlural(value: boolean): void;
     performActionStart(action: Game_Action): void;
     performAction(action: Game_Action): void;
     performActionEnd(): void;
@@ -1063,13 +969,7 @@ declare class Game_Enemy extends Game_Battler {
     performCollapse(): void;
     transform(enemyId: number): void;
     meetsCondition(action: RPG_EnemyAction): boolean;
-    meetsTurnCondition(param1: number, param2: number): boolean;
-    meetsHpCondition(param1: number, param2: number): boolean;
-    meetsMpCondition(param1: number, param2: number): boolean;
-    meetsStateCondition(param: number): boolean;
-    meetsPartyLevelCondition(param: number): boolean;
-    meetsSwitchCondition(param: number): boolean;
-    isActionValid(action: RPG_EnemyAction): boolean;
+    isConditionMet(param1: number, param2: number): boolean;
     selectAction(actionList: RPG_EnemyAction[], ratingZero: number): RPG_EnemyAction | null;
     selectAllActions(actionList: RPG_EnemyAction[]): void;
     makeActions(): void;
@@ -1104,24 +1004,22 @@ declare class Game_Unit {
     clearActions(): void;
     agility(): number;
     tgrSum(): number;
-    randomTarget(): Game_Battler | null;
-    randomDeadTarget(): Game_Battler | null;
+    randomTarget(): Game_Battler;
+    randomDeadTarget(): Game_Battler;
     smoothTarget(index: number): Game_Battler;
     smoothDeadTarget(index: number): Game_Battler;
     clearResults(): void;
-    onBattleStart(advantageous: boolean): void;
+    onBattleStart(): void;
     onBattleEnd(): void;
     makeActions(): void;
     select(activeMember: Game_Battler): void;
     isAllDead(): boolean;
-    substituteBattler(target: Game_Battler): Game_Battler | null;
-    tpbBaseSpeed(): number;
-    tpbReferenceTime(): number;
-    updateTpb(): void;
+    substituteBattler(): Game_Battler | null;
 }
 
 // ─── Game_Party ──────────────────────────────────────────────────────────────
-// The game object class for the party.
+// The game object class for the party. Information such as gold and items is
+// included.
 
 declare class Game_Party extends Game_Unit {
     constructor();
@@ -1151,18 +1049,15 @@ declare class Game_Party extends Game_Unit {
     members(): Game_Actor[];
     allMembers(): Game_Actor[];
     battleMembers(): Game_Actor[];
-    hiddenBattleMembers(): Game_Actor[];
-    allBattleMembers(): Game_Actor[];
     maxBattleMembers(): number;
     leader(): Game_Actor;
-    removeInvalidMembers(): void;
     reviveBattleMembers(): void;
     items(): RPG_Item[];
     weapons(): RPG_Weapon[];
     armors(): RPG_Armor[];
     equipItems(): (RPG_Weapon | RPG_Armor)[];
     allItems(): (RPG_Item | RPG_Weapon | RPG_Armor)[];
-    itemContainer(item: RPG_Item | RPG_Weapon | RPG_Armor | null): Record<number, number> | null;
+    itemContainer(item: RPG_Item | RPG_Weapon | RPG_Armor): Record<number, number> | null;
     setupStartingMembers(): void;
     name(): string;
     setupBattleTest(): void;
@@ -1182,14 +1077,13 @@ declare class Game_Party extends Game_Unit {
     hasMaxItems(item: RPG_Item | RPG_Weapon | RPG_Armor): boolean;
     hasItem(item: RPG_Item | RPG_Weapon | RPG_Armor, includeEquip?: boolean): boolean;
     isAnyMemberEquipped(item: RPG_Weapon | RPG_Armor): boolean;
-    gainItem(item: RPG_Item | RPG_Weapon | RPG_Armor | null, amount: number, includeEquip?: boolean): void;
+    gainItem(item: RPG_Item | RPG_Weapon | RPG_Armor, amount: number, includeEquip?: boolean): void;
     discardMembersEquip(item: RPG_Weapon | RPG_Armor, amount: number): void;
     loseItem(item: RPG_Item | RPG_Weapon | RPG_Armor, amount: number, includeEquip?: boolean): void;
     consumeItem(item: RPG_Item): void;
-    canUse(item: RPG_Skill | RPG_Item): boolean;
+    canUse(item: RPG_Skill | RPG_Item | null): boolean;
     canInput(): boolean;
     isAllDead(): boolean;
-    isEscaped(): boolean;
     onPlayerWalk(): void;
     menuActor(): Game_Actor;
     setMenuActor(actor: Game_Actor): void;
@@ -1208,14 +1102,11 @@ declare class Game_Party extends Game_Unit {
     hasCancelSurprise(): boolean;
     hasRaisePreemptive(): boolean;
     hasGoldDouble(): boolean;
-    hasDropItemDouble(): boolean;
-    ratePreemptive(troopAgi: number): number;
-    rateSurprise(troopAgi: number): number;
+    hasDoubleItemNumber(): boolean;
     performVictory(): void;
     performEscape(): void;
     removeBattleStates(): void;
     requestMotionRefresh(): void;
-    onEscapeFailure(): void;
 }
 
 // ─── Game_Troop ──────────────────────────────────────────────────────────────
@@ -1234,30 +1125,28 @@ declare class Game_Troop extends Game_Unit {
     _turnCount: number;
     _namesCount: Record<string, number>;
 
-    initialize(): void;
-    isEventRunning(): boolean;
-    updateInterpreter(): void;
-    turnCount(): number;
     members(): Game_Enemy[];
     clear(): void;
     troop(): RPG_Troop;
     setup(troopId: number): void;
     makeUniqueNames(): void;
-    updatePluralFlags(): void;
     letterTable(): string[];
     enemyNames(): string[];
-    meetsConditions(page: RPG_TroopPage): boolean;
+    meetsConditions(page: RPG_BattleEventPage): boolean;
     setupBattleEvent(): void;
     increaseTurn(): void;
+    isEventRunning(): boolean;
+    updateInterpreter(): void;
+    turnCount(): number;
     expTotal(): number;
     goldTotal(): number;
     goldRate(): number;
     makeDropItems(): (RPG_Item | RPG_Weapon | RPG_Armor)[];
-    isTpbTurnEnd(): boolean;
 }
 
 // ─── Game_Map ────────────────────────────────────────────────────────────────
-// The game object class for a map.
+// The game object class for a map. It contains scrolling and passage
+// determination functions.
 
 declare class Game_Map {
     constructor();
@@ -1285,14 +1174,12 @@ declare class Game_Map {
     _battleback1Name: string | null;
     _battleback2Name: string | null;
     _needsRefresh: boolean;
-    _tileEvents: Game_Event[];
 
     initialize(): void;
     setup(mapId: number): void;
     isEventRunning(): boolean;
     tileWidth(): number;
     tileHeight(): number;
-    bushDepth(): number;
     mapId(): number;
     tilesetId(): number;
     displayX(): number;
@@ -1300,7 +1187,7 @@ declare class Game_Map {
     parallaxName(): string;
     battleback1Name(): string | null;
     battleback2Name(): string | null;
-    requestRefresh(): void;
+    requestRefresh(mapId?: number): void;
     isNameDisplayEnabled(): boolean;
     disableNameDisplay(): void;
     enableNameDisplay(): void;
@@ -1313,9 +1200,8 @@ declare class Game_Map {
     airship(): Game_Vehicle;
     setupEvents(): void;
     events(): Game_Event[];
-    event(eventId: number): Game_Event;
+    event(eventId: number): Game_Event | undefined;
     eraseEvent(eventId: number): void;
-    autorunCommonEvents(): RPG_CommonEvent[];
     parallelCommonEvents(): RPG_CommonEvent[];
     setupScroll(): void;
     setupParallax(): void;
@@ -1332,7 +1218,7 @@ declare class Game_Map {
     isLoopHorizontal(): boolean;
     isLoopVertical(): boolean;
     isDashDisabled(): boolean;
-    encounterList(): RPG_MapEncounter[];
+    encounterList(): RPG_Map_Encounter[];
     encounterStep(): number;
     isOverworld(): boolean;
     screenTileX(): number;
@@ -1398,10 +1284,12 @@ declare class Game_Map {
     setupStartingMapEvent(): boolean;
     setupAutorunCommonEvent(): boolean;
     isAnyEventStarting(): boolean;
+    interpreter(): Game_Interpreter;
 }
 
 // ─── Game_CommonEvent ────────────────────────────────────────────────────────
-// The game object class for a common event.
+// The game object class for a common event. It contains functionality for
+// running parallel process events.
 
 declare class Game_CommonEvent {
     constructor(commonEventId: number);
@@ -1409,7 +1297,6 @@ declare class Game_CommonEvent {
     _commonEventId: number;
     _interpreter: Game_Interpreter | null;
 
-    initialize(commonEventId: number): void;
     event(): RPG_CommonEvent;
     list(): RPG_EventCommand[];
     refresh(): void;
@@ -1418,13 +1305,11 @@ declare class Game_CommonEvent {
 }
 
 // ─── Game_CharacterBase ──────────────────────────────────────────────────────
-// The superclass of Game_Character.
+// The superclass of Game_Character. It handles basic information, such as
+// coordinates and images, shared by all characters.
 
 declare class Game_CharacterBase {
     constructor();
-
-    readonly x: number;
-    readonly y: number;
 
     _x: number;
     _y: number;
@@ -1474,83 +1359,90 @@ declare class Game_CharacterBase {
     isMoving(): boolean;
     isJumping(): boolean;
     jumpHeight(): number;
-    isStopping(): boolean;
+    jumpPeak(): number;
+    isStop(): boolean;
     checkStop(threshold: number): boolean;
     resetStopCount(): void;
-    realMoveSpeed(): number;
-    distancePerFrame(): number;
-    isDashing(): boolean;
-    isDebugThrough(): boolean;
-    straighten(): void;
-    reverseDir(d: number): number;
-    canPass(x: number, y: number, d: number): boolean;
-    canPassDiagonally(x: number, y: number, horz: number, vert: number): boolean;
-    isMapPassable(x: number, y: number, d: number): boolean;
-    isCollidedWithCharacters(x: number, y: number): boolean;
-    isCollidedWithEvents(x: number, y: number): boolean;
-    isCollidedWithVehicles(x: number, y: number): boolean;
-    setPosition(x: number, y: number): void;
-    copyPosition(character: Game_CharacterBase): void;
-    locate(x: number, y: number): void;
-    direction(): number;
-    setDirection(d: number): void;
-    isTile(): boolean;
-    isObjectCharacter(): boolean;
-    shiftY(): number;
-    scrolledX(): number;
-    scrolledY(): number;
-    screenX(): number;
-    screenY(): number;
-    screenZ(): number;
-    isNearTheScreen(): boolean;
+    animationWait(): number;
+    updateAnimationCount(): void;
     update(): void;
     updateStop(): void;
     updateJump(): void;
     updateMove(): void;
     updateAnimation(): void;
-    animationWait(): number;
-    updateAnimationCount(): void;
-    updatePattern(): void;
-    maxPattern(): number;
-    pattern(): number;
-    setPattern(pattern: number): void;
-    isOriginalPattern(): boolean;
-    resetPattern(): void;
-    refreshBushDepth(): void;
-    isOnLadder(): boolean;
-    isOnBush(): boolean;
-    terrainTag(): number;
-    regionId(): number;
-    increaseSteps(): void;
-    tileId(): number;
-    characterName(): string;
-    characterIndex(): number;
-    setImage(characterName: string, characterIndex: number): void;
-    setTileImage(tileId: number): void;
-    checkEventTriggerTouchFront(d: number): void;
-    checkEventTriggerTouch(x: number, y: number): boolean;
-    isMovementSucceeded(x?: number, y?: number): boolean;
-    setMovementSuccess(success: boolean): void;
-    moveStraight(d: number): void;
-    moveDiagonally(horz: number, vert: number): void;
-    jump(xPlus: number, yPlus: number): void;
+    animationId(): number;
+    setAnimationId(animationId: number): void;
+    isBalloonPlaying(): boolean;
+    startBalloon(): void;
+    setBalloonId(balloonId: number): void;
+    direction(): number;
+    setDirection(d: number): void;
     hasWalkAnime(): boolean;
     setWalkAnime(walkAnime: boolean): void;
     hasStepAnime(): boolean;
     setStepAnime(stepAnime: boolean): void;
-    isDirectionFixed(): boolean;
-    setDirectionFix(directionFix: boolean): void;
-    isThrough(): boolean;
-    setThrough(through: boolean): void;
     isTransparent(): boolean;
-    bushDepth(): number;
     setTransparent(transparent: boolean): void;
-    startAnimation(): void;
-    startBalloon(): void;
-    isAnimationPlaying(): boolean;
-    isBalloonPlaying(): boolean;
-    endAnimation(): void;
-    endBalloon(): void;
+    requestAnimation(animationId: number): void;
+    requestBalloon(balloonId: number): void;
+    bushDepth(): number;
+    setImage(characterName: string, characterIndex: number): void;
+    setTileImage(tileId: number): void;
+    checkEventTriggerTouchFront(d: number): void;
+    checkEventTriggerTouch(x: number, y: number): boolean;
+    isMovementSucceeded(): boolean;
+    setMovementSuccess(success: boolean): void;
+    moveStraight(d: number): void;
+    moveDiagonally(horz: number, vert: number): void;
+    jump(xPlus: number, yPlus: number): void;
+    isMapPassable(x: number, y: number, d: number): boolean;
+    canPass(x: number, y: number, d: number): boolean;
+    canPassDiagonally(x: number, y: number, horz: number, vert: number): boolean;
+    isCollidedWithCharacters(x: number, y: number): boolean;
+    isCollidedWithEvents(x: number, y: number): boolean;
+    isCollidedWithVehicles(x: number, y: number): boolean;
+    screenX(): number;
+    screenY(): number;
+    screenZ(): number;
+    scrolledX(): number;
+    scrolledY(): number;
+    distancePerFrame(): number;
+    realMoveSpeed(): number;
+    increaseSteps(): void;
+    tileId(): number;
+    characterName(): string;
+    characterIndex(): number;
+    setPosition(x: number, y: number): void;
+    copyPosition(character: Game_CharacterBase): void;
+    locate(x: number, y: number): void;
+    setDirectionFix(directionFix: boolean): void;
+    isDirectionFixed(): boolean;
+    setThrough(through: boolean): void;
+    isThrough(): boolean;
+    pattern(): number;
+    setPattern(pattern: number): void;
+    maxPattern(): number;
+    isOriginalPattern(): boolean;
+    resetPattern(): void;
+    straighten(): void;
+    reverseDir(d: number): number;
+    turnTowardCharacter(character: Game_CharacterBase): void;
+    turnAwayFromCharacter(character: Game_CharacterBase): void;
+    turnTowardPlayer(): void;
+    turnAwayFromPlayer(): void;
+    moveTowardCharacter(character: Game_CharacterBase): void;
+    moveAwayFromCharacter(character: Game_CharacterBase): void;
+    moveTowardPlayer(): void;
+    moveAwayFromPlayer(): void;
+    moveForward(): void;
+    moveBackward(): void;
+    processRouteEnd(): void;
+    advanceMoveRouteIndex(): void;
+    turnRight90(): void;
+    turnLeft90(): void;
+    turn180(): void;
+    turnRightOrLeft90(): void;
+    turnRandom(): void;
 }
 
 // ─── Game_Character ──────────────────────────────────────────────────────────
@@ -1559,54 +1451,6 @@ declare class Game_CharacterBase {
 declare class Game_Character extends Game_CharacterBase {
     constructor();
 
-    // Route command constants
-    static ROUTE_END: number;
-    static ROUTE_MOVE_DOWN: number;
-    static ROUTE_MOVE_LEFT: number;
-    static ROUTE_MOVE_RIGHT: number;
-    static ROUTE_MOVE_UP: number;
-    static ROUTE_MOVE_LOWER_L: number;
-    static ROUTE_MOVE_LOWER_R: number;
-    static ROUTE_MOVE_UPPER_L: number;
-    static ROUTE_MOVE_UPPER_R: number;
-    static ROUTE_MOVE_RANDOM: number;
-    static ROUTE_MOVE_TOWARD: number;
-    static ROUTE_MOVE_AWAY: number;
-    static ROUTE_MOVE_FORWARD: number;
-    static ROUTE_MOVE_BACKWARD: number;
-    static ROUTE_JUMP: number;
-    static ROUTE_WAIT: number;
-    static ROUTE_TURN_DOWN: number;
-    static ROUTE_TURN_LEFT: number;
-    static ROUTE_TURN_RIGHT: number;
-    static ROUTE_TURN_UP: number;
-    static ROUTE_TURN_90D_R: number;
-    static ROUTE_TURN_90D_L: number;
-    static ROUTE_TURN_180D: number;
-    static ROUTE_TURN_90D_R_L: number;
-    static ROUTE_TURN_RANDOM: number;
-    static ROUTE_TURN_TOWARD: number;
-    static ROUTE_TURN_AWAY: number;
-    static ROUTE_SWITCH_ON: number;
-    static ROUTE_SWITCH_OFF: number;
-    static ROUTE_CHANGE_SPEED: number;
-    static ROUTE_CHANGE_FREQ: number;
-    static ROUTE_WALK_ANIME_ON: number;
-    static ROUTE_WALK_ANIME_OFF: number;
-    static ROUTE_STEP_ANIME_ON: number;
-    static ROUTE_STEP_ANIME_OFF: number;
-    static ROUTE_DIR_FIX_ON: number;
-    static ROUTE_DIR_FIX_OFF: number;
-    static ROUTE_THROUGH_ON: number;
-    static ROUTE_THROUGH_OFF: number;
-    static ROUTE_TRANSPARENT_ON: number;
-    static ROUTE_TRANSPARENT_OFF: number;
-    static ROUTE_CHANGE_IMAGE: number;
-    static ROUTE_CHANGE_OPACITY: number;
-    static ROUTE_CHANGE_BLEND_MODE: number;
-    static ROUTE_PLAY_SE: number;
-    static ROUTE_SCRIPT: number;
-
     _moveRouteForcing: boolean;
     _moveRoute: RPG_MoveRoute | null;
     _moveRouteIndex: number;
@@ -1614,14 +1458,12 @@ declare class Game_Character extends Game_CharacterBase {
     _originalMoveRouteIndex: number;
     _waitCount: number;
 
-    initialize(): void;
     initMembers(): void;
     memorizeMoveRoute(): void;
     restoreMoveRoute(): void;
     isMoveRouteForcing(): boolean;
     setMoveRoute(moveRoute: RPG_MoveRoute): void;
     forceMoveRoute(moveRoute: RPG_MoveRoute): void;
-    updateStop(): void;
     updateRoutineMove(): void;
     processMoveCommand(command: RPG_MoveCommand): void;
     deltaXFrom(x: number): number;
@@ -1650,7 +1492,8 @@ declare class Game_Character extends Game_CharacterBase {
 }
 
 // ─── Game_Player ─────────────────────────────────────────────────────────────
-// The game object class for the player.
+// The game object class for the player. It contains event starting
+// determinants and map scrolling functions.
 
 declare class Game_Player extends Game_Character {
     constructor();
@@ -1673,15 +1516,14 @@ declare class Game_Player extends Game_Character {
     initMembers(): void;
     clearTransferInfo(): void;
     followers(): Game_Followers;
-    refresh(): void;
-    isStopping(): boolean;
-    reserveTransfer(mapId: number, x: number, y: number, d: number, fadeType: number): void;
-    setupForNewGame(): void;
-    requestMapReload(): void;
+    isAnimationPlaying(): boolean;
+    performTransfer(): void;
     isTransferring(): boolean;
     newMapId(): number;
     fadeType(): number;
-    performTransfer(): void;
+    relocate(mapId: number, x: number, y: number, d?: number): void;
+    setupForNewGame(): void;
+    requestMapReload(): void;
     isMapPassable(x: number, y: number, d: number): boolean;
     vehicle(): Game_Vehicle | null;
     isInBoat(): boolean;
@@ -1699,33 +1541,30 @@ declare class Game_Player extends Game_Character {
     increaseSteps(): void;
     makeEncounterCount(): void;
     makeEncounterTroopId(): number;
-    meetsEncounterConditions(encounter: RPG_MapEncounter): boolean;
+    meetsEncounterConditions(encounter: RPG_Map_Encounter): boolean;
     executeEncounter(): boolean;
     startMapEvent(x: number, y: number, triggers: number[], normal: boolean): void;
     moveByInput(): void;
     canMove(): boolean;
     getInputDirection(): number;
     executeMove(direction: number): void;
-    update(sceneActive: boolean): void;
+    update(sceneActive?: boolean): void;
     updateDashing(): void;
-    isDashButtonPressed(): boolean;
-    updateScroll(lastScrolledX: number, lastScrolledY: number): void;
     updateVehicle(): void;
     updateVehicleGetOn(): void;
     updateVehicleGetOff(): void;
-    updateNonmoving(wasMoving: boolean, sceneActive: boolean): void;
+    updateNonmoving(wasMoving: boolean): void;
     triggerAction(): boolean;
-    triggerButtonAction(): boolean;
     triggerTouchAction(): boolean;
     triggerTouchActionD1(x1: number, y1: number): boolean;
     triggerTouchActionD2(x2: number, y2: number): boolean;
-    triggerTouchActionD3(x2: number, y2: number): boolean;
+    triggerTouchActionD3(destX: number, destY: number): boolean;
     updateEncounterCount(): void;
     canEncounter(): boolean;
     encounterProgressValue(): number;
     checkEventTriggerHere(triggers: number[]): void;
     checkEventTriggerThere(triggers: number[]): void;
-    checkEventTriggerTouch(x: number, y: number): void;
+    checkEventTriggerTouch(x: number, y: number): boolean;
     canStartLocalEvents(): boolean;
     getOnOffVehicle(): boolean;
     getOnVehicle(): boolean;
@@ -1743,18 +1582,17 @@ declare class Game_Player extends Game_Character {
 }
 
 // ─── Game_Follower ───────────────────────────────────────────────────────────
-// The game object class for a follower.
+// The game object class for a follower. A follower is an allied character,
+// other than the front character, displayed in the party.
 
 declare class Game_Follower extends Game_Character {
     constructor(memberIndex: number);
 
     _memberIndex: number;
 
-    initialize(memberIndex: number): void;
     refresh(): void;
-    actor(): Game_Actor;
+    actor(): Game_Actor | null;
     isVisible(): boolean;
-    isGathered(): boolean;
     update(): void;
     chaseCharacter(character: Game_CharacterBase): void;
 }
@@ -1770,13 +1608,12 @@ declare class Game_Followers {
     _data: Game_Follower[];
 
     initialize(): void;
-    setup(): void;
     isVisible(): boolean;
     show(): void;
     hide(): void;
-    data(): Game_Follower[];
-    reverseData(): Game_Follower[];
     follower(index: number): Game_Follower;
+    forEach(callback: (follower: Game_Follower) => void): void;
+    reverseEach(callback: (follower: Game_Follower) => void): void;
     refresh(): void;
     update(): void;
     updateMove(): void;
@@ -1784,8 +1621,6 @@ declare class Game_Followers {
     synchronize(x: number, y: number, d: number): void;
     gather(): void;
     areGathering(): boolean;
-    visibleFollowers(): Game_Follower[];
-    areMoving(): boolean;
     areGathered(): boolean;
     isSomeoneCollided(x: number, y: number): boolean;
 }
@@ -1802,14 +1637,13 @@ declare class Game_Vehicle extends Game_Character {
     _driving: boolean;
     _bgm: RPG_AudioFile | null;
 
-    initialize(type: string): void;
     initMembers(): void;
     isBoat(): boolean;
     isShip(): boolean;
     isAirship(): boolean;
     resetDirection(): void;
     initMoveSpeed(): void;
-    vehicle(): RPG_SystemVehicle | null;
+    vehicle(): RPG_System_Vehicle | null;
     loadSystemSettings(): void;
     refresh(): void;
     setLocation(mapId: number, x: number, y: number): void;
@@ -1836,7 +1670,8 @@ declare class Game_Vehicle extends Game_Character {
 }
 
 // ─── Game_Event ──────────────────────────────────────────────────────────────
-// The game object class for an event.
+// The game object class for an event. It contains functionality for event page
+// switching and running parallel process events.
 
 declare class Game_Event extends Game_Character {
     constructor(mapId: number, eventId: number);
@@ -1854,12 +1689,11 @@ declare class Game_Event extends Game_Character {
     _locked: boolean;
     _interpreter: Game_Interpreter | null;
 
-    initialize(mapId: number, eventId: number): void;
     initMembers(): void;
     eventId(): number;
     event(): RPG_Event;
-    page(): RPG_EventPage;
-    list(): RPG_EventCommand[];
+    page(): RPG_EventPage | null;
+    list(): RPG_EventCommand[] | null;
     isCollidedWithCharacters(x: number, y: number): boolean;
     isCollidedWithEvents(x: number, y: number): boolean;
     isCollidedWithPlayerCharacters(x: number, y: number): boolean;
@@ -1868,15 +1702,12 @@ declare class Game_Event extends Game_Character {
     updateStop(): void;
     updateSelfMovement(): void;
     stopCountThreshold(): number;
-    moveTypeRandom(): void;
-    moveTypeTowardPlayer(): void;
+    isNearTheScreen(): boolean;
+    isMoveRouteForcing(): boolean;
     isNearThePlayer(): boolean;
-    moveTypeCustom(): void;
-    isStarting(): boolean;
-    clearStartingFlag(): void;
-    isTriggerIn(triggers: number[]): boolean;
-    start(): void;
-    erase(): void;
+    locate(x: number, y: number): void;
+    forceMoveRoute(moveRoute: RPG_MoveRoute): void;
+    eraseEvent(): void;
     refresh(): void;
     findProperPageIndex(): number;
     meetsConditions(page: RPG_EventPage): boolean;
@@ -1884,13 +1715,15 @@ declare class Game_Event extends Game_Character {
     clearPageSettings(): void;
     setupPageSettings(): void;
     isOriginalPattern(): boolean;
-    resetPattern(): void;
-    checkEventTriggerTouch(x: number, y: number): void;
+    updatePattern(): void;
     checkEventTriggerAuto(): void;
     update(): void;
     updateParallel(): void;
-    locate(x: number, y: number): void;
-    forceMoveRoute(moveRoute: RPG_MoveRoute): void;
+    start(): void;
+    clearStartingFlag(): void;
+    isStarting(): boolean;
+    checkEventTriggerTouch(x: number, y: number): boolean;
+    isTriggerIn(triggers: number[]): boolean;
 }
 
 // ─── Game_Interpreter ────────────────────────────────────────────────────────
@@ -1900,25 +1733,25 @@ declare class Game_Interpreter {
     constructor(depth?: number);
 
     _depth: number;
+    _branch: Record<number, number | boolean>;
+    _params: any[];
+    _indent: number;
+    _frameCount: number;
+    _freezeChecker: number;
     _mapId: number;
     _eventId: number;
     _list: RPG_EventCommand[] | null;
     _index: number;
     _waitCount: number;
     _waitMode: string;
-    _comments: string | string[];
-    _characterId: number;
+    _comments: string;
+    _character: Game_Event | null;
     _childInterpreter: Game_Interpreter | null;
-    _branch: Record<number, any>;
-    _indent: number;
-    _frameCount: number;
-    _freezeChecker: number;
+    _imageReservationId: number;
 
-    initialize(depth?: number): void;
     checkOverflow(): void;
     clear(): void;
     setup(list: RPG_EventCommand[], eventId?: number): void;
-    loadImages(): void;
     eventId(): number;
     isOnCurrentMap(): boolean;
     setupReservedCommonEvent(): boolean;
@@ -1931,11 +1764,9 @@ declare class Game_Interpreter {
     setWaitMode(waitMode: string): void;
     wait(duration: number): void;
     fadeSpeed(): number;
-    executeCommand(): boolean;
-    checkFreeze(): boolean;
-    terminate(): void;
-    skipBranch(): void;
-    currentCommand(): RPG_EventCommand;
+    setupChoices(params: any[]): void;
+    pluginCommand(command: string, args: string[]): void;
+    currentCommand(): RPG_EventCommand | null;
     nextEventCode(): number;
     iterateActorId(param: number, callback: (actor: Game_Actor) => void): void;
     iterateActorEx(param1: number, param2: number, callback: (actor: Game_Actor) => void): void;
@@ -1945,25 +1776,23 @@ declare class Game_Interpreter {
     character(param: number): Game_Character | null;
     operateValue(operation: number, operandType: number, operand: number): number;
     changeHp(target: Game_Battler, value: number, allowDeath: boolean): void;
+    gameDataOperand(type: number, param1: number, param2: number): number;
 
-    // ── Event command methods ──
-
+    // Event commands (command101 through command355+)
     // Show Text
-    command101(params: any[]): boolean;
+    command101(): boolean;
     // Show Choices
-    command102(params: any[]): boolean;
+    command102(): boolean;
     // Input Number
-    command103(params: any[]): boolean;
+    command103(): boolean;
     // Select Item
-    command104(params: any[]): boolean;
+    command104(): boolean;
     // Show Scrolling Text
-    command105(params: any[]): boolean;
+    command105(): boolean;
     // Comment
-    command108(params: any[]): boolean;
-    // Skip
-    command109(): boolean;
+    command108(): boolean;
     // Conditional Branch
-    command111(params: any[]): boolean;
+    command111(): boolean;
     // Loop
     command112(): boolean;
     // Break Loop
@@ -1971,69 +1800,69 @@ declare class Game_Interpreter {
     // Exit Event Processing
     command115(): boolean;
     // Common Event
-    command117(params: any[]): boolean;
+    command117(): boolean;
     // Label
     command118(): boolean;
     // Jump to Label
-    command119(params: any[]): boolean;
+    command119(): boolean;
     // Control Switches
-    command121(params: any[]): boolean;
+    command121(): boolean;
     // Control Variables
-    command122(params: any[]): boolean;
+    command122(): boolean;
     // Control Self Switch
-    command123(params: any[]): boolean;
+    command123(): boolean;
     // Control Timer
-    command124(params: any[]): boolean;
+    command124(): boolean;
     // Change Gold
-    command125(params: any[]): boolean;
+    command125(): boolean;
     // Change Items
-    command126(params: any[]): boolean;
+    command126(): boolean;
     // Change Weapons
-    command127(params: any[]): boolean;
+    command127(): boolean;
     // Change Armors
-    command128(params: any[]): boolean;
+    command128(): boolean;
     // Change Party Member
-    command129(params: any[]): boolean;
+    command129(): boolean;
     // Change Battle BGM
-    command132(params: any[]): boolean;
+    command132(): boolean;
     // Change Victory ME
-    command133(params: any[]): boolean;
+    command133(): boolean;
     // Change Save Access
-    command134(params: any[]): boolean;
+    command134(): boolean;
     // Change Menu Access
-    command135(params: any[]): boolean;
-    // Change Encounter
-    command136(params: any[]): boolean;
+    command135(): boolean;
+    // Change Encounter Disable
+    command136(): boolean;
     // Change Formation Access
-    command137(params: any[]): boolean;
+    command137(): boolean;
     // Change Window Color
-    command138(params: any[]): boolean;
+    command138(): boolean;
     // Change Defeat ME
-    command139(params: any[]): boolean;
+    command139(): boolean;
     // Change Vehicle BGM
-    command140(params: any[]): boolean;
+    command140(): boolean;
     // Transfer Player
-    command201(params: any[]): boolean;
+    command201(): boolean;
     // Set Vehicle Location
-    command202(params: any[]): boolean;
+    command202(): boolean;
     // Set Event Location
-    command203(params: any[]): boolean;
+    command203(): boolean;
     // Scroll Map
-    command204(params: any[]): boolean;
+    command204(): boolean;
     // Set Movement Route
-    command205(params: any[]): boolean;
-    // Get on/off Vehicle
+    command205(): boolean;
+    // Get On/Off Vehicle
     command206(): boolean;
     // Change Transparency
-    command211(params: any[]): boolean;
+    command211(): boolean;
     // Show Animation
-    command212(params: any[]): boolean;
+    command212(): boolean;
     // Show Balloon Icon
-    command213(params: any[]): boolean;
+    command213(): boolean;
     // Erase Event
     command214(): boolean;
     // Change Player Followers
-    command216(params: any[]): boolean;
+    command216(): boolean;
     // Gather Followers
     command217(): boolean;
     // Fadeout Screen
@@ -2041,113 +1870,113 @@ declare class Game_Interpreter {
     // Fadein Screen
     command222(): boolean;
     // Tint Screen
-    command223(params: any[]): boolean;
+    command223(): boolean;
     // Flash Screen
-    command224(params: any[]): boolean;
+    command224(): boolean;
     // Shake Screen
-    command225(params: any[]): boolean;
+    command225(): boolean;
     // Wait
-    command230(params: any[]): boolean;
+    command230(): boolean;
     // Show Picture
-    command231(params: any[]): boolean;
+    command231(): boolean;
     // Move Picture
-    command232(params: any[]): boolean;
+    command232(): boolean;
     // Rotate Picture
-    command233(params: any[]): boolean;
+    command233(): boolean;
     // Tint Picture
-    command234(params: any[]): boolean;
+    command234(): boolean;
     // Erase Picture
-    command235(params: any[]): boolean;
+    command235(): boolean;
     // Set Weather Effect
-    command236(params: any[]): boolean;
+    command236(): boolean;
     // Play BGM
-    command241(params: any[]): boolean;
+    command241(): boolean;
     // Fadeout BGM
-    command242(params: any[]): boolean;
+    command242(): boolean;
     // Save BGM
     command243(): boolean;
     // Resume BGM
     command244(): boolean;
     // Play BGS
-    command245(params: any[]): boolean;
+    command245(): boolean;
     // Fadeout BGS
-    command246(params: any[]): boolean;
+    command246(): boolean;
     // Play ME
-    command249(params: any[]): boolean;
+    command249(): boolean;
     // Play SE
-    command250(params: any[]): boolean;
+    command250(): boolean;
     // Stop SE
     command251(): boolean;
     // Play Movie
-    command261(params: any[]): boolean;
+    command261(): boolean;
     // Change Map Name Display
-    command281(params: any[]): boolean;
+    command281(): boolean;
     // Change Tileset
-    command282(params: any[]): boolean;
-    // Change Battle Background
-    command283(params: any[]): boolean;
+    command282(): boolean;
+    // Change Battle Back
+    command283(): boolean;
     // Change Parallax
-    command284(params: any[]): boolean;
+    command284(): boolean;
     // Get Location Info
-    command285(params: any[]): boolean;
+    command285(): boolean;
     // Battle Processing
-    command301(params: any[]): boolean;
+    command301(): boolean;
     // Shop Processing
-    command302(params: any[]): boolean;
+    command302(): boolean;
     // Name Input Processing
-    command303(params: any[]): boolean;
+    command303(): boolean;
     // Change HP
-    command311(params: any[]): boolean;
+    command311(): boolean;
     // Change MP
-    command312(params: any[]): boolean;
-    // Change State
-    command313(params: any[]): boolean;
-    // Recover All
-    command314(params: any[]): boolean;
-    // Change EXP
-    command315(params: any[]): boolean;
-    // Change Level
-    command316(params: any[]): boolean;
-    // Change Parameter
-    command317(params: any[]): boolean;
-    // Change Skill
-    command318(params: any[]): boolean;
-    // Change Equipment
-    command319(params: any[]): boolean;
-    // Change Name
-    command320(params: any[]): boolean;
-    // Change Class
-    command321(params: any[]): boolean;
-    // Change Actor Images
-    command322(params: any[]): boolean;
-    // Change Vehicle Image
-    command323(params: any[]): boolean;
-    // Change Nickname
-    command324(params: any[]): boolean;
-    // Change Profile
-    command325(params: any[]): boolean;
+    command312(): boolean;
     // Change TP
-    command326(params: any[]): boolean;
+    command326(): boolean;
+    // Change State
+    command313(): boolean;
+    // Recover All
+    command314(): boolean;
+    // Change EXP
+    command315(): boolean;
+    // Change Level
+    command316(): boolean;
+    // Change Parameter
+    command317(): boolean;
+    // Change Skill
+    command318(): boolean;
+    // Change Equipment
+    command319(): boolean;
+    // Change Name
+    command320(): boolean;
+    // Change Class
+    command321(): boolean;
+    // Change Actor Images
+    command322(): boolean;
+    // Change Vehicle Image
+    command323(): boolean;
+    // Change Nickname
+    command324(): boolean;
+    // Change Profile
+    command325(): boolean;
     // Change Enemy HP
-    command331(params: any[]): boolean;
+    command331(): boolean;
     // Change Enemy MP
-    command332(params: any[]): boolean;
+    command332(): boolean;
+    // Change Enemy TP
+    command342(): boolean;
     // Change Enemy State
-    command333(params: any[]): boolean;
+    command333(): boolean;
     // Enemy Recover All
-    command334(params: any[]): boolean;
+    command334(): boolean;
     // Enemy Appear
-    command335(params: any[]): boolean;
+    command335(): boolean;
     // Enemy Transform
-    command336(params: any[]): boolean;
+    command336(): boolean;
     // Show Battle Animation
-    command337(params: any[]): boolean;
+    command337(): boolean;
     // Force Action
-    command339(params: any[]): boolean;
+    command339(): boolean;
     // Abort Battle
     command340(): boolean;
-    // Change Enemy TP
-    command342(params: any[]): boolean;
     // Open Menu Screen
     command351(): boolean;
     // Open Save Screen
@@ -2158,36 +1987,6 @@ declare class Game_Interpreter {
     command354(): boolean;
     // Script
     command355(): boolean;
-    // Plugin Command MV (deprecated)
-    command356(params: any[]): boolean;
     // Plugin Command
-    command357(params: any[]): boolean;
-
-    // Branch result handlers
-    // When [**]
-    command402(params: any[]): boolean;
-    // When Cancel
-    command403(): boolean;
-    // Else
-    command411(): boolean;
-    // Repeat Above
-    command413(): boolean;
-    // If Win
-    command601(): boolean;
-    // If Escape
-    command602(): boolean;
-    // If Lose
-    command603(): boolean;
-
-    // Helper methods
-    setupChoices(params: any[]): void;
-    setupNumInput(params: any[]): void;
-    setupItemChoice(params: any[]): void;
-    setupChild(list: RPG_EventCommand[], eventId: number): void;
-    jumpTo(index: number): void;
-    gameDataOperand(type: number, param1: number, param2: number): number;
-    operateVariable(variableId: number, operationType: number, value: any): void;
-    picturePoint(params: any[]): { x: number; y: number };
-    videoFileExt(): string;
-    pluginCommand(command: string, args: string[]): void;
+    command356(): boolean;
 }

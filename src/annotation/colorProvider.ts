@@ -55,7 +55,7 @@ function toHex(value: number): string {
   return hex;
 }
 
-class RmmzColorProvider implements vscode.DocumentColorProvider {
+class RmmvColorProvider implements vscode.DocumentColorProvider {
   provideDocumentColors(
     document: vscode.TextDocument,
     _token: vscode.CancellationToken
@@ -120,6 +120,6 @@ export function activate(context: vscode.ExtensionContext): void {
   ];
 
   context.subscriptions.push(
-    vscode.languages.registerColorProvider(selector, new RmmzColorProvider())
+    vscode.languages.registerColorProvider(selector, new RmmvColorProvider())
   );
 }

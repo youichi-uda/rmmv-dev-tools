@@ -1,5 +1,5 @@
 /**
- * Complete definition of RPG Maker MZ plugin annotation tags.
+ * Complete definition of RPG Maker MV plugin annotation tags.
  */
 
 /** Top-level tags that appear directly in the plugin comment block */
@@ -9,12 +9,8 @@ export const TOP_LEVEL_TAGS = [
   'author',
   'help',
   'url',
-  'base',
-  'orderAfter',
-  'orderBefore',
   'requiredAssets',
   'param',
-  'command',
   'noteParam',
   'noteDir',
   'noteType',
@@ -39,15 +35,11 @@ export const PARAM_TAGS = [
   'value',
 ] as const;
 
-/** Tags valid inside a @command scope */
-export const COMMAND_TAGS = [
-  'text',
-  'desc',
-  'arg',
-] as const;
+/** Tags valid inside a @command scope (MV has no plugin commands — kept empty for compatibility) */
+export const COMMAND_TAGS = [] as const;
 
-/** Tags valid inside an @arg scope (same as @param) */
-export const ARG_TAGS = PARAM_TAGS;
+/** Tags valid inside an @arg scope (MV has no @arg — kept empty for compatibility) */
+export const ARG_TAGS = [] as const;
 
 /** Basic @type values */
 export const TYPE_VALUES_BASIC = [
@@ -123,17 +115,13 @@ export const TYPE_SPECIFIC_TAGS: Record<string, string[]> = {
 
 /** Description for each annotation tag */
 export const TAG_DESCRIPTIONS: Record<string, string> = {
-  target: 'Target engine (MZ)',
+  target: 'Target engine (MV)',
   plugindesc: 'Plugin title shown in Plugin Manager',
   author: 'Plugin author name',
   help: 'Multi-line help text for Plugin Manager',
   url: 'Plugin URL (clickable in Plugin Manager)',
-  base: 'Required dependency plugin name',
-  orderAfter: 'Plugin that must load before this one',
-  orderBefore: 'Plugin that must load after this one',
   requiredAssets: 'Asset file path required for deployment',
   param: 'Plugin parameter definition',
-  command: 'Plugin command definition',
   noteParam: 'Note tag field name for database editor',
   noteDir: 'Image folder path for note file picker',
   noteType: 'Note field type (file)',
@@ -152,5 +140,4 @@ export const TAG_DESCRIPTIONS: Record<string, string> = {
   off: 'Custom label for OFF state',
   option: 'Dropdown option text',
   value: 'Stored value for preceding @option',
-  arg: 'Command argument definition',
 };

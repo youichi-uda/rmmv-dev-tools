@@ -1,4 +1,4 @@
-// Type definitions for RMMZ global variables
+// Type definitions for RPG Maker MV global variables
 // These are the global data and game objects available at runtime.
 
 // ── Data objects (loaded from JSON files) ──
@@ -182,33 +182,26 @@ interface RPG_State extends RPG_MetaData {
   traits: RPG_Trait[];
 }
 
+// MV uses frame-based animations (not Effekseer like MZ)
 interface RPG_Animation {
   id: number;
-  displayType: number;
-  effectName: string;
-  flashTimings: RPG_FlashTiming[];
+  animation1Hue: number;
+  animation1Name: string;
+  animation2Hue: number;
+  animation2Name: string;
+  frames: RPG_AnimationFrame[];
   name: string;
-  offsetX: number;
-  offsetY: number;
-  rotation: RPG_AnimationRotation;
-  scale: number;
-  soundTimings: RPG_SoundTiming[];
-  speed: number;
+  position: number;
+  timings: RPG_AnimationTiming[];
 }
 
-interface RPG_AnimationRotation {
-  x: number;
-  y: number;
-  z: number;
-}
+/** Each frame is an array of cell data arrays: [pattern, x, y, scale, rotation, mirror, opacity, blendMode] */
+type RPG_AnimationFrame = number[][];
 
-interface RPG_FlashTiming {
-  color: number[];
-  duration: number;
-  frame: number;
-}
-
-interface RPG_SoundTiming {
+interface RPG_AnimationTiming {
+  flashColor: [number, number, number, number];
+  flashDuration: number;
+  flashScope: number;
   frame: number;
   se: RPG_AudioFile;
 }
@@ -247,13 +240,11 @@ interface RPG_System {
   locale: string;
   magicSkills: number[];
   menuCommands: boolean[];
-  optAutosave: boolean;
   optDisplayTp: boolean;
   optDrawTitle: boolean;
   optExtraExp: boolean;
   optFloorDeath: boolean;
   optFollowers: boolean;
-  optKeyItemsNumber: boolean;
   optSideView: boolean;
   optSlipDeath: boolean;
   optTransparent: boolean;
@@ -276,19 +267,6 @@ interface RPG_System {
   victoryMe: RPG_AudioFile;
   weaponTypes: string[];
   windowTone: number[];
-  advanced: RPG_SystemAdvanced;
-}
-
-interface RPG_SystemAdvanced {
-  gameId: number;
-  screenWidth: number;
-  screenHeight: number;
-  uiAreaWidth: number;
-  uiAreaHeight: number;
-  numberFontFilename: string;
-  fallbackFonts: string;
-  fontSize: number;
-  mainFontFilename: string;
 }
 
 interface RPG_SystemVehicle {
@@ -490,14 +468,14 @@ declare var $gameParty: Game_Party;
 declare var $gameTroop: Game_Troop;
 declare var $gameMap: Game_Map;
 declare var $gamePlayer: Game_Player;
+declare var $testEvent: RPG_EventCommand[] | null;
 
-// ── Array/Math/String/Number extensions ──
+// ── Array/Math/String/Number extensions (MV core prototypes) ──
 
 interface Array<T> {
   clone(): T[];
   contains(element: T): boolean;
   equals(array: T[]): boolean;
-  remove(element: T): T[];
 }
 
 interface Math {

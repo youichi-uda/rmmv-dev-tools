@@ -25,31 +25,12 @@ interface ParamInfo {
   off?: string;
 }
 
-interface ArgInfo {
-  name: string;
-  text: string;
-  desc: string;
-  type: string;
-  default: string;
-  options: OptionEntry[];
-  min?: string;
-  max?: string;
-}
-
-interface CommandInfo {
-  name: string;
-  text: string;
-  desc: string;
-  args: ArgInfo[];
-}
-
 interface AnnotationData {
   plugindesc: string;
   author: string;
   url: string;
   help: string;
   params: ParamInfo[];
-  commands: CommandInfo[];
 }
 
 // ---------------------------------------------------------------------------
@@ -97,6 +78,7 @@ function extractAnnotationLines(text: string): string[] | undefined {
 
 /**
  * Parses annotation lines into a structured AnnotationData object.
+ * MV version: only top-level and @param scopes (no @command/@arg).
  */
 function parseAnnotation(lines: string[]): AnnotationData {
   const data: AnnotationData = {
@@ -105,18 +87,15 @@ function parseAnnotation(lines: string[]): AnnotationData {
     url: '',
     help: '',
     params: [],
-    commands: [],
   };
 
-  type Scope = 'top' | 'param' | 'command' | 'arg';
+  type Scope = 'top' | 'param';
   let scope: Scope = 'top';
   let helpLines: string[] = [];
   let inHelp = false;
   let currentParam: ParamInfo | undefined;
-  let currentCommand: CommandInfo | undefined;
-  let currentArg: ArgInfo | undefined;
 
-  const tagRegex = /^\s*\*?\s*@(\w+)\s*(.*)?$/;
+  const tagRegex = /^\s*\*?\s*@(\w+)\s*(.*?)?\s*$/;
 
   for (const rawLine of lines) {
     const m = rawLine.match(tagRegex);
@@ -144,28 +123,7 @@ function parseAnnotation(lines: string[]): AnnotationData {
       // Flush previous param
       if (currentParam) data.params.push(currentParam);
       currentParam = makeParam(rest);
-      currentArg = undefined;
       scope = 'param';
-      continue;
-    }
-
-    if (tag === 'command') {
-      // Flush previous param/command
-      if (currentParam) { data.params.push(currentParam); currentParam = undefined; }
-      if (currentArg && currentCommand) { currentCommand.args.push(currentArg); currentArg = undefined; }
-      if (currentCommand) data.commands.push(currentCommand);
-      currentCommand = { name: rest, text: rest, desc: '', args: [] };
-      scope = 'command';
-      continue;
-    }
-
-    if (tag === 'arg') {
-      // Flush previous arg into current command
-      if (currentArg && currentCommand) currentCommand.args.push(currentArg);
-      // Flush param if we were in param scope
-      if (currentParam) { data.params.push(currentParam); currentParam = undefined; }
-      currentArg = makeArg(rest);
-      scope = 'arg';
       continue;
     }
 
@@ -182,20 +140,9 @@ function parseAnnotation(lines: string[]): AnnotationData {
       continue;
     }
 
-    // Sub-tags for param / arg ----------------------------------------------
+    // Sub-tags for param ----------------------------------------------------
     if (scope === 'param' && currentParam) {
       applySubTag(currentParam, tag, rest);
-      continue;
-    }
-
-    if (scope === 'arg' && currentArg) {
-      applySubTag(currentArg, tag, rest);
-      continue;
-    }
-
-    if (scope === 'command' && currentCommand) {
-      if (tag === 'text') currentCommand.text = rest;
-      else if (tag === 'desc') currentCommand.desc = rest;
       continue;
     }
   }
@@ -206,9 +153,7 @@ function parseAnnotation(lines: string[]): AnnotationData {
   }
 
   // Flush remaining items
-  if (currentArg && currentCommand) currentCommand.args.push(currentArg);
   if (currentParam) data.params.push(currentParam);
-  if (currentCommand) data.commands.push(currentCommand);
 
   return data;
 }
@@ -217,21 +162,17 @@ function makeParam(name: string): ParamInfo {
   return { name, text: name, desc: '', type: 'string', default: '', options: [] };
 }
 
-function makeArg(name: string): ArgInfo {
-  return { name, text: name, desc: '', type: 'string', default: '', options: [] };
-}
-
-function applySubTag(target: ParamInfo | ArgInfo, tag: string, value: string): void {
+function applySubTag(target: ParamInfo, tag: string, value: string): void {
   switch (tag) {
     case 'text': target.text = value; break;
     case 'desc': target.desc = value; break;
     case 'type': target.type = value; break;
     case 'default': target.default = value; break;
-    case 'min': (target as ParamInfo).min = value; break;
-    case 'max': (target as ParamInfo).max = value; break;
-    case 'parent': (target as ParamInfo).parent = value; break;
-    case 'on': (target as ParamInfo).on = value; break;
-    case 'off': (target as ParamInfo).off = value; break;
+    case 'min': target.min = value; break;
+    case 'max': target.max = value; break;
+    case 'parent': target.parent = value; break;
+    case 'on': target.on = value; break;
+    case 'off': target.off = value; break;
     case 'option': target.options.push({ text: value }); break;
     case 'value':
       if (target.options.length > 0) {
@@ -257,10 +198,6 @@ function renderHtml(data: AnnotationData): string {
   const paramsHtml = data.params.length > 0
     ? data.params.map(p => renderParam(p)).join('')
     : '<tr><td class="empty" colspan="4">No parameters defined</td></tr>';
-
-  const commandsHtml = data.commands.length > 0
-    ? data.commands.map(c => renderCommand(c)).join('')
-    : '<div class="empty">No commands defined</div>';
 
   const helpHtml = data.help
     ? escapeHtml(data.help).replace(/\n/g, '<br>')
@@ -364,43 +301,6 @@ function renderHtml(data: AnnotationData): string {
     margin-top: 2px;
   }
 
-  /* Commands */
-  .command-card {
-    background: #313244;
-    border: 1px solid #45475a;
-    border-radius: 4px;
-    padding: 10px 14px;
-    margin-bottom: 8px;
-  }
-  .command-name {
-    color: #f5c2e7;
-    font-weight: 600;
-    font-size: 14px;
-  }
-  .command-id {
-    color: #6c7086;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 11px;
-    margin-left: 8px;
-  }
-  .command-desc {
-    color: #a6adc8;
-    font-size: 12px;
-    margin-top: 4px;
-  }
-  .command-args {
-    margin-top: 8px;
-    padding-left: 12px;
-    border-left: 2px solid #45475a;
-  }
-  .command-arg {
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
-  .command-arg .arg-name { color: #cdd6f4; font-weight: 500; }
-  .command-arg .arg-type { color: #a6e3a1; margin-left: 6px; }
-  .command-arg .arg-desc { color: #6c7086; display: block; margin-left: 0; }
-
   /* Help text */
   .help-box {
     background: #313244;
@@ -448,9 +348,6 @@ ${data.plugindesc ? `
     ${paramsHtml}
   </table>
 
-  <div class="section-title">Plugin Commands</div>
-  ${commandsHtml}
-
   <div class="section-title">Help</div>
   <div class="help-box">${helpHtml}</div>
 ` : `
@@ -486,30 +383,9 @@ function renderParam(p: ParamInfo): string {
   return `<tr${rowClass}>
     <td class="param-name">${escapeHtml(p.text || p.name)}<span class="badge">${escapeHtml(p.name)}</span></td>
     <td class="param-type">${escapeHtml(p.type)}</td>
-    <td class="param-default">${escapeHtml(p.default) || '<span class="empty">—</span>'}</td>
-    <td class="param-desc">${descCell || '<span class="empty">—</span>'}</td>
+    <td class="param-default">${escapeHtml(p.default) || '<span class="empty">\u2014</span>'}</td>
+    <td class="param-desc">${descCell || '<span class="empty">\u2014</span>'}</td>
   </tr>`;
-}
-
-function renderCommand(c: CommandInfo): string {
-  let argsHtml = '';
-  if (c.args.length > 0) {
-    const argItems = c.args.map(a =>
-      `<div class="command-arg">
-        <span class="arg-name">${escapeHtml(a.text || a.name)}</span>
-        <span class="arg-type">${escapeHtml(a.type)}</span>
-        ${a.desc ? `<span class="arg-desc">${escapeHtml(a.desc)}</span>` : ''}
-      </div>`
-    ).join('');
-    argsHtml = `<div class="command-args">${argItems}</div>`;
-  }
-
-  return `<div class="command-card">
-    <span class="command-name">${escapeHtml(c.text || c.name)}</span>
-    ${c.name !== c.text ? `<span class="command-id">${escapeHtml(c.name)}</span>` : ''}
-    ${c.desc ? `<div class="command-desc">${escapeHtml(c.desc)}</div>` : ''}
-    ${argsHtml}
-  </div>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -518,6 +394,10 @@ function renderCommand(c: CommandInfo): string {
 
 let currentPanel: vscode.WebviewPanel | undefined;
 
+/** Track the last known text editor document so focus changes to the
+ *  webview panel don't cause us to lose the document reference. */
+let lastDocument: vscode.TextDocument | undefined;
+
 /**
  * Creates or reveals the Annotation Preview webview panel.
  * Reads the active editor and renders the parsed annotation data.
@@ -525,14 +405,17 @@ let currentPanel: vscode.WebviewPanel | undefined;
 export function showAnnotationPreview(): void {
   if (!requirePro('Annotation Preview')) return;
   const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    lastDocument = editor.document;
+  }
 
   if (currentPanel) {
-    currentPanel.reveal(vscode.ViewColumn.Beside);
+    currentPanel.reveal(vscode.ViewColumn.Beside, true);
   } else {
     currentPanel = vscode.window.createWebviewPanel(
-      'rmmzAnnotationPreview',
+      'rmmvAnnotationPreview',
       t('preview.panelTitle'),
-      vscode.ViewColumn.Beside,
+      { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
       { enableScripts: false }
     );
 
@@ -541,7 +424,7 @@ export function showAnnotationPreview(): void {
     });
   }
 
-  updatePreview(editor?.document);
+  updatePreview(lastDocument);
 }
 
 function updatePreview(document: vscode.TextDocument | undefined): void {
@@ -554,7 +437,6 @@ function updatePreview(document: vscode.TextDocument | undefined): void {
       url: '',
       help: '',
       params: [],
-      commands: [],
     });
     return;
   }
@@ -567,7 +449,6 @@ function updatePreview(document: vscode.TextDocument | undefined): void {
       url: '',
       help: '',
       params: [],
-      commands: [],
     });
     return;
   }
@@ -581,12 +462,12 @@ function updatePreview(document: vscode.TextDocument | undefined): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Registers the `rmmz.previewAnnotation` command and sets up live-update
+ * Registers the `rmmv.previewAnnotation` command and sets up live-update
  * listeners for the annotation preview panel.
  */
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.previewAnnotation', showAnnotationPreview)
+    vscode.commands.registerCommand('rmmv.previewAnnotation', showAnnotationPreview)
   );
 
   // Live-update on text changes
@@ -600,11 +481,14 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Update when switching editors
+  // Update when switching editors (ignore when focus moves to webview)
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor(editor => {
       if (!currentPanel) return;
-      updatePreview(editor?.document);
+      if (editor) {
+        lastDocument = editor.document;
+        updatePreview(editor.document);
+      }
     })
   );
 }

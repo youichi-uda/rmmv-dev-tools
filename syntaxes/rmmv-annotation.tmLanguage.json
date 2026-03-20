@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "RMMZ Annotation",
-  "scopeName": "source.rmmz-annotation",
+  "name": "RMMV Annotation",
+  "scopeName": "source.rmmv-annotation",
   "injectionSelector": "L:comment.block",
   "patterns": [
     { "include": "#annotation-tags" }
@@ -18,46 +18,46 @@
       ]
     },
     "scope-tags": {
-      "match": "(@)(param|command|arg)\\b\\s*(\\S*)",
+      "match": "(@)(param)\\b\\s*(\\S*)",
       "captures": {
-        "1": { "name": "punctuation.definition.tag.rmmz" },
-        "2": { "name": "keyword.control.rmmz" },
-        "3": { "name": "entity.name.function.rmmz" }
+        "1": { "name": "punctuation.definition.tag.rmmv" },
+        "2": { "name": "keyword.control.rmmv" },
+        "3": { "name": "entity.name.function.rmmv" }
       }
     },
     "type-tag": {
       "match": "(@)(type)\\b\\s*(\\S*)",
       "captures": {
-        "1": { "name": "punctuation.definition.tag.rmmz" },
-        "2": { "name": "keyword.other.type.rmmz" },
-        "3": { "name": "support.type.rmmz" }
+        "1": { "name": "punctuation.definition.tag.rmmv" },
+        "2": { "name": "keyword.other.type.rmmv" },
+        "3": { "name": "support.type.rmmv" }
       }
     },
     "dependency-tags": {
-      "match": "(@)(base|orderAfter|orderBefore|requiredAssets)\\b\\s*(.*)",
+      "match": "(@)(requiredAssets)\\b\\s*(.*)",
       "captures": {
-        "1": { "name": "punctuation.definition.tag.rmmz" },
-        "2": { "name": "keyword.other.dependency.rmmz" },
-        "3": { "name": "string.unquoted.dependency.rmmz" }
+        "1": { "name": "punctuation.definition.tag.rmmv" },
+        "2": { "name": "keyword.other.dependency.rmmv" },
+        "3": { "name": "string.unquoted.dependency.rmmv" }
       }
     },
     "metadata-tags": {
       "match": "(@)(target|plugindesc|author|help|url|noteParam|noteDir|noteType|noteData)\\b",
       "captures": {
-        "1": { "name": "punctuation.definition.tag.rmmz" },
-        "2": { "name": "keyword.other.metadata.rmmz" }
+        "1": { "name": "punctuation.definition.tag.rmmv" },
+        "2": { "name": "keyword.other.metadata.rmmv" }
       }
     },
     "param-sub-tags": {
       "match": "(@)(text|desc|default|parent|min|max|decimals|dir|require|on|off|option|value)\\b",
       "captures": {
-        "1": { "name": "punctuation.definition.tag.rmmz" },
-        "2": { "name": "storage.type.annotation.rmmz" }
+        "1": { "name": "punctuation.definition.tag.rmmv" },
+        "2": { "name": "storage.type.annotation.rmmv" }
       }
     },
     "separator": {
       "match": "@\\s*-{3,}",
-      "name": "comment.line.separator.rmmz"
+      "name": "comment.line.separator.rmmv"
     }
   }
 }
