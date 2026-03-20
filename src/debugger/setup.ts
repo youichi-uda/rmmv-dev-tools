@@ -5,25 +5,43 @@ import { t } from '../i18n';
 
 const CHROMIUM_ARGS = '--remote-debugging-port=9222';
 
+/** Suppress watcher restore after intentional removal (prepareRelease). */
+let suppressRestoreUntil = 0;
+
 /**
- * Resolves the nw.exe path from the configured RMMZ install path.
- * If not configured, prompts the user to select the folder.
- * Returns the nw.exe path or undefined if cancelled.
+ * Resolves the nw.exe / Game.exe path for MV.
+ * MV projects typically have Game.exe in the project root,
+ * or the MV editor install folder contains nw.exe directly.
  */
-async function resolveNwExePath(): Promise<string | undefined> {
-  const config = vscode.workspace.getConfiguration('rmmz');
-  let installPath: string = config.get('rmmzInstallPath', '');
+export async function resolveNwExePath(projectRoot?: string): Promise<string | undefined> {
+  // First, check project root for Game.exe or nw.exe (MV project structure)
+  if (projectRoot) {
+    const candidates = [
+      path.join(projectRoot, 'Game.exe'),
+      path.join(projectRoot, 'nw.exe'),
+    ];
+    for (const candidate of candidates) {
+      if (fs.existsSync(candidate)) {
+        return candidate;
+      }
+    }
+  }
+
+  // Check configured install path
+  const config = vscode.workspace.getConfiguration('rmmv');
+  let installPath: string = config.get('rmmvInstallPath', '');
 
   if (installPath) {
-    const nwExe = path.join(installPath, 'nwjs-win', 'nw.exe');
-    if (fs.existsSync(nwExe)) {
-      return nwExe;
-    }
+    const nwExe = findNwExe(installPath);
+    if (nwExe) return nwExe;
     // Configured path is invalid — fall through to prompt
     vscode.window.showWarningMessage(t('debugger.nwExeNotFound', installPath));
   }
 
-  // Ask user to select the RMMZ install folder
+  // Explain what we need before showing the folder picker
+  await vscode.window.showInformationMessage(t('debugger.selectInstallFolderPrompt'));
+
+  // Ask user to select the RMMV install folder
   const selected = await vscode.window.showOpenDialog({
     canSelectFolders: true,
     canSelectFiles: false,
@@ -37,16 +55,36 @@ async function resolveNwExePath(): Promise<string | undefined> {
   }
 
   const selectedPath = selected[0].fsPath;
-  const nwExe = path.join(selectedPath, 'nwjs-win', 'nw.exe');
+  const nwExe = findNwExe(selectedPath);
 
-  if (!fs.existsSync(nwExe)) {
+  if (!nwExe) {
     vscode.window.showErrorMessage(t('debugger.nwExeNotFoundSelected', selectedPath));
     return undefined;
   }
 
   // Save the path to settings
-  await config.update('rmmzInstallPath', selectedPath, vscode.ConfigurationTarget.Global);
+  await config.update('rmmvInstallPath', selectedPath, vscode.ConfigurationTarget.Global);
   return nwExe;
+}
+
+/**
+ * Searches for nw.exe in common MV locations within a folder.
+ */
+function findNwExe(folder: string): string | undefined {
+  const candidates = [
+    path.join(folder, 'nw.exe'),
+    path.join(folder, 'Game.exe'),
+    path.join(folder, 'nwjs-win-test', 'game.exe'),  // MV testplay (no embedded package.json)
+    path.join(folder, 'nwjs-win-test', 'nw.exe'),
+    path.join(folder, 'nwjs-win', 'nw.exe'),
+    path.join(folder, 'nwjs-win', 'Game.exe'),        // Deploy-only (has embedded www/ structure)
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -63,7 +101,7 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
   }
 
   // Resolve the nw.exe path
-  const nwExePath = await resolveNwExePath();
+  const nwExePath = await resolveNwExePath(root);
   if (!nwExePath) {
     return;
   }
@@ -74,7 +112,7 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
       const existing = JSON.parse(fs.readFileSync(launchPath, 'utf-8'));
       const nwjsLaunch = existing.configurations?.find(
         (c: { type?: string; request?: string; name?: string }) =>
-          (c.type === 'chrome' || c.type === 'nwjs') && c.request === 'launch' && c.name?.includes('RMMZ')
+          (c.type === 'chrome' || c.type === 'nwjs' || c.type === 'rmmv') && c.request === 'launch' && c.name?.includes('RMMV')
       );
       if (nwjsLaunch) {
         nwjsLaunch.runtimeExecutable = nwExePath;
@@ -92,29 +130,19 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
     version: '0.2.0',
     configurations: [
       {
-        type: 'chrome',
+        type: 'rmmv',
         request: 'launch',
-        name: 'RMMZ Testplay (Debug)',
+        name: 'RMMV Testplay (Debug)',
         runtimeExecutable: nwExePath,
-        runtimeArgs: [
-          '.',
-          `--${CHROMIUM_ARGS.replace('--', '')}`,
-        ],
-        webRoot: '${workspaceFolder}',
         port: 9222,
-        sourceMapPathOverrides: {
-          'ts/plugins/*': '${workspaceFolder}/ts/plugins/*',
-        },
+        webRoot: '${workspaceFolder}',
       },
       {
-        type: 'chrome',
+        type: 'rmmv',
         request: 'attach',
-        name: 'Attach to RMMZ Testplay',
+        name: 'Attach to RMMV Testplay',
         port: 9222,
         webRoot: '${workspaceFolder}',
-        sourceMapPathOverrides: {
-          'ts/plugins/*': '${workspaceFolder}/ts/plugins/*',
-        },
       },
     ],
   };
@@ -150,7 +178,7 @@ function ensureChromiumArgs(root: string): void {
   try {
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
-    // MZ's package.json has chromium-args at the top level
+    // MV's package.json has chromium-args at the top level
     const currentArgs: string = pkg['chromium-args'] || '';
     if (!currentArgs.includes('remote-debugging-port')) {
       pkg['chromium-args'] = currentArgs
@@ -197,6 +225,7 @@ export async function prepareRelease(workspaceFolder: vscode.WorkspaceFolder): P
       delete pkg['chromium-args'];
     }
 
+    suppressRestoreUntil = Date.now() + 3000; // suppress watcher for 3s
     fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf-8');
     vscode.window.showInformationMessage(t('release.done'));
   } catch {
@@ -206,7 +235,7 @@ export async function prepareRelease(workspaceFolder: vscode.WorkspaceFolder): P
 
 /**
  * Watches the project's package.json and re-injects chromium-args
- * when RPG Maker MZ editor overwrites it.
+ * when RPG Maker MV editor overwrites it.
  */
 export function watchPackageJson(
   context: vscode.ExtensionContext,
@@ -224,7 +253,7 @@ export function watchPackageJson(
     const launch = JSON.parse(fs.readFileSync(launchPath, 'utf-8'));
     const hasNwjs = launch.configurations?.some(
       (c: { type?: string; name?: string }) =>
-        (c.type === 'chrome' || c.type === 'nwjs') && c.name?.includes('RMMZ')
+        (c.type === 'chrome' || c.type === 'nwjs' || c.type === 'rmmv') && c.name?.includes('RMMV')
     );
     if (!hasNwjs) return;
   } catch {
@@ -238,9 +267,10 @@ export function watchPackageJson(
   let debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
   const onPackageJsonChange = () => {
-    // Debounce — MZ may write multiple times
+    // Debounce — MV may write multiple times
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
+      if (Date.now() < suppressRestoreUntil) return;
       try {
         const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
         const currentArgs: string = pkg['chromium-args'] || '';

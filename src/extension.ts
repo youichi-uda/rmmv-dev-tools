@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
-import { RmmzCompletionProvider } from './annotation/completionProvider';
-import { RmmzHoverProvider } from './annotation/hoverProvider';
+import { RmmvCompletionProvider } from './annotation/completionProvider';
+import { RmmvHoverProvider } from './annotation/hoverProvider';
 import { createValidator } from './annotation/validator';
 import { promptIntelliSenseSetup, setupIntelliSense } from './intellisense/setup';
 import { setupDebugger, watchPackageJson, prepareRelease } from './debugger/setup';
+import { RmmvDebugAdapterFactory, RmmvDebugConfigProvider } from './debugger/adapter';
 import { generatePluginTemplate } from './template/generator';
 import { activate as activateDataHover } from './datalink/hover';
 import { activate as activateConflictDetector } from './conflict/detector';
@@ -45,14 +46,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(
     vscode.languages.registerCompletionItemProvider(
       jsSelector,
-      new RmmzCompletionProvider(),
+      new RmmvCompletionProvider(),
       '@', ' ' // trigger on @ and space (for @type values)
     )
   );
 
   // Hover provider for annotation tags
   context.subscriptions.push(
-    vscode.languages.registerHoverProvider(jsSelector, new RmmzHoverProvider())
+    vscode.languages.registerHoverProvider(jsSelector, new RmmvHoverProvider())
   );
 
   // Diagnostics / validation
@@ -60,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // IntelliSense setup command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.setupIntelliSense', async () => {
+    vscode.commands.registerCommand('rmmv.setupIntelliSense', async () => {
       const folder = await pickWorkspaceFolder();
       if (folder) await setupIntelliSense(folder);
     })
@@ -68,7 +69,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // Debugger setup command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.setupDebugger', async () => {
+    vscode.commands.registerCommand('rmmv.setupDebugger', async () => {
       if (!requirePro('Debugger Setup')) return;
       const folder = await pickWorkspaceFolder();
       if (folder) await setupDebugger(folder);
@@ -77,24 +78,30 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // Plugin template generator command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.newPlugin', generatePluginTemplate)
+    vscode.commands.registerCommand('rmmv.newPlugin', generatePluginTemplate)
   );
 
   // Prepare for Release command (remove debug port from package.json)
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.prepareRelease', async () => {
+    vscode.commands.registerCommand('rmmv.prepareRelease', async () => {
       const folder = await pickWorkspaceFolder();
       if (folder) await prepareRelease(folder);
     })
   );
 
-  // Watch package.json for MZ editor overwrites (all workspace folders)
+  // Watch package.json for MV editor overwrites (all workspace folders)
   const folders = vscode.workspace.workspaceFolders;
   if (folders) {
     for (const folder of folders) {
       watchPackageJson(context, folder);
     }
   }
+
+  // Debug Adapter for direct CDP attachment (bypasses js-debug Target.attachToBrowserTarget)
+  context.subscriptions.push(
+    vscode.debug.registerDebugAdapterDescriptorFactory('rmmv', new RmmvDebugAdapterFactory()),
+    vscode.debug.registerDebugConfigurationProvider('rmmv', new RmmvDebugConfigProvider()),
+  );
 
   // Data hover preview (Phase 2: $dataXxx[N], switches, variables)
   activateDataHover(context);
@@ -129,7 +136,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Database browser sidebar (tree view of data/*.json)
   activateDatabaseBrowser(context);
 
-  // Plugin parameter rename support (@param/@arg renaming)
+  // Plugin parameter rename support (@param renaming)
   activateParamRename(context);
 
   // Testplay Console Viewer (pipe game console to output channel)
@@ -153,15 +160,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Plugin Registry Integration (version checking and compatibility)
   activatePluginRegistry(context);
 
-  // Class Hierarchy Browser (inheritance tree for RMMZ classes)
+  // Class Hierarchy Browser (inheritance tree for RMMV classes)
   activateClassHierarchy(context);
 
-  // Quick Actions sidebar (button panel in RMMZ view container)
+  // Quick Actions sidebar (button panel in RMMV view container)
   activateQuickActions(context);
 
   // TypeScript setup command
   context.subscriptions.push(
-    vscode.commands.registerCommand('rmmz.setupTypeScript', async () => {
+    vscode.commands.registerCommand('rmmv.setupTypeScript', async () => {
       if (!requirePro('TypeScript Setup')) return;
       const folder = await pickWorkspaceFolder();
       if (folder) await setupTypeScript(context, folder);
@@ -177,7 +184,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Prompt IntelliSense setup on activation
   promptIntelliSenseSetup(context);
 
-  console.log('RMMZ Dev Tools activated');
+  console.log('RMMV Dev Tools activated');
 }
 
 async function pickWorkspaceFolder(): Promise<vscode.WorkspaceFolder | undefined> {

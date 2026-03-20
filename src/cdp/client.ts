@@ -50,6 +50,7 @@ export class CdpClient extends EventEmitter {
           if (str.includes('\r\n\r\n')) {
             if (str.includes('101')) {
               handshakeDone = true;
+              socket.setTimeout(0); // Clear connection timeout
               this.socket = socket;
               this.connected = true;
               const idx = data.indexOf(Buffer.from('\r\n\r\n')) + 4;

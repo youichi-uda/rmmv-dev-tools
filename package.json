@@ -360,6 +360,63 @@
         }
       }
     },
+    "debuggers": [
+      {
+        "type": "rmmv",
+        "label": "RPG Maker MV",
+        "languages": [
+          "javascript"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "runtimeExecutable": {
+                "type": "string",
+                "description": "Path to Game.exe or nw.exe"
+              },
+              "port": {
+                "type": "number",
+                "default": 9222,
+                "description": "CDP port for NW.js remote debugging"
+              },
+              "webRoot": {
+                "type": "string",
+                "default": "${workspaceFolder}",
+                "description": "Local path to the game project root"
+              }
+            }
+          },
+          "attach": {
+            "properties": {
+              "port": {
+                "type": "number",
+                "default": 9222,
+                "description": "CDP port for NW.js remote debugging"
+              },
+              "webRoot": {
+                "type": "string",
+                "default": "${workspaceFolder}",
+                "description": "Local path to the game project root"
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "rmmv",
+            "request": "launch",
+            "name": "RMMV Testplay (Debug)"
+          },
+          {
+            "type": "rmmv",
+            "request": "attach",
+            "name": "Attach to RMMV Game",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}"
+          }
+        ]
+      }
+    ],
     "configurationDefaults": {
       "[javascript]": {
         "editor.quickSuggestions": {
