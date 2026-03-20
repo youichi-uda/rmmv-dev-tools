@@ -1,17 +1,17 @@
 [日本語版はこちら / Japanese](README.ja.md)
 
-# RMMZ Dev Tools — VS Code Extension for RPG Maker MZ Plugin Development
+# RMMV Dev Tools — VS Code Extension for RPG Maker MV Plugin Development
 
-The first comprehensive VS Code extension built specifically for RPG Maker MZ plugin developers. 14 free features + 17 Pro features covering annotation intelligence, testplay debugging, conflict detection, TypeScript workflow, and more.
+The first comprehensive VS Code extension built specifically for RPG Maker MV plugin developers. 14 free features + 17 Pro features covering annotation intelligence, testplay debugging, conflict detection, TypeScript workflow, and more.
 
-> Stop writing MZ plugins like it's 2010. Get syntax highlighting, validation, IntelliSense, and a full debugging workflow — all purpose-built for MZ's plugin annotation system.
+> Stop writing MV plugins like it's 2010. Get syntax highlighting, validation, IntelliSense, and a full debugging workflow — all purpose-built for MV's plugin annotation system.
 
-[![VS Marketplace](https://img.shields.io/visual-studio-marketplace/v/abyo-software.rmmz-dev-tools)](https://marketplace.visualstudio.com/items?itemName=abyo-software.rmmz-dev-tools)
+[![VS Marketplace](https://img.shields.io/visual-studio-marketplace/v/abyo-software.rmmv-dev-tools)](https://marketplace.visualstudio.com/items?itemName=abyo-software.rmmv-dev-tools)
 [![Discord](https://img.shields.io/discord/1234567890?label=Discord)](https://discord.gg/CDFmWGkfDC)
 
-## Why RMMZ Dev Tools?
+## Why RMMV Dev Tools?
 
-RPG Maker MZ plugin development has had almost zero dedicated tooling. Existing extensions are either abandoned, MV-only, or provide just snippets. This extension gives you a complete development environment:
+RPG Maker MV plugin development has had almost zero dedicated tooling. Existing extensions are either abandoned or provide just snippets. This extension gives you a complete development environment:
 
 - **Write faster** — annotation completion, @type suggestions, plugin templates
 - **Catch bugs early** — real-time validation, conflict detection, asset checking
@@ -26,7 +26,7 @@ RPG Maker MZ plugin development has had almost zero dedicated tooling. Existing 
 |---------|-------------|
 | **Syntax Highlighting** | Color-coded `/*:`, `/*:ja`, `/*~struct~` blocks — scope tags, type tags, dependency tags, and metadata each get distinct colors |
 | **Smart Tag Completion** | Context-aware `@tag` completion. In `@param` scope: `@text`, `@desc`, `@type`, `@min`, etc. Top level: `@param`, `@command`, `@base`, etc. |
-| **@type Completion** | All 24+ MZ type values (`string`, `actor`, `struct<>`, `switch[]`, etc.) with descriptions |
+| **@type Completion** | All 24+ MV type values (`string`, `actor`, `struct<>`, `switch[]`, etc.) with descriptions |
 | **Validation** | Catches typos (`@commnd`), invalid types (`@type numbre`), scope violations (`@min` inside `@command`), missing `@plugindesc` |
 | **Hover Documentation** | Hover any `@tag` or `@type` to see what it does |
 | **Formatter** | Reorder tags in canonical order within annotation blocks |
@@ -52,7 +52,7 @@ Activate with a Gumroad license key. No subscription. Works offline.
 
 | Feature | Description |
 |---------|-------------|
-| **TypeScript Setup** | One-click setup: generates `tsconfig.json`, `ts/plugins/`, and copies RMMZ type definitions (~72 classes, 250+ interfaces) for full IntelliSense on `$gameParty`, `Window_Base`, `Scene_Map`, etc. |
+| **TypeScript Setup** | One-click setup: generates `tsconfig.json`, `ts/plugins/`, and copies RMMV type definitions (~72 classes, 250+ interfaces) for full IntelliSense on `$gameParty`, `Window_Base`, `Scene_Map`, etc. |
 | **TypeScript Auto-Build** | File watcher compiles `ts/plugins/*.ts` → `js/plugins/*.js` on save. Status bar shows build state. Errors appear in Problems panel. Cleans up `.js`/`.js.map` when `.ts` files are deleted. |
 | **TypeScript Templates & Snippets** | Plugin template wizard supports TypeScript output. 5 TS-specific snippets (`rmmz-alias` with `this:` type, `rmmz-command`, `rmmz-plugin`, etc.). Debugger setup includes source map support for `.ts` breakpoints. |
 
@@ -82,33 +82,33 @@ Activate with a Gumroad license key. No subscription. Works offline.
 | **Data Hover (Pro)** | Hover `$dataActors[3]` → actor name/stats. Hover `$gameVariables.value(5)` → variable name. |
 | **Formula Evaluator** | Hover damage/healing formulas → see evaluated results inline |
 | **Note Tag Editor** | Visual WYSIWYG editor for note tags in actors, classes, items, enemies |
-| **Class Hierarchy** | Searchable tree of RMMZ class inheritance — Scenes, Windows, Sprites, Game objects |
+| **Class Hierarchy** | Searchable tree of RMMV class inheritance — Scenes, Windows, Sprites, Game objects |
 | **Plugin Registry** | Check for plugin updates and view compatibility info |
 
 ## Releasing Your Game
 
-> **Important:** Before distributing your game, run `RMMZ: Prepare for Release` from the Command Palette (or the sidebar). This removes the debug port (`--remote-debugging-port`) from `package.json` so your released game doesn't expose a debugging endpoint to players.
+> **Important:** Before distributing your game, run `RMMV: Prepare for Release` from the Command Palette (or the sidebar). This removes the debug port (`--remote-debugging-port`) from `package.json` so your released game doesn't expose a debugging endpoint to players.
 
 ## Getting Started
 
-1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=abyo-software.rmmz-dev-tools)
-2. Open an RPG Maker MZ project folder in VS Code
-3. The extension activates automatically when it detects `js/plugins/` or `data/System.json`
+1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=abyo-software.rmmv-dev-tools)
+2. Open an RPG Maker MV project folder in VS Code
+3. The extension activates automatically when it detects `js/rpg_core.js`
 
 ### Quick Start Commands
 
 | Command | Description |
 |---------|-------------|
-| `RMMZ: Setup IntelliSense` | Generate `jsconfig.json` for core script completion |
-| `RMMZ: Setup Debugger` | Generate `launch.json` for F5 debugging |
-| `RMMZ: New Plugin` | Scaffold a new plugin file (JS or TS) |
-| `RMMZ: Setup TypeScript` | Set up TypeScript plugin development (Pro) |
-| `RMMZ: Activate Pro License` | Enter your Gumroad license key |
+| `RMMV: Setup IntelliSense` | Generate `jsconfig.json` for core script completion |
+| `RMMV: Setup Debugger` | Generate `launch.json` for F5 debugging |
+| `RMMV: New Plugin` | Scaffold a new plugin file (JS or TS) |
+| `RMMV: Setup TypeScript` | Set up TypeScript plugin development (Pro) |
+| `RMMV: Activate Pro License` | Enter your Gumroad license key |
 
 ## Requirements
 
 - VS Code 1.75.0+
-- RPG Maker MZ project (with `js/plugins/` and `data/` directories)
+- RPG Maker MV project (with `js/rpg_core.js`)
 
 ## Pro License
 
@@ -121,7 +121,7 @@ Purchase a one-time license on [Gumroad](https://y1uda.gumroad.com/l/rmmv?wanted
 ## Support
 
 - [Discord](https://discord.gg/CDFmWGkfDC)
-- [GitHub Issues](https://github.com/youichi-uda/rmmz-dev-tools/issues)
+- [GitHub Issues](https://github.com/youichi-uda/rmmv-dev-tools/issues)
 
 ## License
 

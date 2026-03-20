@@ -4,12 +4,12 @@ import * as fs from 'fs';
 import { isProLicensed } from '../license/gumroad';
 
 /**
- * MZ base parameter indices:
+ * MV base parameter indices:
  * 0=MHP, 1=MMP, 2=ATK, 3=DEF, 4=MAT, 5=MDF, 6=AGI, 7=LUK
  */
 const PARAM_NAMES = ['mhp', 'mmp', 'atk', 'def', 'mat', 'mdf', 'agi', 'luk'] as const;
 
-/** Pattern to detect MZ damage formula variables in a string. */
+/** Pattern to detect MV damage formula variables in a string. */
 const FORMULA_VAR_PATTERN = /\b[ab]\.(mhp|mmp|atk|def|mat|mdf|agi|luk)\b/;
 
 /** Match a string literal (single or double quoted) that looks like a formula. */
@@ -46,7 +46,7 @@ function loadBaseParams(dataDir: string, file: string, index: number): ParamBloc
     const params = entry.params as number[][] | number[] | undefined;
     if (!params) return undefined;
 
-    // MZ params can be either:
+    // MV params can be either:
     // - A 2D array: params[paramIndex][level] (Classes.json style curves)
     // - A flat array: params[paramIndex] (Enemies.json style)
     const block: ParamBlock = { mhp: 0, mmp: 0, atk: 0, def: 0, mat: 0, mdf: 0, agi: 0, luk: 0 };
@@ -164,7 +164,7 @@ class FormulaHoverProvider implements vscode.HoverProvider {
     const result = evaluateFormula(formula, a, b);
 
     const md = new vscode.MarkdownString();
-    md.appendMarkdown('**MZ Damage Formula Preview**\n\n');
+    md.appendMarkdown('**MV Damage Formula Preview**\n\n');
     md.appendCodeblock(formula, 'javascript');
     md.appendMarkdown('\n');
     md.appendMarkdown(`**a** (Actor #1): ATK=${a.atk} DEF=${a.def} MAT=${a.mat} MDF=${a.mdf} AGI=${a.agi} LUK=${a.luk} MHP=${a.mhp} MMP=${a.mmp}\n\n`);

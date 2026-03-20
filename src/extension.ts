@@ -109,7 +109,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // Plugin conflict detection (prototype override analysis)
   activateConflictDetector(context);
 
-  // Annotation preview webview (live MZ Plugin Manager preview)
+  // Annotation preview webview (live MV Plugin Manager preview)
   activateAnnotationPreview(context);
 
   // Quick Scene Reload (re-evaluate plugin + reload scene on save)

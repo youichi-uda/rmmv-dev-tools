@@ -14,7 +14,7 @@ export function isRmmvProject(workspaceFolder: vscode.WorkspaceFolder): boolean 
 }
 
 /**
- * Offers to set up IntelliSense for the MZ project.
+ * Offers to set up IntelliSense for the MV project.
  * Generates jsconfig.json pointing to the core scripts.
  */
 export async function setupIntelliSense(workspaceFolder: vscode.WorkspaceFolder): Promise<void> {
@@ -62,7 +62,7 @@ export async function setupIntelliSense(workspaceFolder: vscode.WorkspaceFolder)
 }
 
 /**
- * Prompts the user to set up IntelliSense if this looks like an MZ project.
+ * Prompts the user to set up IntelliSense if this looks like an MV project.
  */
 export function promptIntelliSenseSetup(context: vscode.ExtensionContext): void {
   const folders = vscode.workspace.workspaceFolders;
