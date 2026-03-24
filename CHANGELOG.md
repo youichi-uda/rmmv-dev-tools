@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3] - 2026-03-24
+
+### Fixed
+
+- Add missing `@type` values: `icon`, `color` (MV 1.5.0+)
+- Support multi-dimensional array types like `number[][]`
+
 ## [0.1.0] - 2026-03-17
 
 ### Added
