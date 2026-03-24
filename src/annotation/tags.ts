@@ -71,10 +71,17 @@ export const TYPE_VALUES_DATABASE = [
   'variable',
 ] as const;
 
+/** UI picker @type values (added in MV 1.5.0, undocumented on official site) */
+export const TYPE_VALUES_UI = [
+  'icon',
+  'color',
+] as const;
+
 /** All simple @type values (without struct<> or [] modifiers) */
 export const TYPE_VALUES = [
   ...TYPE_VALUES_BASIC,
   ...TYPE_VALUES_DATABASE,
+  ...TYPE_VALUES_UI,
 ] as const;
 
 /** Description for each @type value, shown in completion details */
@@ -101,6 +108,8 @@ export const TYPE_DESCRIPTIONS: Record<string, string> = {
   common_event: 'Common Event selector (from database)',
   switch: 'Switch selector (from database)',
   variable: 'Variable selector (from database)',
+  icon: 'Icon picker (from IconSet)',
+  color: 'Color picker (from system palette)',
 };
 
 /** Tags that have special type-specific applicability */

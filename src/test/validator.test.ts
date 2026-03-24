@@ -77,6 +77,30 @@ describe('validateDocument', () => {
     expect(typeWarns).toHaveLength(0);
   });
 
+  it('accepts multi-dimensional array types (number[][])', () => {
+    const d = diags(`/*:
+ * @plugindesc Test
+ * @target MV
+ * @param foo
+ * @type number[][]
+ */`);
+    const typeWarns = d.filter(x => x.message.includes('Unknown @type'));
+    expect(typeWarns).toHaveLength(0);
+  });
+
+  it('accepts UI picker types (icon, color)', () => {
+    for (const type of ['icon', 'color']) {
+      const d = diags(`/*:
+ * @plugindesc Test
+ * @target MV
+ * @param foo
+ * @type ${type}
+ */`);
+      const typeWarns = d.filter(x => x.message.includes('Unknown @type'));
+      expect(typeWarns, `@type ${type} should be valid`).toHaveLength(0);
+    }
+  });
+
   // ---- Scope validation ----
 
   it('warns when @min is used at top level (outside @param)', () => {
