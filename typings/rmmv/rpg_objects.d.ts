@@ -393,7 +393,7 @@ declare class Game_Action {
     targetsForOpponents(): Game_Battler[];
     targetsForFriends(): Game_Battler[];
     evaluate(): number;
-    itemTargetCandidates(): Game_Battler[];
+    itemTargetCandidates(): (Game_Actor | Game_Enemy)[];
     evaluateWithTarget(target: Game_Battler): number;
     testApply(target: Game_Battler): boolean;
     hasItemAnyValidEffects(target: Game_Battler): boolean;
@@ -481,6 +481,10 @@ declare class Game_ActionResult {
 
 // ─── Game_BattlerBase ────────────────────────────────────────────────────────
 // The superclass of Game_Battler. It mainly contains parameters calculation.
+
+interface Game_BattlerBase {
+    [key: string]: any;
+}
 
 declare class Game_BattlerBase {
     constructor();

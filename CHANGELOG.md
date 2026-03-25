@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.4] - 2026-03-25
+
+### Fixed
+
+- Fix `Game_Action.itemTargetCandidates` return type to `(Game_Actor | Game_Enemy)[]`
+- Add `Sprite.dy` and `Sprite.ry` properties used by `Sprite_Damage`
+- Fix `Window.initialize` signature to allow `Window_Base` override
+- Add `id` property to `RPG_MapInfo` type definition
+- Add index signature to `Game_BattlerBase` and `TextManager` for dynamic access
+
+### Changed
+
+- Remove internal docs from repository
+
 ## [1.1.3] - 2026-03-24
 
 ### Fixed
