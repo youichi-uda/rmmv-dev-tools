@@ -107,9 +107,12 @@ declare namespace ConfigManager {
 // StorageManager
 //
 // The static class that manages storage for saving game data.
+// Renamed to RMMV_StorageManager to avoid conflict with the DOM StorageManager
+// interface. Use `declare const StorageManager: typeof RMMV_StorageManager;`
+// in your own project if you need the original name.
 // ---------------------------------------------------------------------------
 
-declare namespace StorageManager {
+declare namespace RMMV_StorageManager {
   function save(savefileId: number, json: string): void;
   function load(savefileId: number): string;
   function exists(savefileId: number): boolean;
@@ -500,13 +503,13 @@ declare namespace BattleManager {
   let _preemptive: boolean;
   let _surprise: boolean;
   let _actorIndex: number;
-  let _actionForcedBattler: Game_Battler | null;
+  let _actionForcedBattler: Game_Actor | Game_Enemy | null;
   let _mapBgm: RPG_AudioFile | null;
   let _mapBgs: RPG_AudioFile | null;
-  let _actionBattlers: Game_Battler[];
-  let _subject: Game_Battler | null;
+  let _actionBattlers: (Game_Actor | Game_Enemy)[];
+  let _subject: Game_Actor | Game_Enemy | null;
   let _action: Game_Action | null;
-  let _targets: Game_Battler[];
+  let _targets: (Game_Actor | Game_Enemy)[];
   let _logWindow: Window_BattleLog | null;
   let _statusWindow: Window_BattleStatus | null;
   let _spriteset: Spriteset_Battle | null;
@@ -538,20 +541,20 @@ declare namespace BattleManager {
   function processTurn(): void;
   function endTurn(): void;
   function updateTurnEnd(): void;
-  function getNextSubject(): Game_Battler | null;
-  function allBattleMembers(): Game_Battler[];
+  function getNextSubject(): Game_Actor | Game_Enemy | null;
+  function allBattleMembers(): (Game_Actor | Game_Enemy)[];
   function makeActionOrders(): void;
   function startAction(): void;
   function updateAction(): void;
   function endAction(): void;
-  function invokeAction(subject: Game_Battler, target: Game_Battler): void;
-  function invokeNormalAction(subject: Game_Battler, target: Game_Battler): void;
-  function invokeCounterAttack(subject: Game_Battler, target: Game_Battler): void;
-  function invokeMagicReflection(subject: Game_Battler, target: Game_Battler): void;
-  function applySubstitute(target: Game_Battler): Game_Battler;
-  function checkSubstitute(target: Game_Battler): boolean;
+  function invokeAction(subject: Game_Actor | Game_Enemy, target: Game_Actor | Game_Enemy): void;
+  function invokeNormalAction(subject: Game_Actor | Game_Enemy, target: Game_Actor | Game_Enemy): void;
+  function invokeCounterAttack(subject: Game_Actor | Game_Enemy, target: Game_Actor | Game_Enemy): void;
+  function invokeMagicReflection(subject: Game_Actor | Game_Enemy, target: Game_Actor | Game_Enemy): void;
+  function applySubstitute(target: Game_Actor | Game_Enemy): Game_Actor | Game_Enemy;
+  function checkSubstitute(target: Game_Actor | Game_Enemy): boolean;
   function isActionForced(): boolean;
-  function forceAction(battler: Game_Battler): void;
+  function forceAction(battler: Game_Actor | Game_Enemy): void;
   function processForcedAction(): void;
   function abort(): void;
   function checkBattleEnd(): boolean;

@@ -320,7 +320,7 @@ declare class Game_Item {
 // The game object class for a battle action.
 
 declare class Game_Action {
-    constructor(subject: Game_Battler, forcing?: boolean);
+    constructor(subject: Game_Actor | Game_Enemy, forcing?: boolean);
 
     static EFFECT_RECOVER_HP: number;
     static EFFECT_RECOVER_MP: number;
@@ -347,8 +347,8 @@ declare class Game_Action {
     _subjectEnemyIndex: number;
 
     clear(): void;
-    setSubject(subject: Game_Battler): void;
-    subject(): Game_Battler;
+    setSubject(subject: Game_Actor | Game_Enemy): void;
+    subject(): Game_Actor | Game_Enemy;
     friendsUnit(): Game_Unit;
     opponentsUnit(): Game_Unit;
     setEnemyAction(action: RPG_EnemyAction | null): void;
@@ -387,53 +387,53 @@ declare class Game_Action {
     isGuard(): boolean;
     isMagicSkill(): boolean;
     decideRandomTarget(): void;
-    makeTargets(): Game_Battler[];
-    repeatTargets(targets: Game_Battler[]): Game_Battler[];
-    confusionTarget(): Game_Battler;
-    targetsForOpponents(): Game_Battler[];
-    targetsForFriends(): Game_Battler[];
+    makeTargets(): (Game_Actor | Game_Enemy)[];
+    repeatTargets(targets: (Game_Actor | Game_Enemy)[]): (Game_Actor | Game_Enemy)[];
+    confusionTarget(): Game_Actor | Game_Enemy;
+    targetsForOpponents(): (Game_Actor | Game_Enemy)[];
+    targetsForFriends(): (Game_Actor | Game_Enemy)[];
     evaluate(): number;
     itemTargetCandidates(): (Game_Actor | Game_Enemy)[];
-    evaluateWithTarget(target: Game_Battler): number;
-    testApply(target: Game_Battler): boolean;
-    hasItemAnyValidEffects(target: Game_Battler): boolean;
-    testItemEffect(target: Game_Battler, effect: RPG_Effect): boolean;
-    itemCnt(target: Game_Battler): number;
-    itemMrf(target: Game_Battler): number;
-    itemHit(target: Game_Battler): number;
-    itemEva(target: Game_Battler): number;
-    itemCri(target: Game_Battler): number;
-    apply(target: Game_Battler): void;
-    makeDamageValue(target: Game_Battler, critical: boolean): number;
-    evalDamageFormula(target: Game_Battler): number;
-    calcElementRate(target: Game_Battler): number;
-    elementsMaxRate(target: Game_Battler, elements: number[]): number;
+    evaluateWithTarget(target: Game_Actor | Game_Enemy): number;
+    testApply(target: Game_Actor | Game_Enemy): boolean;
+    hasItemAnyValidEffects(target: Game_Actor | Game_Enemy): boolean;
+    testItemEffect(target: Game_Actor | Game_Enemy, effect: RPG_Effect): boolean;
+    itemCnt(target: Game_Actor | Game_Enemy): number;
+    itemMrf(target: Game_Actor | Game_Enemy): number;
+    itemHit(target: Game_Actor | Game_Enemy): number;
+    itemEva(target: Game_Actor | Game_Enemy): number;
+    itemCri(target: Game_Actor | Game_Enemy): number;
+    apply(target: Game_Actor | Game_Enemy): void;
+    makeDamageValue(target: Game_Actor | Game_Enemy, critical: boolean): number;
+    evalDamageFormula(target: Game_Actor | Game_Enemy): number;
+    calcElementRate(target: Game_Actor | Game_Enemy): number;
+    elementsMaxRate(target: Game_Actor | Game_Enemy, elements: number[]): number;
     applyCritical(damage: number): number;
     applyVariance(damage: number, variance: number): number;
-    applyGuard(damage: number, target: Game_Battler): number;
-    executeDamage(target: Game_Battler, value: number): void;
-    executeHpDamage(target: Game_Battler, value: number): void;
-    executeMpDamage(target: Game_Battler, value: number): void;
+    applyGuard(damage: number, target: Game_Actor | Game_Enemy): number;
+    executeDamage(target: Game_Actor | Game_Enemy, value: number): void;
+    executeHpDamage(target: Game_Actor | Game_Enemy, value: number): void;
+    executeMpDamage(target: Game_Actor | Game_Enemy, value: number): void;
     gainDrainedHp(value: number): void;
     gainDrainedMp(value: number): void;
-    applyItemEffect(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectRecoverHp(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectRecoverMp(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectGainTp(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectAddState(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectRemoveState(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectAddBuff(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectAddDebuff(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectRemoveBuff(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectRemoveDebuff(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectSpecial(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectGrow(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectLearnSkill(target: Game_Battler, effect: RPG_Effect): void;
-    itemEffectCommonEvent(target: Game_Battler, effect: RPG_Effect): void;
-    applyItemUserEffect(target: Game_Battler): void;
-    lukEffectRate(target: Game_Battler): number;
+    applyItemEffect(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectRecoverHp(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectRecoverMp(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectGainTp(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectAddState(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectRemoveState(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectAddBuff(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectAddDebuff(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectRemoveBuff(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectRemoveDebuff(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectSpecial(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectGrow(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectLearnSkill(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    itemEffectCommonEvent(target: Game_Actor | Game_Enemy, effect: RPG_Effect): void;
+    applyItemUserEffect(target: Game_Actor | Game_Enemy): void;
+    lukEffectRate(target: Game_Actor | Game_Enemy): number;
     applyGlobal(): void;
-    makeSuccess(target: Game_Battler): void;
+    makeSuccess(target: Game_Actor | Game_Enemy): void;
     hasItem(): boolean;
     isValid(): boolean;
     speed(): number;
@@ -564,7 +564,7 @@ declare class Game_BattlerBase {
     _buffs: number[];
     _buffTurns: number[];
 
-    initialize(): void;
+    initialize(...args: any[]): void;
     initMembers(): void;
     clearParamPlus(): void;
     clearStates(): void;
@@ -739,7 +739,7 @@ declare class Game_Battler extends Game_BattlerBase {
     makeSpeed(): void;
     currentAction(): Game_Action | null;
     removeCurrentAction(): void;
-    setLastTarget(target: Game_Battler): void;
+    setLastTarget(target: Game_Actor | Game_Enemy): void;
     forceAction(skillId: number, targetIndex: number): void;
     useItem(item: RPG_Skill | RPG_Item): void;
     consumeItem(item: RPG_Item): void;
@@ -1001,24 +1001,24 @@ declare class Game_Unit {
 
     initialize(): void;
     inBattle(): boolean;
-    members(): Game_Battler[];
-    aliveMembers(): Game_Battler[];
-    deadMembers(): Game_Battler[];
-    movableMembers(): Game_Battler[];
+    members(): (Game_Actor | Game_Enemy)[];
+    aliveMembers(): (Game_Actor | Game_Enemy)[];
+    deadMembers(): (Game_Actor | Game_Enemy)[];
+    movableMembers(): (Game_Actor | Game_Enemy)[];
     clearActions(): void;
     agility(): number;
     tgrSum(): number;
-    randomTarget(): Game_Battler;
-    randomDeadTarget(): Game_Battler;
-    smoothTarget(index: number): Game_Battler;
-    smoothDeadTarget(index: number): Game_Battler;
+    randomTarget(): Game_Actor | Game_Enemy | null;
+    randomDeadTarget(): Game_Actor | Game_Enemy | null;
+    smoothTarget(index: number): Game_Actor | Game_Enemy;
+    smoothDeadTarget(index: number): Game_Actor | Game_Enemy;
     clearResults(): void;
     onBattleStart(): void;
     onBattleEnd(): void;
     makeActions(): void;
-    select(activeMember: Game_Battler): void;
+    select(activeMember: Game_Actor | Game_Enemy): void;
     isAllDead(): boolean;
-    substituteBattler(): Game_Battler | null;
+    substituteBattler(): Game_Actor | Game_Enemy | null;
 }
 
 // ─── Game_Party ──────────────────────────────────────────────────────────────
@@ -1346,7 +1346,7 @@ declare class Game_CharacterBase {
     _jumpPeak: number;
     _movementSuccess: boolean;
 
-    initialize(): void;
+    initialize(...args: any[]): void;
     initMembers(): void;
     pos(x: number, y: number): boolean;
     posNt(x: number, y: number): boolean;
@@ -1462,6 +1462,7 @@ declare class Game_Character extends Game_CharacterBase {
     _originalMoveRouteIndex: number;
     _waitCount: number;
 
+    initialize(...args: any[]): void;
     initMembers(): void;
     memorizeMoveRoute(): void;
     restoreMoveRoute(): void;
@@ -1776,10 +1777,10 @@ declare class Game_Interpreter {
     iterateActorEx(param1: number, param2: number, callback: (actor: Game_Actor) => void): void;
     iterateActorIndex(param: number, callback: (actor: Game_Actor) => void): void;
     iterateEnemyIndex(param: number, callback: (enemy: Game_Enemy) => void): void;
-    iterateBattler(param1: number, param2: number, callback: (battler: Game_Battler) => void): void;
+    iterateBattler(param1: number, param2: number, callback: (battler: Game_Actor | Game_Enemy) => void): void;
     character(param: number): Game_Character | null;
     operateValue(operation: number, operandType: number, operand: number): number;
-    changeHp(target: Game_Battler, value: number, allowDeath: boolean): void;
+    changeHp(target: Game_Actor | Game_Enemy, value: number, allowDeath: boolean): void;
     gameDataOperand(type: number, param1: number, param2: number): number;
 
     // Event commands (command101 through command355+)

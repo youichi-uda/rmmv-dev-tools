@@ -105,10 +105,10 @@ declare class Sprite_Character extends Sprite_Base {
 // ---------------------------------------------------------------------------
 
 declare class Sprite_Battler extends Sprite_Base {
-    constructor(battler?: Game_Battler);
-    initialize(battler?: Game_Battler): void;
+    constructor(battler?: Game_Actor | Game_Enemy);
+    initialize(battler?: Game_Actor | Game_Enemy): void;
     initMembers(): void;
-    setBattler(battler: Game_Battler): void;
+    setBattler(battler: Game_Actor | Game_Enemy): void;
     update(): void;
     updateVisibility(): void;
     updateMain(): void;
@@ -129,7 +129,7 @@ declare class Sprite_Battler extends Sprite_Base {
     isMoving(): boolean;
     inHomePosition(): boolean;
 
-    _battler: Game_Battler | null;
+    _battler: Game_Actor | Game_Enemy | null;
     _damages: Sprite_Damage[];
     _homeX: number;
     _homeY: number;
@@ -299,7 +299,7 @@ declare class Sprite_Animation extends Sprite_Base {
 declare class Sprite_Damage extends Sprite {
     constructor();
     initialize(): void;
-    setup(target: Game_Battler): void;
+    setup(target: Game_Actor | Game_Enemy): void;
     setupCriticalEffect(): void;
     digitWidth(): number;
     digitHeight(): number;
@@ -327,7 +327,7 @@ declare class Sprite_StateIcon extends Sprite {
     constructor();
     initialize(): void;
     initMembers(): void;
-    setup(battler: Game_Battler): void;
+    setup(battler: Game_Actor | Game_Enemy): void;
     update(): void;
     animationWait(): number;
     updateIcon(): void;
@@ -336,7 +336,7 @@ declare class Sprite_StateIcon extends Sprite {
     static _iconWidth: number;
     static _iconHeight: number;
 
-    _battler: Game_Battler | null;
+    _battler: Game_Actor | Game_Enemy | null;
     _iconIndex: number;
     _animationIndex: number;
     _animationCount: number;
@@ -352,13 +352,13 @@ declare class Sprite_StateOverlay extends Sprite_Base {
     initialize(): void;
     initMembers(): void;
     loadBitmap(): void;
-    setup(battler: Game_Battler): void;
+    setup(battler: Game_Actor | Game_Enemy): void;
     update(): void;
     animationWait(): number;
     updatePattern(): void;
     updateFrame(): void;
 
-    _battler: Game_Battler | null;
+    _battler: Game_Actor | Game_Enemy | null;
     _overlayIndex: number;
     _animationCount: number;
     _pattern: number;
