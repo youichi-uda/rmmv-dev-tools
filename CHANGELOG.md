@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.6] - 2026-03-27
+
+### Fixed
+
+- Revert `RMMV_StorageManager` → `StorageManager` to match runtime name and prevent `ReferenceError`
+- Remove `"DOM"` from generated tsconfig `lib` to avoid irreconcilable name conflicts with DOM globals
+- Add `dom-rmmv.d.ts` providing essential DOM type declarations without conflicting `Window`/`StorageManager` globals
+
+## [1.1.5] - 2026-03-26
+
+### Fixed
+
+- Comprehensive type fixes, conflict report ordering, auto-build persistence
+
 ## [1.1.4] - 2026-03-25
 
 ### Fixed

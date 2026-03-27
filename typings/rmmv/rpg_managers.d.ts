@@ -107,12 +107,9 @@ declare namespace ConfigManager {
 // StorageManager
 //
 // The static class that manages storage for saving game data.
-// Renamed to RMMV_StorageManager to avoid conflict with the DOM StorageManager
-// interface. Use `declare const StorageManager: typeof RMMV_StorageManager;`
-// in your own project if you need the original name.
 // ---------------------------------------------------------------------------
 
-declare namespace RMMV_StorageManager {
+declare namespace StorageManager {
   function save(savefileId: number, json: string): void;
   function load(savefileId: number): string;
   function exists(savefileId: number): boolean;
